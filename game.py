@@ -60,7 +60,7 @@ def main():
 
     # Put Text On The Background, Centered
     if pg.font:
-        font = pg.font.Font(None, 36*3)
+        font = pg.font.Font(os.path.join(DATA_DIR, 'Sadtember.ttf'), 36*3)
         text = font.render("Hostile", 1, (220, 20, 60))
         textpos = text.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 2)
         background.blit(text, textpos)
