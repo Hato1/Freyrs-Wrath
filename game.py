@@ -11,6 +11,10 @@ if not pg.mixer:
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
 DATA_DIR = os.path.join(MAIN_DIR, "data")
 
+MENU = 1
+GAME = 2
+END = 3
+GAME_STATE = MENU
 
 # functions to create our resources
 def load_image(name, colorkey=None):
@@ -81,31 +85,39 @@ def main():
     while going:
         clock.tick(60)
 
-        # Handle Input Events
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                going = False
-            elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                going = False
+        if GAME_STATE == MENU:
+            menu_loop()
+        else:
 
-            elif event.type == pg.KEYDOWN and event.key == pg.K_f:
-                pg.display.toggle_fullscreen()
-            elif event.type == pg.VIDEORESIZE:
-                pg.display._resize_event(event)
+            # Handle Input Events
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    going = False
+                elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                    going = False
 
-        allsprites.update()
+                elif event.type == pg.KEYDOWN and event.key == pg.K_f:
+                    pg.display.toggle_fullscreen()
+                elif event.type == pg.VIDEORESIZE:
+                    pg.display._resize_event(event)
 
-        # Draw Everything
-        screen.blit(background, (0, 0))
-        allsprites.draw(screen)
-        pg.display.flip()
+            allsprites.update()
+
+            # Draw Everything
+            screen.blit(background, (0, 0))
+            allsprites.draw(screen)
+            pg.display.flip()
 
     pg.quit()
+
+def game_loop():
+    pass
+
+def menu_loop():
+    pass
 
 
 # Game Over
 
-
 # this calls the 'main' function when this script is executed
-
 main()
