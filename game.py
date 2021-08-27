@@ -16,16 +16,19 @@ GAME = 2
 END = 3
 GAME_STATE = MENU
 WHITE = (255, 255, 255)
+GREY = (122,122,122)
 GREEN = (20, 239, 20)
 BLACK = (0, 0, 0)
 GAME_NAME = "Name of the Game"
+PLAYER_1_NAME = "VIKING"
+PLAYER_2_NAME = "MONK"
 
 
 class Game:
 
     def __init__(self, state=MENU):
         self.game_state = state
-        self.menu_surface = None  # init in setup_game
+        self.background_surface = None  # init in setup_game
         self.screen = None  # init in setup_game
         self.soundtrack = None
         self.setup_game()
@@ -46,34 +49,34 @@ class Game:
 
     def draw_menu_background(self):
         # Create The Menu
-        self.menu_surface = pg.Surface(self.screen.get_size())
-        self.menu_surface = self.menu_surface.convert()
-        self.menu_surface.fill(WHITE)
+        self.background_surface = pg.Surface(self.screen.get_size())
+        self.background_surface = self.background_surface.convert()
+        self.background_surface.fill(WHITE)
         self.write_menu_text()
 
     def write_menu_text(self):
         font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         text_title = font_title.render(GAME_NAME, 1, (220, 20, 60))
-        textpos_title = text_title.get_rect(centerx=self.menu_surface.get_width() / 2,
-                                            centery=self.menu_surface.get_height() / 5)
-        self.menu_surface.blit(text_title, textpos_title)
+        textpos_title = text_title.get_rect(centerx=self.background_surface.get_width() / 2,
+                                            centery=self.background_surface.get_height() / 5)
+        self.background_surface.blit(text_title, textpos_title)
 
         font_team = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
         text_team = font_team.render("Team Fishing Minigame Metaphor", 1, (220, 20, 60))
-        textpos_team = text_team.get_rect(centerx=self.menu_surface.get_width() / 2,
-                                          centery=self.menu_surface.get_height() / 1.8)
-        self.menu_surface.blit(text_team, textpos_team)
+        textpos_team = text_team.get_rect(centerx=self.background_surface.get_width() / 2,
+                                          centery=self.background_surface.get_height() / 1.8)
+        self.background_surface.blit(text_team, textpos_team)
 
         text_by = font_team.render("by", 1, (220, 20, 60))
-        textpos_by = text_by.get_rect(centerx=self.menu_surface.get_width() / 2,
-                                      centery=self.menu_surface.get_height() / 2.2)
-        self.menu_surface.blit(text_by, textpos_by)
+        textpos_by = text_by.get_rect(centerx=self.background_surface.get_width() / 2,
+                                      centery=self.background_surface.get_height() / 2.2)
+        self.background_surface.blit(text_by, textpos_by)
 
         font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
         text_space_to_begin = font_space_to_begin.render("Press Spacebar to Start", 1, (220, 20, 60))
-        textpos_space_to_begin = text_space_to_begin.get_rect(centerx=self.menu_surface.get_width() / 2,
-                                                              centery=self.menu_surface.get_height() / 1.2)
-        self.menu_surface.blit(text_space_to_begin, textpos_space_to_begin)
+        textpos_space_to_begin = text_space_to_begin.get_rect(centerx=self.background_surface.get_width() / 2,
+                                                              centery=self.background_surface.get_height() / 1.2)
+        self.background_surface.blit(text_space_to_begin, textpos_space_to_begin)
 
     def draw_game_background(self):
         half_screen_width = self.screen.get_size()[0] / 2
@@ -86,6 +89,31 @@ class Game:
         self.screen.blit(divider, (half_screen_width, 0))
         pg.display.flip()
 
+    def draw_end_background(self):
+        self.background_surface = pg.Surface(self.screen.get_size())
+        self.background_surface = self.background_surface.convert()
+        self.background_surface.fill(GREY)
+        self.write_end_text()
+
+    def write_end_text(self):
+
+        loser = ""
+        if not self.p1.check_alive():
+            loser = PLAYER_1_NAME
+        elif not self.p2.check_alive():
+            loser = PLAYER_2_NAME
+
+        font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
+        text_title = font_title.render(loser, 1, (255, 20, 30))
+        textpos_title = text_title.get_rect(centerx=self.background_surface.get_width() / 2,
+                                            centery=self.background_surface.get_height() / 5)
+        self.background_surface.blit(text_title, textpos_title)
+
+        font_team = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
+        text_team = font_team.render("Team Fishing Minigame Metaphor", 1, (220, 20, 60))
+        textpos_team = text_team.get_rect(centerx=self.background_surface.get_width() / 2,
+                                          centery=self.background_surface.get_height() / 1.8)
+        self.background_surface.blit(text_team, textpos_team)
 
     def main(self):
         """this function is called when the program starts.
@@ -94,7 +122,7 @@ class Game:
         # Initialize Everything
 
         # Display The Background
-        self.screen.blit(self.menu_surface, (0, 0))
+        self.screen.blit(self.background_surface, (0, 0))
         pg.display.flip()  # Flipping display is recommended practice to be sure display updates???
 
         # Prepare Game Objects
@@ -152,7 +180,6 @@ class Game:
             self.game_state = GAME
             button_sound = load_sound("button_sound.mp3")
             button_sound.play()
-            self.state_change_processed = False
 
     def process_game_event(self, event):
         pass
@@ -161,15 +188,20 @@ class Game:
         pass
 
     def menu_loop(self):
-        self.screen.blit(self.menu_surface, (0, 0))
+        self.screen.blit(self.background_surface, (0, 0))
 
     def game_loop(self):
         self.p1.update_world()
         self.p2.update_world()
         self.draw_game_background()
 
+        if (not self.p1.check_alive()) or (not self.p2.check_alive()):
+            self.game_state = END
+            self.draw_end_background()
+
+
     def end_loop(self):
-        pass
+        self.screen.blit(self.background_surface, (0, 0))
 
 
 # Game Over
