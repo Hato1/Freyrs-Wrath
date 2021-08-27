@@ -30,7 +30,9 @@ class Game:
         self.state_change_processed = False
         self.menu_surface = None  # init in setup_game
         self.screen = None  # init in setup_game
+        self.soundtrack = None
         self.setup_game()
+
 
         half_screen_width = self.screen.get_size()[0] / 2
         screen_height = self.screen.get_size()[1]
@@ -42,8 +44,10 @@ class Game:
         self.screen = pg.display.set_mode((512, 288), pg.SCALED | pg.RESIZABLE)
         pg.display.set_caption("Prototype")
         self.set_state_menu()
-        soundtrack = load_sound("Fishing song.mp3")
-        soundtrack.play(-1)
+
+        self.soundtrack = load_sound("Fishing song.mp3")
+        self.soundtrack.play(-1)
+
 
     def set_state_menu(self):
         # Create The Menu
@@ -130,6 +134,8 @@ class Game:
                     pg.display.toggle_fullscreen()
                 elif event.type == pg.VIDEORESIZE:
                     pg.display._resize_event(event)
+                elif event.type == pg.KEYDOWN and event.key == pg.K_m:
+                    self.soundtrack.stop()
 
                 self.process_event(event)
 
