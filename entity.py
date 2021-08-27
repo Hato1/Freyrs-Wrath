@@ -42,7 +42,7 @@ class Entity(pg.sprite.Sprite):
             y = y / norm
             #self.rect.topleft[0] += x * self.speed
             #self.rect.topleft[1] += y * self.speed
-            self.rect.topleft = (x * self.speed, y * self.speed)
+            self.rect.topleft = (self.rect.topleft[0] + x * self.speed, self.rect.topleft[1] + y * self.speed)
             return (x, y)
         else:
             return False
