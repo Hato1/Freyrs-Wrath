@@ -1,6 +1,6 @@
 import os
+
 import pygame as pg
-from pygame.locals import *
 from pygame.compat import geterror
 
 if not pg.font:
@@ -16,6 +16,7 @@ GAME = 2
 END = 3
 GAME_STATE = MENU
 WHITE = (255, 255, 255)
+GREEN = (20, 239, 20)
 
 
 # functions to create our resources
@@ -49,72 +50,83 @@ def load_sound(name):
         raise SystemExit(str(geterror()))
     return sound
 
+
 class Game():
 
     def __init__(self, state):
         self.game_state = state
         self.state_changed = True
-        self.background = None
+        self.background = None # init in setup_game
+        self.screen = None # init in setup_game
+        self.setup_game()
 
-    def set_menu(self, background):
-        background.fill(WHITE)
-        self.write_menu_text(background)
+    def setup_game(self):
+        pg.init()
+        self.screen = pg.display.set_mode((512, 288), pg.SCALED | pg.RESIZABLE)
+        pg.display.set_caption("Prototype")
+        self.set_state_menu()
 
-    def write_menu_text(self, background):
+
+    def set_state_menu(self):
+        # Create The Backgound
+        self.background = pg.Surface(self.screen.get_size())
+        self.background = self.background.convert()
+        self.background.fill(WHITE)
+        self.write_menu_text()
+
+    def write_menu_text(self):
         font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         text_title = font_title.render("Name of the Game", 1, (220, 20, 60))
-        textpos_title = text_title.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 4)
-        background.blit(text_title, textpos_title)
+        textpos_title = text_title.get_rect(centerx=self.background.get_width() / 2, centery=self.background.get_height() / 4)
+        self.background.blit(text_title, textpos_title)
 
         font_team = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
         text_team = font_team.render("Fishing Minigame Metaphor", 1, (220, 20, 60))
-        textpos_team = text_team.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 2)
-        background.blit(text_team, textpos_team)
+        textpos_team = text_team.get_rect(centerx=self.background.get_width() / 2, centery=self.background.get_height() / 2)
+        self.background.blit(text_team, textpos_team)
 
         font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
         text_space_to_begin = font_space_to_begin.render("Press Spacebar to Start", 1, (220, 20, 60))
-        textpos_space_to_begin = text_space_to_begin.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 1.2)
-        background.blit(text_space_to_begin, textpos_space_to_begin)
+        textpos_space_to_begin = text_space_to_begin.get_rect(centerx=self.background.get_width() / 2,
+                                                              centery=self.background.get_height() / 1.2)
+        self.background.blit(text_space_to_begin, textpos_space_to_begin)
+
+    def set_state_game(self):
+        self.background.fill(GREEN)
+        pg.display.flip()
+        self.write_menu_text()
 
     def main(self):
         """this function is called when the program starts.
            it initializes everything it needs, then runs in
            a loop until the function returns."""
         # Initialize Everything
-        pg.init()
-        screen = pg.display.set_mode((512, 288), pg.SCALED | pg.RESIZABLE)
-        pg.display.set_caption("Prototype")
-
-        # Create The Backgound
-        background = pg.Surface(screen.get_size())
-        background = background.convert()
-        background.fill((67, 112, 173))
 
         # Put Text On The Background, Centered
         if pg.font:
-            font = pg.font.Font(os.path.join(DATA_DIR, 'Sadtember.ttf'), 36*3)
+            font = pg.font.Font(os.path.join(DATA_DIR, 'Sadtember.ttf'), 36 * 3)
             text = font.render("Hostile", 1, (220, 20, 60))
-            textpos = text.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 2)
-            background.blit(text, textpos)
+            textpos = text.get_rect(centerx=self.background.get_width() / 2, centery=self.background.get_height() / 2)
+            self.background.blit(text, textpos)
 
         # Add a rectangle
-        pg.draw.rect(background, (100, 0, 100), pg.Rect(30, 30, 60, 60))
+        pg.draw.rect(self.background, (100, 0, 100), pg.Rect(30, 30, 60, 60))
 
         # Display The Background
-        screen.blit(background, (0, 0))
+        self.screen.blit(self.background, (0, 0))
         pg.display.flip()  # Flipping display is recommended practice to be sure display updates???
 
         # Prepare Game Objects
         clock = pg.time.Clock()
         allsprites = pg.sprite.RenderPlain(())
 
-        self.set_menu(background)
+        self.set_state_menu()
 
         # Main Loop
         going = True
         while going:
             clock.tick(60)
-                # Handle Input Events
+            # Handle Input Events
 
             if self.state_changed:
                 self.handle_state_change()
@@ -131,30 +143,33 @@ class Game():
                     pg.display._resize_event(event)
 
                 if GAME_STATE == MENU:
-                    self.menu_loop(event, background)
+                    self.menu_loop(event)
                 elif GAME_STATE == GAME:
-                    self.game_loop(event, background)
+                    self.game_loop(event)
 
             allsprites.update()
 
-                # Draw Everything
-            screen.blit(background, (0, 0))
-            allsprites.draw(screen)
+            # Draw Everything
+            self.screen.blit(self.background, (0, 0))
+            allsprites.draw(self.screen)
             pg.display.flip()
 
         pg.quit()
 
-    def game_loop(self, event, background):
-        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-            self.game_state = MENU
-            self.state_changed = True
-
-    def menu_loop(self, event, background):
+    def game_loop(self, event):
         pass
+
+    def menu_loop(self, event):
+        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+            self.game_state = GAME
+            self.state_changed = True
 
     def handle_state_change(self):
         if self.game_state == MENU:
-            self.set_menu()
+            self.set_state_menu()
+        elif self.game_state == GAME:
+            self.set_state_game()
+
 
 # Game Over
 
