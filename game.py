@@ -3,6 +3,9 @@ import os
 import pygame as pg
 from pygame.compat import geterror
 
+from helper import load_sound
+from world import World
+
 if not pg.font:
     print("Warning, fonts disabled")
 if not pg.mixer:
@@ -18,47 +21,16 @@ GAME_STATE = MENU
 WHITE = (255, 255, 255)
 GREEN = (20, 239, 20)
 
-# functions to create our resources
-def load_image(name, colorkey=None):
-    fullname = os.path.join(DATA_DIR, name)
-    try:
-        image = pg.image.load(fullname)
-    except pg.error:
-        print("Cannot load image:", fullname)
-        raise SystemExit(str(geterror()))
-    image = image.convert()
-    if colorkey is not None:
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey, pg.RLEACCEL)
-    return image, image.get_rect()
-
-
-def load_sound(name):
-    class NoneSound:
-        def play(self):
-            pass
-
-    if not pg.mixer or not pg.mixer.get_init():
-        return NoneSound()
-    fullname = os.path.join(DATA_DIR, name)
-    try:
-        sound = pg.mixer.Sound(fullname)
-    except pg.error:
-        print("Cannot load sound: %s" % fullname)
-        raise SystemExit(str(geterror()))
-    return sound
-
 class Game:
 
-    def __init__(self, state=MENU, world1=None, world2=None):
+    def __init__(self, state=MENU):
         self.game_state = state
         self.state_change_processed = False
         self.menu_surface = None  # init in setup_game
         self.screen = None  # init in setup_game
-        self.p1 = world1
-        self.p2 = world2
         self.setup_game()
+        self.p1 = World((200, 200))
+        self.p2 = World((200, 200))
 
     def setup_game(self):
         pg.init()
@@ -95,9 +67,14 @@ class Game:
         self.menu_surface.blit(text_space_to_begin, textpos_space_to_begin)
 
     def set_state_game(self):
-        # TODO insteado f filling menu surface, change to a world
-        self.menu_surface.fill(GREEN)
+        # TODO instead of filling menu surface, change to a world
+        self.screen.blit(self.p1.world, (0,0))
+        self.screen.blit(self.p2.world, (201,0))
         pg.display.flip()
+        print("butts")
+
+    def actually_set_game_state(self):
+        pass
 
     def set_state_end(self):
         pass
@@ -148,33 +125,35 @@ class Game:
                 elif event.type == pg.VIDEORESIZE:
                     pg.display._resize_event(event)
 
-                if GAME_STATE == MENU:
+                if self.game_state == MENU:
                     self.menu_loop(event)
-                elif GAME_STATE == GAME:
+                elif self.game_state == GAME:
                     self.game_loop(event)
-                elif GAME_STATE == END:
+                elif self.game_state == END:
                     self.end_loop(event)
 
             allsprites.update()
 
             # Draw Everything
-            self.screen.blit(self.menu_surface, (0, 0))
             allsprites.draw(self.screen)
             pg.display.flip()
 
         pg.quit()
 
     def menu_loop(self, event):
-        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+        self.screen.blit(self.menu_surface, (0, 0))
+
+        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == MENU:
             self.game_state = GAME
-            self.state_changed = True
+            button_sound = load_sound("button_sound.mp3")
+            button_sound.play()
+            self.state_change_processed = False
 
     def game_loop(self, event):
         pass
 
     def end_loop(self, event):
         pass
-
 
     def handle_state_change(self):
         if self.game_state == MENU:
