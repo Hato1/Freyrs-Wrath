@@ -3,6 +3,7 @@ import pygame as pg
 
 from helper import DATA_DIR, load_image
 
+
 # To do:
 # Handle position wrapping. (helper function?)
 
@@ -10,13 +11,12 @@ from helper import DATA_DIR, load_image
 class Entity(pg.sprite.Sprite):
     def __init__(self, sprite, position, lives=3, speed=5, ai=None):
         """EG Entity([5.5, 7.64], ai=BaseAI())"""
-        pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image(sprite, -1)
-
         self.position = position
         self.lives = lives
         self.speed = speed
         self.ai = ai
+
+        self.image, self.rect = load_image(sprite, -1)
 
     def get_position(self):
         return self.position
@@ -35,7 +35,7 @@ class Entity(pg.sprite.Sprite):
 
     def move(self):
         if self.ai:
-            x, y = ai.decide_move()
+            x, y = self.ai.decide_move()
             norm = (x**2 + y**2)**0.5
             x = x / norm
             y = y / norm
