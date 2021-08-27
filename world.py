@@ -5,6 +5,7 @@ from helper import DATA_DIR, load_image
 
 from entity import Entity, BaseAI
 
+
 class World:
 
     def __init__(self, dims):
@@ -33,12 +34,8 @@ class World:
         self.player.move()
         self.allsprites.update()
 
-        #for entity in self.entity_list:
-            #entity.move()
-
         self.allsprites.draw(self.world)
         pg.display.flip()
-
 
     def add_entity(self, sprite):
         entity = Entity(sprite, [0,0])
@@ -60,7 +57,6 @@ class World:
 
     def check_alive(self):
         return self.player.is_alive()
-
 
     def player_move(self):
         self.player.move()
