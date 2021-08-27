@@ -49,7 +49,6 @@ def load_sound(name):
         raise SystemExit(str(geterror()))
     return sound
 
-
 class Game:
 
     def __init__(self, state=MENU, world1=None, world2=None):
@@ -66,6 +65,8 @@ class Game:
         self.screen = pg.display.set_mode((512, 288), pg.SCALED | pg.RESIZABLE)
         pg.display.set_caption("Prototype")
         self.set_state_menu()
+        soundtrack = load_sound("Fishing song.mp3")
+        soundtrack.play(-1)
 
     def set_state_menu(self):
         # Create The Menu
