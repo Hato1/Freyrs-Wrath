@@ -24,6 +24,9 @@ class Entity:
     def check_collision(self, objects):
         raise NotImplemented("How do I check for collision again?")
 
+    def is_alive(self):
+        return self.lives > 0
+
     def move(self):
         if self.ai:
             x, y = ai.decide_move()
