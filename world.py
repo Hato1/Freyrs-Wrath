@@ -26,9 +26,6 @@ class World:
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
 
-
-
-
     def update_world(self):
         self.world.fill((100, 250, 250))
         self.money -= 1
