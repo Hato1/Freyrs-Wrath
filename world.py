@@ -13,7 +13,8 @@ class World:
 
         self.dims = dims
 
-        self.velocity = [0, 0]
+        # Delete me self.dir_dict = {pg.K_w: 0, pg.K_s: 0, pg.K_a: 0, pg.K_d: 0}
+        self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
 
         self.entity_list = []
 
@@ -39,7 +40,6 @@ class World:
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
 
-
     def update_world(self):
         self.world.fill((100, 250, 250))
 
@@ -48,7 +48,6 @@ class World:
         self.player.move()
 
         self.allsprites.update()
-
 
         self.allsprites.draw(self.world)
         pg.display.flip()
@@ -81,13 +80,15 @@ class World:
 
     def move(self):
         for entity in self.entity_list:
-            entity.slide(self.velocity)
+            x = self.dir_dict['LEFT'] - self.dir_dict['RIGHT']
+            y = self.dir_dict['UP'] - self.dir_dict['DOWN']
+            entity.slide([x, y])
 
-    def set_move(self, x=None, y=None):
-        if x is not None:
-            self.velocity[0] = x
-        if y is not None:
-            self.velocity[1] = y
+    def set_dir(self, key, val):
+        self.dir_dict[key] = val
+
+    def get_dir(self):
+        return self.dir_dict
 
     def gen_money(self):
         return

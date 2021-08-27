@@ -22,6 +22,8 @@ BLACK = (0, 0, 0)
 GAME_NAME = "Name of the Game"
 PLAYER_1_NAME = "VIKING"
 PLAYER_2_NAME = "MONK"
+P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT'}
+P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT'}
 
 
 class Game:
@@ -155,7 +157,6 @@ class Game:
             if self.game_state == MENU:
                 self.menu_loop()
             elif self.game_state == GAME:
-                self.p1.move()
                 self.game_loop()
             elif self.game_state == END:
                 self.end_loop()
@@ -182,39 +183,16 @@ class Game:
             button_sound = load_sound("button_sound.mp3")
             button_sound.play()
 
-    dir_dict = {}
-
     def process_game_event(self, event):
-        direction2 = [0, 0]
-        if event.type == pg.KEYDOWN and event.key == pg.K_w:
-            self.p1.set_move(y=1)
-        elif event.type == pg.KEYDOWN and event.key == pg.K_s:
-            self.p1.set_move(y=-1)
-        elif event.type == pg.KEYDOWN and event.key == pg.K_a:
-            self.p1.set_move(x=-1)
-        elif event.type == pg.KEYDOWN and event.key == pg.K_d:
-            self.p1.set_move(x=1)
+        if event.type == pg.KEYDOWN and event.key in P1DIRS:
+            self.p1.set_dir(P1DIRS[event.key], 1)
+        elif event.type == pg.KEYUP and event.key in P1DIRS:
+            self.p1.set_dir(P1DIRS[event.key], 0)
 
-        if event.type == pg.KEYUP and event.key == pg.K_w:
-            self.p1.set_move(y=0)
-        elif event.type == pg.KEYUP and event.key == pg.K_s:
-            self.p1.set_move(y=0)
-        elif event.type == pg.KEYUP and event.key == pg.K_a:
-            self.p1.set_move(x=0)
-        elif event.type == pg.KEYUP and event.key == pg.K_d:
-            self.p1.set_move(x=0)
-        # self.p1.move()
-
-        # direction1 = [0, 0]
-        # if event.type == pg.KEYDOWN and event.key == pg.K_UP:
-        #     direction1[1] = 1
-        # elif event.type == pg.KEYDOWN and event.key == pg.K_DOWN:
-        #     direction1[1] = -1
-        # elif event.type == pg.KEYDOWN and event.key == pg.K_LEFT:
-        #     direction1[0] = 1
-        # elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
-        #     direction1[0] = -1
-        # self.p2.move(direction1)
+        if event.type == pg.KEYDOWN and event.key in P2DIRS:
+            self.p2.set_dir(P2DIRS[event.key], 1)
+        elif event.type == pg.KEYUP and event.key in P2DIRS:
+            self.p2.set_dir(P2DIRS[event.key], 0)
 
     def process_end_event(self, event):
         pass
@@ -223,7 +201,9 @@ class Game:
         self.screen.blit(self.background_surface, (0, 0))
 
     def game_loop(self):
+        self.p1.move()
         self.p1.update_world()
+        self.p2.move()
         self.p2.update_world()
         self.draw_game_background()
 
