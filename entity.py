@@ -13,17 +13,16 @@ class Entity(pg.sprite.Sprite):
         """EG Entity([5.5, 7.64], ai=BaseAI())"""
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(sprite, -1)
-
-        self.position = position
+        self.rect.topleft = position
         self.lives = lives
         self.speed = speed
         self.ai = ai
 
     def get_position(self):
-        return self.position
+        return self.rect.topleft
 
     def set_position(self, position):
-        self.position = position
+        self.rect.topleft = position
 
     def change_control(self, new_scheme):
         self.control = new_scheme
@@ -40,8 +39,8 @@ class Entity(pg.sprite.Sprite):
             norm = (x**2 + y**2)**0.5
             x = x / norm
             y = y / norm
-            self.position[0] += x * self.speed
-            self.position[1] += y * self.speed
+            self.rect.topleft[0] += x * self.speed
+            self.rect.topleft[1] += y * self.speed
             return (x, y)
         else:
             return False
