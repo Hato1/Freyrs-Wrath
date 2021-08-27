@@ -58,8 +58,9 @@ class World:
     def check_alive(self):
         return self.player.is_alive()
 
-    def player_move(self):
-        self.player.move()
+    def move(self, vec):
+        for entity in self.entity_list:
+            sprite.slide(vec)
 
 
 #     Screen.player = Entity()

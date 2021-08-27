@@ -13,7 +13,7 @@ class Entity(pg.sprite.Sprite):
         """EG Entity([5.5, 7.64], ai=BaseAI())"""
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(sprite, -1)
-        self.rect.topleft = position
+        self.rect.center = position
         self.lives = lives
         self.speed = speed
         self.ai = ai
@@ -39,10 +39,16 @@ class Entity(pg.sprite.Sprite):
             norm = (x**2 + y**2)**0.5
             x = x / norm
             y = y / norm
-            self.rect.topleft = (self.rect.topleft[0] + x * self.speed, self.rect.topleft[1] + y * self.speed)
+            # self.rect.topleft = (self.rect.topleft[0] + x * self.speed, self.rect.topleft[1] + y * self.speed)
+            self.rect.left += x * self.speed
+            self.rect.top += y * self.speed
             return (x, y)
         else:
             return False
+
+    def slide(self, vec):
+        self.rect.left += vec[0] * self.speed
+        self.rect.top += vec[1] * self.speed
 
 
 class BaseAI():
