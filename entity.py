@@ -1,16 +1,21 @@
 import random
+import pygame
+
+from helper import DATA_DIR
 
 # To do:
 # Handle position wrapping. (helper function?)
 
 
-class Entity:
-    def __init__(self, position, lives=3, speed=5, ai=None):
+class Entity(pg.sprite.Sprite):
+    def __init__(self, sprite, position lives=3, speed=5, ai=None):
         """EG Entity([5.5, 7.64], ai=BaseAI())"""
         self.position = position
         self.lives = lives
         self.speed = speed
         self.ai = ai
+
+        self.image, self.rect = load_image(sprite, -1)
 
     def get_position(self):
         return self.position
