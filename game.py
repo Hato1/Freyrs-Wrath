@@ -20,6 +20,7 @@ END = 3
 GAME_STATE = MENU
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+GAME_NAME = "Name of the Game"
 
 GREEN = (20, 239, 20)
 
@@ -42,7 +43,7 @@ class Game:
     def setup_game(self):
         pg.init()
         self.screen = pg.display.set_mode((512, 288), pg.SCALED | pg.RESIZABLE)
-        pg.display.set_caption("Prototype")
+        pg.display.set_caption(GAME_NAME)
         self.set_state_menu()
 
         self.soundtrack = load_sound("Fishing song.mp3")
@@ -58,16 +59,23 @@ class Game:
 
     def write_menu_text(self):
         font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
-        text_title = font_title.render("Name of the Game", 1, (220, 20, 60))
+        text_title = font_title.render(GAME_NAME, 1, (220, 20, 60))
         textpos_title = text_title.get_rect(centerx=self.menu_surface.get_width() / 2,
-                                            centery=self.menu_surface.get_height() / 4)
+                                            centery=self.menu_surface.get_height() / 5)
         self.menu_surface.blit(text_title, textpos_title)
 
+
+
         font_team = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
-        text_team = font_team.render("Fishing Minigame Metaphor", 1, (220, 20, 60))
+        text_team = font_team.render("Team Fishing Minigame Metaphor", 1, (220, 20, 60))
         textpos_team = text_team.get_rect(centerx=self.menu_surface.get_width() / 2,
-                                          centery=self.menu_surface.get_height() / 2)
+                                          centery=self.menu_surface.get_height() / 1.8)
         self.menu_surface.blit(text_team, textpos_team)
+
+        text_by = font_team.render("by", 1, (220, 20, 60))
+        textpos_by = text_by.get_rect(centerx=self.menu_surface.get_width() / 2,
+                                          centery=self.menu_surface.get_height() / 2.2)
+        self.menu_surface.blit(text_by, textpos_by )
 
         font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
         text_space_to_begin = font_space_to_begin.render("Press Spacebar to Start", 1, (220, 20, 60))
@@ -95,13 +103,6 @@ class Game:
            it initializes everything it needs, then runs in
            a loop until the function returns."""
         # Initialize Everything
-
-        # Put Text On The Background, Centered
-        if pg.font:
-            font = pg.font.Font(os.path.join(DATA_DIR, 'Sadtember.ttf'), 36 * 3)
-            text = font.render("Hostile", 1, (220, 20, 60))
-            textpos = text.get_rect(centerx=self.menu_surface.get_width() / 2, centery=self.menu_surface.get_height() / 2)
-            self.menu_surface.blit(text, textpos)
 
         # Add a rectangle
         pg.draw.rect(self.menu_surface, (100, 0, 100), pg.Rect(30, 30, 60, 60))
