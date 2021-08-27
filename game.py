@@ -19,6 +19,8 @@ GAME = 2
 END = 3
 GAME_STATE = MENU
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
 GREEN = (20, 239, 20)
 
 class Game:
@@ -71,8 +73,14 @@ class Game:
 
     def set_state_game(self):
         half_screen_width = self.screen.get_size()[0] / 2
+        screen_height = self.screen.get_size()[1]
         self.screen.blit(self.p1.world, (0,0))
-        self.screen.blit(self.p2.world, (half_screen_width,0))
+        self.screen.blit(self.p2.world, (half_screen_width+1, 0))
+        divider = pg.Surface((1, screen_height))
+        divider = divider.convert()
+        divider.fill(BLACK)
+        self.screen.blit(divider, (half_screen_width, 0))
+
         pg.display.flip()
 
     def set_state_end(self):
