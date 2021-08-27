@@ -38,7 +38,7 @@ class World:
         pg.display.flip()
 
     def add_entity(self, sprite):
-        entity = Entity(sprite, [0,0])
+        entity = Entity(sprite, [0, 0])
         self.entity_list.append(entity)
 
     def get_surface(self):
