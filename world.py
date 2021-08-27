@@ -30,10 +30,10 @@ class World:
         #spawns 5 coin entity
         #for i in range(5):
             #self.add_entity(coin_path, (self.dims[0]/(i+1), self.dims[1]/(i+1)))
-        self.add_entity(coin_path, (500, 280))
-        self.add_entity(coin_path, (300, 100))
+        self.add_entity(coin_path, (self.world.get_width()/4, self.world.get_height()/4))
+        self.add_entity(coin_path, (self.world.get_width()/2, self.world.get_height()/2))
 
-        self.entity_list = (self.player)
+        self.entity_list.append(self.player)
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
 
@@ -47,11 +47,12 @@ class World:
 
         self.allsprites.update()
 
+
         self.allsprites.draw(self.world)
         pg.display.flip()
 
-    def add_entity(self, sprite, ai_state=None):
-        entity = Entity(sprite, [0,0], ai=ai_state)
+    def add_entity(self, sprite, pos, ai_state=None):
+        entity = Entity(sprite, pos, ai=ai_state)
         self.entity_list.append(entity)
 
     def get_surface(self):
