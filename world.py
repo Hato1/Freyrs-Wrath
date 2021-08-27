@@ -4,6 +4,7 @@ import os
 from helper import DATA_DIR, load_image
 
 from entity import Entity, BaseAI
+from shop import Shop
 
 
 class World:
@@ -15,7 +16,7 @@ class World:
         self.world = pg.Surface(self.dims)
         self.world = self.world.convert()
         self.draw_world()
-
+        self.shop = Shop()
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
@@ -31,8 +32,10 @@ class World:
         self.world.fill((100, 250, 250))
         self.money -= 1
         self.update_money()
+        self.update_shop()
         self.player.move()
         self.allsprites.update()
+
 
         self.allsprites.draw(self.world)
         pg.display.flip()
@@ -54,6 +57,11 @@ class World:
                                                  centery=self.world.get_height() / 4)
 
         self.world.blit(self.text_money, textpos_money)
+
+    def update_shop(self):
+        self.shop.draw_shop()
+
+        self.world.blit(self.shop.shop, (0, 0))
 
     def check_alive(self):
         return self.player.is_alive()
