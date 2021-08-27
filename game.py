@@ -16,7 +16,7 @@ GAME = 2
 END = 3
 GAME_STATE = MENU
 WHITE = (255, 255, 255)
-GREY = (122,122,122)
+GREY = (122, 122, 122)
 GREEN = (20, 239, 20)
 BLACK = (0, 0, 0)
 GAME_NAME = "Name of the Game"
@@ -182,7 +182,7 @@ class Game:
             button_sound.play()
 
     def process_game_event(self, event):
-        direction1 = [0,0]
+        direction1 = [0, 0]
         if event.type == pg.KEYDOWN and event.key == pg.K_UP:
             direction1[0] += 1
         elif event.type == pg.KEYDOWN and event.key == pg.K_DOWN:
@@ -191,7 +191,7 @@ class Game:
             direction1[1] += 1
         elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
             direction1[0] -= 1
-        #entity1.move(direction)
+        # entity1.move(direction)
 
         direction2 = [0, 0]
         if event.type == pg.KEYDOWN and event.key == pg.K_w:
@@ -218,7 +218,6 @@ class Game:
         if (not self.p1.check_alive()) or (not self.p2.check_alive()):
             self.game_state = END
             self.draw_end_background()
-
 
     def end_loop(self):
         self.screen.blit(self.background_surface, (0, 0))
