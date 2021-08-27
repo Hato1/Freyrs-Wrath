@@ -191,7 +191,7 @@ class Game:
             direction1[1] += 1
         elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
             direction1[0] -= 1
-        # entity1.move(direction)
+        self.p1.move(direction1)
 
         direction2 = [0, 0]
         if event.type == pg.KEYDOWN and event.key == pg.K_w:
@@ -202,7 +202,7 @@ class Game:
             direction2[1] += 1
         elif event.type == pg.KEYDOWN and event.key == pg.K_d:
             direction2[0] -= 1
-        # entity2.move(direction)
+        self.p2.move(direction2)
 
     def process_end_event(self, event):
         pass

@@ -20,7 +20,7 @@ class World:
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
-        #'sprite_viking', 'sprite_viking_front.png'
+        # 'sprite_viking', 'sprite_viking_front.png'
         player_path = os.path.join(DATA_DIR, 'Fist.bmp')
         self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), ai=BaseAI())
 
@@ -35,7 +35,6 @@ class World:
         self.update_shop()
         self.player.move()
         self.allsprites.update()
-
 
         self.allsprites.draw(self.world)
         pg.display.flip()
