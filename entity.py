@@ -34,13 +34,15 @@ class Entity(pg.sprite.Sprite):
         return self.lives > 0
 
     def move(self):
+        print('Moveing')
         if self.ai:
             x, y = self.ai.decide_move()
             norm = (x**2 + y**2)**0.5
             x = x / norm
             y = y / norm
-            self.rect.topleft[0] += x * self.speed
-            self.rect.topleft[1] += y * self.speed
+            #self.rect.topleft[0] += x * self.speed
+            #self.rect.topleft[1] += y * self.speed
+            self.rect.topleft = (x * self.speed, y * self.speed)
             return (x, y)
         else:
             return False
