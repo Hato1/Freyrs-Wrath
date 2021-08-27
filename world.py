@@ -32,7 +32,7 @@ class World:
         self.world.fill((100, 250, 250))
         self.money -= 1
         self.update_money()
-        self.player_move()
+        self.player.move()
         self.allsprites.update()
 
         #for entity in self.entity_list:
@@ -65,7 +65,7 @@ class World:
 
 
     def player_move(self):
-        return
+        self.player.move()
 
 
 #     Screen.player = Entity()
