@@ -7,9 +7,8 @@ from helper import DATA_DIR, load_image
 # To do:
 # Handle position wrapping. (helper function?)
 
-
 class Entity(pg.sprite.Sprite):
-    def __init__(self, sprite, position, lives=3, speed=5, ai=None):
+    def __init__(self, sprite, position, lives=3, speed=5, ai=None, type="Entity"):
         """EG Entity([5.5, 7.64], ai=BaseAI())"""
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(sprite, -1)
@@ -17,6 +16,9 @@ class Entity(pg.sprite.Sprite):
         self.lives = lives
         self.speed = speed
         self.ai = ai
+
+    def __type__(self):
+        return self.type
 
     def get_position(self):
         return self.rect.topleft

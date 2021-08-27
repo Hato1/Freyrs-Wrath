@@ -13,6 +13,8 @@ class World:
 
         self.dims = dims
 
+        self.velocity = [0, 0]
+
         self.entity_list = []
 
         self.world = pg.Surface(self.dims)
@@ -77,9 +79,15 @@ class World:
     def check_alive(self):
         return self.player.is_alive()
 
-    def move(self, vec):
+    def move(self):
         for entity in self.entity_list:
-            entity.slide(vec)
+            entity.slide(self.velocity)
+
+    def set_move(self, x=None, y=None):
+        if x is not None:
+            self.velocity[0] = x
+        if y is not None:
+            self.velocity[1] = y
 
     def gen_money(self):
         return

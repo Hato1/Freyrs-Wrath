@@ -155,6 +155,7 @@ class Game:
             if self.game_state == MENU:
                 self.menu_loop()
             elif self.game_state == GAME:
+                self.p1.move()
                 self.game_loop()
             elif self.game_state == END:
                 self.end_loop()
@@ -181,28 +182,39 @@ class Game:
             button_sound = load_sound("button_sound.mp3")
             button_sound.play()
 
-    def process_game_event(self, event):
-        direction1 = [0, 0]
-        if event.type == pg.KEYDOWN and event.key == pg.K_UP:
-            direction1[1] -= 1
-        elif event.type == pg.KEYDOWN and event.key == pg.K_DOWN:
-            direction1[1] += 1
-        elif event.type == pg.KEYDOWN and event.key == pg.K_LEFT:
-            direction1[0] -= 1
-        elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
-            direction1[0] += 1
-        self.p2.move(direction1)
+    dir_dict = {}
 
+    def process_game_event(self, event):
         direction2 = [0, 0]
         if event.type == pg.KEYDOWN and event.key == pg.K_w:
-            direction2[1] -= 1
+            self.p1.set_move(y=1)
         elif event.type == pg.KEYDOWN and event.key == pg.K_s:
-            direction2[1] += 1
+            self.p1.set_move(y=-1)
         elif event.type == pg.KEYDOWN and event.key == pg.K_a:
-            direction2[0] -= 1
+            self.p1.set_move(x=-1)
         elif event.type == pg.KEYDOWN and event.key == pg.K_d:
-            direction2[0] += 1
-        self.p1.move(direction2)
+            self.p1.set_move(x=1)
+
+        if event.type == pg.KEYUP and event.key == pg.K_w:
+            self.p1.set_move(y=0)
+        elif event.type == pg.KEYUP and event.key == pg.K_s:
+            self.p1.set_move(y=0)
+        elif event.type == pg.KEYUP and event.key == pg.K_a:
+            self.p1.set_move(x=0)
+        elif event.type == pg.KEYUP and event.key == pg.K_d:
+            self.p1.set_move(x=0)
+        # self.p1.move()
+
+        # direction1 = [0, 0]
+        # if event.type == pg.KEYDOWN and event.key == pg.K_UP:
+        #     direction1[1] = 1
+        # elif event.type == pg.KEYDOWN and event.key == pg.K_DOWN:
+        #     direction1[1] = -1
+        # elif event.type == pg.KEYDOWN and event.key == pg.K_LEFT:
+        #     direction1[0] = 1
+        # elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
+        #     direction1[0] = -1
+        # self.p2.move(direction1)
 
     def process_end_event(self, event):
         pass
