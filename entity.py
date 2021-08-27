@@ -39,6 +39,8 @@ class Entity(pg.sprite.Sprite):
         if self.ai:
             x, y = self.ai.decide_move()
             norm = (x**2 + y**2)**0.5
+            if norm == 0:
+                return (0, 0)
             x = x / norm
             y = y / norm
             # self.rect.topleft = (self.rect.topleft[0] + x * self.speed, self.rect.topleft[1] + y * self.speed)
