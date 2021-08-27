@@ -184,24 +184,24 @@ class Game:
     def process_game_event(self, event):
         direction1 = [0, 0]
         if event.type == pg.KEYDOWN and event.key == pg.K_UP:
-            direction1[0] += 1
+            direction1[1] -= 1
         elif event.type == pg.KEYDOWN and event.key == pg.K_DOWN:
-            direction1[0] -= 1
-        elif event.type == pg.KEYDOWN and event.key == pg.K_LEFT:
             direction1[1] += 1
-        elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
+        elif event.type == pg.KEYDOWN and event.key == pg.K_LEFT:
             direction1[0] -= 1
+        elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
+            direction1[0] += 1
         self.p1.move(direction1)
 
         direction2 = [0, 0]
         if event.type == pg.KEYDOWN and event.key == pg.K_w:
-            direction2[0] += 1
+            direction2[1] -= 1
         elif event.type == pg.KEYDOWN and event.key == pg.K_s:
-            direction2[0] -= 1
-        elif event.type == pg.KEYDOWN and event.key == pg.K_a:
             direction2[1] += 1
-        elif event.type == pg.KEYDOWN and event.key == pg.K_d:
+        elif event.type == pg.KEYDOWN and event.key == pg.K_a:
             direction2[0] -= 1
+        elif event.type == pg.KEYDOWN and event.key == pg.K_d:
+            direction2[0] += 1
         self.p2.move(direction2)
 
     def process_end_event(self, event):
