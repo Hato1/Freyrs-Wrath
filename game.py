@@ -15,6 +15,8 @@ MENU = 1
 GAME = 2
 END = 3
 GAME_STATE = MENU
+WHITE = (255, 255, 255)
+
 
 # functions to create our resources
 def load_image(name, colorkey=None):
@@ -80,42 +82,58 @@ def main():
     clock = pg.time.Clock()
     allsprites = pg.sprite.RenderPlain(())
 
+    set_menu(background)
+
     # Main Loop
     going = True
     while going:
         clock.tick(60)
 
         if GAME_STATE == MENU:
-            menu_loop()
-        else:
+            menu_loop(background)
 
             # Handle Input Events
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    going = False
-                elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                    going = False
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                going = False
+            elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                going = False
 
-                elif event.type == pg.KEYDOWN and event.key == pg.K_f:
-                    pg.display.toggle_fullscreen()
-                elif event.type == pg.VIDEORESIZE:
-                    pg.display._resize_event(event)
+            elif event.type == pg.KEYDOWN and event.key == pg.K_f:
+                pg.display.toggle_fullscreen()
+            elif event.type == pg.VIDEORESIZE:
+                pg.display._resize_event(event)
 
-            allsprites.update()
+        allsprites.update()
 
             # Draw Everything
-            screen.blit(background, (0, 0))
-            allsprites.draw(screen)
-            pg.display.flip()
+        screen.blit(background, (0, 0))
+        allsprites.draw(screen)
+        pg.display.flip()
 
     pg.quit()
 
 def game_loop():
     pass
 
-def menu_loop():
+def menu_loop(background):
     pass
 
+def set_menu(background):
+    background.fill(WHITE)
+    write_menu_text(background)
+
+
+def write_menu_text(background):
+    font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
+    text_title = font_title.render("Name of the Game", 1, (220, 20, 60))
+    textpos_title = text_title.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 4)
+    background.blit(text_title, textpos_title)
+
+    font_team = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
+    text_team = font_team.render("Fishing Minigame Metaphor", 1, (220, 20, 60))
+    textpos_team = text_team.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 2)
+    background.blit(text_team, textpos_team)
 
 # Game Over
 
