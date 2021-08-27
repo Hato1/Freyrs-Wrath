@@ -1,6 +1,6 @@
 import os
+
 import pygame as pg
-from pygame.locals import *
 from pygame.compat import geterror
 
 if not pg.font:
@@ -16,7 +16,7 @@ GAME = 2
 END = 3
 GAME_STATE = MENU
 WHITE = (255, 255, 255)
-
+GREEN = (20, 239, 20)
 
 # functions to create our resources
 def load_image(name, colorkey=None):
@@ -50,96 +50,144 @@ def load_sound(name):
     return sound
 
 
-def main():
-    """this function is called when the program starts.
-       it initializes everything it needs, then runs in
-       a loop until the function returns."""
-    # Initialize Everything
-    pg.init()
-    screen = pg.display.set_mode((512, 288), pg.SCALED | pg.RESIZABLE)
-    pg.display.set_caption("Prototype")
+class Game:
 
-    # Create The Backgound
-    background = pg.Surface(screen.get_size())
-    background = background.convert()
-    background.fill((67, 112, 173))
+    def __init__(self, state=MENU, world1=None, world2=None):
+        self.game_state = state
+        self.state_change_processed = False
+        self.menu_surface = None  # init in setup_game
+        self.screen = None  # init in setup_game
+        self.p1 = world1
+        self.p2 = world2
+        self.setup_game()
 
-    # Put Text On The Background, Centered
-    if pg.font:
-        font = pg.font.Font(os.path.join(DATA_DIR, 'Sadtember.ttf'), 36*3)
-        text = font.render("Hostile", 1, (220, 20, 60))
-        textpos = text.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 2)
-        background.blit(text, textpos)
+    def setup_game(self):
+        pg.init()
+        self.screen = pg.display.set_mode((512, 288), pg.SCALED | pg.RESIZABLE)
+        pg.display.set_caption("Prototype")
+        self.set_state_menu()
 
-    # Add a rectangle
-    pg.draw.rect(background, (100, 0, 100), pg.Rect(30, 30, 60, 60))
+    def set_state_menu(self):
+        # Create The Menu
+        self.menu_surface = pg.Surface(self.screen.get_size())
+        self.menu_surface = self.menu_surface.convert()
+        self.menu_surface.fill(WHITE)
+        self.write_menu_text()
 
-    # Display The Background
-    screen.blit(background, (0, 0))
-    pg.display.flip()  # Flipping display is recommended practice to be sure display updates???
+    def write_menu_text(self):
+        font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
+        text_title = font_title.render("Name of the Game", 1, (220, 20, 60))
+        textpos_title = text_title.get_rect(centerx=self.menu_surface.get_width() / 2,
+                                            centery=self.menu_surface.get_height() / 4)
+        self.menu_surface.blit(text_title, textpos_title)
 
-    # Prepare Game Objects
-    clock = pg.time.Clock()
-    allsprites = pg.sprite.RenderPlain(())
+        font_team = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
+        text_team = font_team.render("Fishing Minigame Metaphor", 1, (220, 20, 60))
+        textpos_team = text_team.get_rect(centerx=self.menu_surface.get_width() / 2,
+                                          centery=self.menu_surface.get_height() / 2)
+        self.menu_surface.blit(text_team, textpos_team)
 
-    set_menu(background)
+        font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
+        text_space_to_begin = font_space_to_begin.render("Press Spacebar to Start", 1, (220, 20, 60))
+        textpos_space_to_begin = text_space_to_begin.get_rect(centerx=self.menu_surface.get_width() / 2,
+                                                              centery=self.menu_surface.get_height() / 1.2)
+        self.menu_surface.blit(text_space_to_begin, textpos_space_to_begin)
 
-    # Main Loop
-    going = True
-    while going:
-        clock.tick(60)
-
-        if GAME_STATE == MENU:
-            menu_loop(background)
-
-            # Handle Input Events
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                going = False
-            elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                going = False
-
-            elif event.type == pg.KEYDOWN and event.key == pg.K_f:
-                pg.display.toggle_fullscreen()
-            elif event.type == pg.VIDEORESIZE:
-                pg.display._resize_event(event)
-
-        allsprites.update()
-
-            # Draw Everything
-        screen.blit(background, (0, 0))
-        allsprites.draw(screen)
+    def set_state_game(self):
+        # TODO insteado f filling menu surface, change to a world
+        self.menu_surface.fill(GREEN)
         pg.display.flip()
 
-    pg.quit()
+    def set_state_end(self):
+        pass
 
-def game_loop():
-    pass
+    def main(self):
+        """this function is called when the program starts.
+           it initializes everything it needs, then runs in
+           a loop until the function returns."""
+        # Initialize Everything
 
-def menu_loop(background):
-    pass
+        # Put Text On The Background, Centered
+        if pg.font:
+            font = pg.font.Font(os.path.join(DATA_DIR, 'Sadtember.ttf'), 36 * 3)
+            text = font.render("Hostile", 1, (220, 20, 60))
+            textpos = text.get_rect(centerx=self.menu_surface.get_width() / 2, centery=self.menu_surface.get_height() / 2)
+            self.menu_surface.blit(text, textpos)
 
-def set_menu(background):
-    background.fill(WHITE)
-    write_menu_text(background)
+        # Add a rectangle
+        pg.draw.rect(self.menu_surface, (100, 0, 100), pg.Rect(30, 30, 60, 60))
 
-def write_menu_text(background):
-    font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
-    text_title = font_title.render("Name of the Game", 1, (220, 20, 60))
-    textpos_title = text_title.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 4)
-    background.blit(text_title, textpos_title)
+        # Display The Background
+        self.screen.blit(self.menu_surface, (0, 0))
+        pg.display.flip()  # Flipping display is recommended practice to be sure display updates???
 
-    font_team = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
-    text_team = font_team.render("Fishing Minigame Metaphor", 1, (220, 20, 60))
-    textpos_team = text_team.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 2)
-    background.blit(text_team, textpos_team)
+        # Prepare Game Objects
+        clock = pg.time.Clock()
+        allsprites = pg.sprite.RenderPlain(())
 
-    font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
-    text_space_to_begin = font_space_to_begin.render("Press Spacebar to Start", 1, (220, 20, 60))
-    textpos_space_to_begin = text_space_to_begin.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 1.2)
-    background.blit(text_space_to_begin, textpos_space_to_begin)
+        self.set_state_menu()
+
+        # Main Loop
+        going = True
+        while going:
+            clock.tick(60)
+            # Handle Input Events
+
+            if not self.state_change_processed:
+                self.handle_state_change()
+
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    going = False
+                elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                    going = False
+
+                elif event.type == pg.KEYDOWN and event.key == pg.K_f:
+                    pg.display.toggle_fullscreen()
+                elif event.type == pg.VIDEORESIZE:
+                    pg.display._resize_event(event)
+
+                if GAME_STATE == MENU:
+                    self.menu_loop(event)
+                elif GAME_STATE == GAME:
+                    self.game_loop(event)
+                elif GAME_STATE == END:
+                    self.end_loop(event)
+
+            allsprites.update()
+
+            # Draw Everything
+            self.screen.blit(self.menu_surface, (0, 0))
+            allsprites.draw(self.screen)
+            pg.display.flip()
+
+        pg.quit()
+
+    def menu_loop(self, event):
+        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+            self.game_state = GAME
+            self.state_changed = True
+
+    def game_loop(self, event):
+        pass
+
+    def end_loop(self, event):
+        pass
+
+
+    def handle_state_change(self):
+        if self.game_state == MENU:
+            self.set_state_menu()
+        elif self.game_state == GAME:
+            self.set_state_game()
+        elif self.game_state == END:
+            self.set_state_end()
+
+        self.state_change_processed = True
+
 
 # Game Over
 
 # this calls the 'main' function when this script is executed
-main()
+game = Game()
+game.main()
