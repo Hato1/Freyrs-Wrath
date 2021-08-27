@@ -1,8 +1,9 @@
 import pygame as pg
 import os
+
 from helper import DATA_DIR, load_image
 
-from entity import Entity
+from entity import Entity, BaseAI
 
 class World:
 
@@ -19,7 +20,7 @@ class World:
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
         #'sprite_viking', 'sprite_viking_front.png'
         player_path = os.path.join(DATA_DIR, 'Fist.bmp')
-        self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2))
+        self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), ai=BaseAI())
 
         self.entity_list = (self.player)
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
