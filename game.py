@@ -3,16 +3,13 @@ import os
 import pygame as pg
 from pygame.compat import geterror
 
-from helper import load_sound
+from helper import load_sound, DATA_DIR
 from world import World
 
 if not pg.font:
     print("Warning, fonts disabled")
 if not pg.mixer:
     print("Warning, sound disabled")
-
-MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
-DATA_DIR = os.path.join(MAIN_DIR, "data")
 
 MENU = 1
 GAME = 2
@@ -22,6 +19,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 GREEN = (20, 239, 20)
+
 
 class Game:
 

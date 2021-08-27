@@ -8,7 +8,7 @@ from helper import DATA_DIR
 
 
 class Entity(pg.sprite.Sprite):
-    def __init__(self, sprite, position lives=3, speed=5, ai=None):
+    def __init__(self, sprite, position, lives=3, speed=5, ai=None):
         """EG Entity([5.5, 7.64], ai=BaseAI())"""
         self.position = position
         self.lives = lives
