@@ -123,7 +123,6 @@ def set_menu(background):
     background.fill(WHITE)
     write_menu_text(background)
 
-
 def write_menu_text(background):
     font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
     text_title = font_title.render("Name of the Game", 1, (220, 20, 60))
@@ -134,6 +133,11 @@ def write_menu_text(background):
     text_team = font_team.render("Fishing Minigame Metaphor", 1, (220, 20, 60))
     textpos_team = text_team.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 2)
     background.blit(text_team, textpos_team)
+
+    font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
+    text_space_to_begin = font_space_to_begin.render("Press Spacebar to Start", 1, (220, 20, 60))
+    textpos_space_to_begin = text_space_to_begin.get_rect(centerx=background.get_width() / 2, centery=background.get_height() / 1.2)
+    background.blit(text_space_to_begin, textpos_space_to_begin)
 
 # Game Over
 
