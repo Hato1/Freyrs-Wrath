@@ -111,8 +111,7 @@ class Game:
             # Handle Input Events
             if not self.state_change_processed:
                 self.handle_state_change()
-            self.p1.update_world()
-            self.p2.update_world()
+
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     going = False
@@ -124,7 +123,7 @@ class Game:
                 elif event.type == pg.VIDEORESIZE:
                     pg.display._resize_event(event)
 
-                self.process_loop_event(event)
+                self.process_event(event)
 
             if self.game_state == MENU:
                 self.menu_loop()
@@ -141,7 +140,7 @@ class Game:
 
         pg.quit()
 
-    def process_loop_event(self, event):
+    def process_event(self, event):
         if self.game_state == MENU:
             self.process_menu_event(event)
         elif self.game_state == GAME:
@@ -168,7 +167,8 @@ class Game:
         pass
 
     def game_loop(self):
-        pass
+        self.p1.update_world()
+        self.p2.update_world()
 
     def end_loop(self):
         pass
