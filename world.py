@@ -33,7 +33,7 @@ class World:
         self.add_entity(coin_path, (500, 280))
         self.add_entity(coin_path, (300, 100))
 
-        self.entity_list = (self.player)
+        self.entity_list.append(self.player)
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
 
