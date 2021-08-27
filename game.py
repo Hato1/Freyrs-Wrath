@@ -142,10 +142,15 @@ class Game:
                 self.menu_loop()
             elif self.game_state == GAME:
                 self.game_loop()
+                self.p1.update_world()
+                self.p2.update_world()
+                self.set_state_game()
             elif self.game_state == END:
                 self.end_loop()
 
             allsprites.update()
+
+
 
             # Draw Everything
             allsprites.draw(self.screen)
