@@ -13,6 +13,8 @@ class World:
 
         self.dims = dims
 
+        self.entity_list = []
+
         self.world = pg.Surface(self.dims)
         self.world = self.world.convert()
         self.draw_world()
@@ -21,27 +23,37 @@ class World:
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
         #'sprite_viking', 'sprite_viking_front.png'
+
         player_path = os.path.join(DATA_DIR, 'Fist.bmp')
+        coin_path = os.path.join(DATA_DIR, 'chimp.bmp')
         self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), ai=BaseAI())
+        self.entity_list.append(self.player)
+        #spawns 5 coin entity
+        #for i in range(5):
+            #self.add_entity(coin_path, (self.dims[0]/(i+1), self.dims[1]/(i+1)))
+        self.add_entity(coin_path, (500, 280))
+        self.add_entity(coin_path, (300, 100))
 
         self.entity_list = (self.player)
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
 
+
     def update_world(self):
         self.world.fill((100, 250, 250))
-        self.money -= 1
+
         self.update_money()
         self.update_shop()
         self.player.move()
+
         self.allsprites.update()
 
 
         self.allsprites.draw(self.world)
         pg.display.flip()
 
-    def add_entity(self, sprite):
-        entity = Entity(sprite, [0, 0])
+    def add_entity(self, sprite, ai_state=None):
+        entity = Entity(sprite, [0,0], ai=ai_state)
         self.entity_list.append(entity)
 
     def get_surface(self):
@@ -68,7 +80,10 @@ class World:
 
     def move(self, vec):
         for entity in self.entity_list:
-            sprite.slide(vec)
+            entity.slide(vec)
+
+    def gen_money(self):
+        return
 
 
 #     Screen.player = Entity()
