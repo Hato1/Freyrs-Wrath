@@ -16,6 +16,7 @@ class Entity(pg.sprite.Sprite):
         self.lives = lives
         self.speed = speed
         self.ai = ai
+        self.type = type
 
     def __type__(self):
         return self.type

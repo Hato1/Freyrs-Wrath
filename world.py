@@ -1,9 +1,11 @@
+import random
+
 import pygame as pg
 import os
 
 from helper import DATA_DIR, load_image
 
-from entity import Entity, BaseAI
+from entity import Entity, BaseAI, Follow
 from shop import Shop
 
 
@@ -28,15 +30,18 @@ class World:
         # 'sprite_viking', 'sprite_viking_front.png'
         player_path = os.path.join(DATA_DIR, 'Fist.bmp')
         coin_path = os.path.join(DATA_DIR, 'chimp.bmp')
-        self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), ai=BaseAI())
-        self.entity_list.append(self.player)
-        #spawns 5 coin entity
-        #for i in range(5):
-            #self.add_entity(coin_path, (self.dims[0]/(i+1), self.dims[1]/(i+1)))
-        self.add_entity(coin_path, (self.world.get_width()/4, self.world.get_height()/4))
-        self.add_entity(coin_path, (self.world.get_width()/2, self.world.get_height()/2))
+        self.add_entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), None, 'Player')
+        self.player = self.entity_list[0]
 
-        self.entity_list.append(self.player)
+
+        #spawns 5 coin entities
+        for i in range(5):
+            self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), 'Coin')
+
+        fol = Follow()
+        self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, 'Enemy')
+        fol.update_info({'target': self.entity_list[0],'me':self.entity_list[-1]})
+
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
 
@@ -44,16 +49,17 @@ class World:
         self.world.fill((100, 250, 250))
 
         self.update_money()
-        self.update_shop()
         self.player.move()
+        self.entity_list[-1].move()
+        self.update_shop()
 
         self.allsprites.update()
 
         self.allsprites.draw(self.world)
         pg.display.flip()
 
-    def add_entity(self, sprite, pos, ai_state=None):
-        entity = Entity(sprite, pos, ai=ai_state)
+    def add_entity(self, sprite, pos, ai_state=None, name="Entity"):
+        entity = Entity(sprite, pos, ai=ai_state, type=name)
         self.entity_list.append(entity)
 
     def get_surface(self):
@@ -90,26 +96,9 @@ class World:
     def get_dir(self):
         return self.dir_dict
 
-    def gen_money(self):
-        return
+    def move_coin(self, coin):
+        pos = coin.get_position()
+        newpos = ((pos[0]-self.dims[0]) * -1, (pos[1]-self.dims[1]) * -1)
+        coin.set_position(newpos)
 
 
-#     Screen.player = Entity()
-#     Screen.entities = []
-#     Screen.money = 1337
-#     Entity class:
-# Player:
-#     Lives = 3
-#     Position (able to move)
-#
-# Enemy:
-# Lives = 1
-# Position (AI movement)
-# Controls: Enemy_ai class
-#     Shop class:
-#     Overlay displayed: True/False
-#     More enemies
-#     Faster enemies
-#
-#     Extra life
-#     Faster speed
