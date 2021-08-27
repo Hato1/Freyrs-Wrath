@@ -75,9 +75,6 @@ class Game:
         self.screen.blit(self.p2.world, (half_screen_width,0))
         pg.display.flip()
 
-    def actually_set_game_state(self):
-        pass
-
     def set_state_end(self):
         pass
 
@@ -127,12 +124,14 @@ class Game:
                 elif event.type == pg.VIDEORESIZE:
                     pg.display._resize_event(event)
 
-                if self.game_state == MENU:
-                    self.menu_loop(event)
-                elif self.game_state == GAME:
-                    self.game_loop(event)
-                elif self.game_state == END:
-                    self.end_loop(event)
+                self.process_loop_event(event)
+
+            if self.game_state == MENU:
+                self.menu_loop()
+            elif self.game_state == GAME:
+                self.game_loop()
+            elif self.game_state == END:
+                self.end_loop()
 
             allsprites.update()
 
@@ -142,7 +141,15 @@ class Game:
 
         pg.quit()
 
-    def menu_loop(self, event):
+    def process_loop_event(self, event):
+        if self.game_state == MENU:
+            self.process_menu_event(event)
+        elif self.game_state == GAME:
+            self.process_game_event(event)
+        elif self.game_state == END:
+            self.process_end_event(event)
+
+    def process_menu_event(self, event):
         self.screen.blit(self.menu_surface, (0, 0))
 
         if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == MENU:
@@ -151,10 +158,19 @@ class Game:
             button_sound.play()
             self.state_change_processed = False
 
-    def game_loop(self, event):
+    def process_game_event(self, event):
         pass
 
-    def end_loop(self, event):
+    def process_end_event(self, event):
+        pass
+
+    def menu_loop(self):
+        pass
+
+    def game_loop(self):
+        pass
+
+    def end_loop(self):
         pass
 
     def handle_state_change(self):
