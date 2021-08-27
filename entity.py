@@ -1,7 +1,8 @@
 import random
 import pygame as pg
 
-from helper import DATA_DIR
+from helper import DATA_DIR, load_image
+
 
 # To do:
 # Handle position wrapping. (helper function?)
@@ -34,7 +35,7 @@ class Entity(pg.sprite.Sprite):
 
     def move(self):
         if self.ai:
-            x, y = ai.decide_move()
+            x, y = self.ai.decide_move()
             norm = (x**2 + y**2)**0.5
             x = x / norm
             y = y / norm
