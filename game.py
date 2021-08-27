@@ -29,8 +29,11 @@ class Game:
         self.menu_surface = None  # init in setup_game
         self.screen = None  # init in setup_game
         self.setup_game()
-        self.p1 = World((200, 200))
-        self.p2 = World((200, 200))
+
+        half_screen_width = self.screen.get_size()[0] / 2
+        screen_height = self.screen.get_size()[1]
+        self.p1 = World((half_screen_width, screen_height))
+        self.p2 = World((half_screen_width, screen_height))
 
     def setup_game(self):
         pg.init()
@@ -67,11 +70,10 @@ class Game:
         self.menu_surface.blit(text_space_to_begin, textpos_space_to_begin)
 
     def set_state_game(self):
-        # TODO instead of filling menu surface, change to a world
+        half_screen_width = self.screen.get_size()[0] / 2
         self.screen.blit(self.p1.world, (0,0))
-        self.screen.blit(self.p2.world, (201,0))
+        self.screen.blit(self.p2.world, (half_screen_width,0))
         pg.display.flip()
-        print("butts")
 
     def actually_set_game_state(self):
         pass
@@ -110,10 +112,10 @@ class Game:
         while going:
             clock.tick(60)
             # Handle Input Events
-
             if not self.state_change_processed:
                 self.handle_state_change()
-
+            self.p1.update_world()
+            self.p2.update_world()
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     going = False
