@@ -1,11 +1,8 @@
 import pygame as pg
 import os
+from helper import DATA_DIR, load_image
 
 from entity import Entity
-
-MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
-DATA_DIR = os.path.join(MAIN_DIR, "data")
-
 
 class World:
 
@@ -21,12 +18,13 @@ class World:
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
 
+        player_path = os.path.join(DATA_DIR, 'Fist.bmp')
+        self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2))
 
-        self.player = Entity((self.world.get_width()/2, self.world.get_height()/2))
-
-        self.entity_list = [self.player]
-
+        self.entity_list = (self.player)
+        self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
+
 
 
 
@@ -34,13 +32,18 @@ class World:
         self.world.fill((100, 250, 250))
         self.money -= 1
         self.update_money()
+        self.player_move()
+        self.allsprites.update()
 
-        for entity in self.entity_list:
-            entity.move()
+        #for entity in self.entity_list:
+            #entity.move()
+
+        self.allsprites.draw(self.world)
+        pg.display.flip()
 
 
-    def add_entity(self):
-        entity = Entity([0,0])
+    def add_entity(self, sprite):
+        entity = Entity(sprite, [0,0])
         self.entity_list.append(entity)
 
     def get_surface(self):
