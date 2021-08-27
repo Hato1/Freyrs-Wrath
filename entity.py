@@ -6,6 +6,7 @@ import random
 
 class Entity:
     def __init__(self, position, lives=3, speed=5, ai=None):
+        """EG Entity([5.5, 7.64], ai=BaseAI())"""
         self.position = position
         self.lives = lives
         self.speed = speed
@@ -57,9 +58,3 @@ class Follow(BaseAI):
         x, y = self.info['me'].get_position()
         tx, ty = self.info['target'].get_position()
         return (tx-x, ty-y)
-
-
-ai = BaseAI()
-x = Entity([5, 5], ai=ai)
-
-print(x.move())
