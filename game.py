@@ -19,6 +19,8 @@ GAME = 2
 END = 3
 GAME_STATE = MENU
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
 GREEN = (20, 239, 20)
 
 class Game:
@@ -28,17 +30,24 @@ class Game:
         self.state_change_processed = False
         self.menu_surface = None  # init in setup_game
         self.screen = None  # init in setup_game
+        self.soundtrack = None
         self.setup_game()
-        self.p1 = World((200, 200))
-        self.p2 = World((200, 200))
+
+
+        half_screen_width = self.screen.get_size()[0] / 2
+        screen_height = self.screen.get_size()[1]
+        self.p1 = World((half_screen_width, screen_height))
+        self.p2 = World((half_screen_width, screen_height))
 
     def setup_game(self):
         pg.init()
         self.screen = pg.display.set_mode((512, 288), pg.SCALED | pg.RESIZABLE)
         pg.display.set_caption("Prototype")
         self.set_state_menu()
-        soundtrack = load_sound("Fishing song.mp3")
-        soundtrack.play(-1)
+
+        self.soundtrack = load_sound("Fishing song.mp3")
+        self.soundtrack.play(-1)
+
 
     def set_state_menu(self):
         # Create The Menu
@@ -67,14 +76,16 @@ class Game:
         self.menu_surface.blit(text_space_to_begin, textpos_space_to_begin)
 
     def set_state_game(self):
-        # TODO instead of filling menu surface, change to a world
+        half_screen_width = self.screen.get_size()[0] / 2
+        screen_height = self.screen.get_size()[1]
         self.screen.blit(self.p1.world, (0,0))
-        self.screen.blit(self.p2.world, (201,0))
-        pg.display.flip()
-        print("butts")
+        self.screen.blit(self.p2.world, (half_screen_width+1, 0))
+        divider = pg.Surface((1, screen_height))
+        divider = divider.convert()
+        divider.fill(BLACK)
+        self.screen.blit(divider, (half_screen_width, 0))
 
-    def actually_set_game_state(self):
-        pass
+        pg.display.flip()
 
     def set_state_end(self):
         pass
@@ -110,7 +121,6 @@ class Game:
         while going:
             clock.tick(60)
             # Handle Input Events
-
             if not self.state_change_processed:
                 self.handle_state_change()
 
@@ -124,13 +134,17 @@ class Game:
                     pg.display.toggle_fullscreen()
                 elif event.type == pg.VIDEORESIZE:
                     pg.display._resize_event(event)
+                elif event.type == pg.KEYDOWN and event.key == pg.K_m:
+                    self.soundtrack.stop()
 
-                if self.game_state == MENU:
-                    self.menu_loop(event)
-                elif self.game_state == GAME:
-                    self.game_loop(event)
-                elif self.game_state == END:
-                    self.end_loop(event)
+                self.process_event(event)
+
+            if self.game_state == MENU:
+                self.menu_loop()
+            elif self.game_state == GAME:
+                self.game_loop()
+            elif self.game_state == END:
+                self.end_loop()
 
             allsprites.update()
 
@@ -140,7 +154,15 @@ class Game:
 
         pg.quit()
 
-    def menu_loop(self, event):
+    def process_event(self, event):
+        if self.game_state == MENU:
+            self.process_menu_event(event)
+        elif self.game_state == GAME:
+            self.process_game_event(event)
+        elif self.game_state == END:
+            self.process_end_event(event)
+
+    def process_menu_event(self, event):
         self.screen.blit(self.menu_surface, (0, 0))
 
         if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == MENU:
@@ -149,10 +171,20 @@ class Game:
             button_sound.play()
             self.state_change_processed = False
 
-    def game_loop(self, event):
+    def process_game_event(self, event):
         pass
 
-    def end_loop(self, event):
+    def process_end_event(self, event):
+        pass
+
+    def menu_loop(self):
+        pass
+
+    def game_loop(self):
+        self.p1.update_world()
+        self.p2.update_world()
+
+    def end_loop(self):
         pass
 
     def handle_state_change(self):
