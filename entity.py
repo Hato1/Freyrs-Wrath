@@ -1,5 +1,5 @@
 import random
-import pygame
+import pygame as pg
 
 from helper import DATA_DIR
 
