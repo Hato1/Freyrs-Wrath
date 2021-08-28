@@ -8,11 +8,11 @@ from pygame.compat import geterror
 import random
 
 PLAYERCOUNT = 4
-WIN_SIZE = ((512*4)+2, (288*4)+2)
+WIN_SIZE = ((512*3)+2, (288*3)+2)
 
-WORLD_SIZE = ((512*4)//2, (288*4))
+WORLD_SIZE = ((512*3)//2, (288*3))
 if PLAYERCOUNT > 2:
-    WORLD_SIZE = ((512*4)//2, (288*4)//2)
+    WORLD_SIZE = ((512*3)//2, (288*3)//2)
 # WORLD_DIMS = (255*2, 288*2)
 
 # tilesize = 512/8 = 32
@@ -44,6 +44,10 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_back.png'), 2),
     (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_left.png'), 2),
     (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_right.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_front.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_back.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_left.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_right.png'), 2),
     (os.path.join(DATA_DIR, 'dirt.png'), 0.2),
     (os.path.join(DATA_DIR, 'sand.png'), 0.4),
     (os.path.join(DATA_DIR, 'ground.jpg'), 0.5),
@@ -56,7 +60,7 @@ for i in os.listdir(tilesets):
     if os.path.isdir(os.path.join(tilesets, i)):
         for j in os.listdir(os.path.join(tilesets, i)):
             if j.endswith('png'):
-                IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), 1/4))
+                IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), 3/16))
 LOADED_IMAGES = {}
 
 
@@ -118,7 +122,7 @@ def create_background(name):
         '        U--D    ',
         '           |    '
         ]
-    dims = (WORLD_SIZE[0]//64, WORLD_SIZE[1]//64)
+    dims = (WORLD_SIZE[0]//48, WORLD_SIZE[1]//48)
     bg = pg.Surface(WORLD_SIZE)
     for i in range(dims[0]):
         for j in range(dims[1]):
@@ -147,7 +151,7 @@ def create_background(name):
             elif roads[j][i].isdigit():
                 tile = str(18+int(roads[j][i]))
 
-            bg.blit(LOADED_IMAGES[name[0] + tile], (i*64, j*64))
+            bg.blit(LOADED_IMAGES[name[0] + tile], (i*48, j*48))
     LOADED_IMAGES.update({name: bg})
     return {"DOWN": name}
 

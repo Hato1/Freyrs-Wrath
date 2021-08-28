@@ -10,8 +10,8 @@ from entity import Entity
 from shop import Shop
 
 CHARACTERS = {'VIKING': {'player_sprite': 'sprite_viking', 'enemy_sprite': 'sprite_demon'},
-              'PRIEST': {'player_sprite': 'sprite_priest', 'enemy_sprite': 'sprite_demon'},  # Farmer
-              'FARMER': {'player_sprite': 'sprite_viking', 'enemy_sprite': 'sprite_viking'},
+              'PRIEST': {'player_sprite': 'sprite_priest', 'enemy_sprite': 'sprite_farmer'},
+              'FARMER': {'player_sprite': 'sprite_farmer', 'enemy_sprite': 'sprite_viking'},
               'DEMON': {'player_sprite': 'sprite_demon', 'enemy_sprite': 'sprite_priest'}}
 
 
