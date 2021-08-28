@@ -197,11 +197,13 @@ class Game:
         elif event.type == pg.KEYUP and event.key in P2DIRS:
             self.p2.set_dir(P2DIRS[event.key], 0)
 
+        #shop open/close keys
         if event.type == pg.KEYDOWN and event.key == pg.K_q:
             self.p1.shop.toggle_open()
         elif event.type == pg.KEYDOWN and event.key == pg.K_p:
             self.p2.shop.toggle_open()
 
+        #p1 using powers
         if event.type == pg.KEYDOWN and event.key == pg.K_f:
             if self.p1.pay_for_power("more"):
                 self.p2.activate_power("more")
@@ -209,8 +211,19 @@ class Game:
             if self.p1.pay_for_power("speed"):
                 self.p2.activate_power("speed")
         elif event.type == pg.KEYDOWN and event.key == pg.K_h:
-            if self.p1.pay_for_power("health"):
-                self.p1.activate_power("health")
+            if self.p1.pay_for_power("heal"):
+                self.p1.activate_power("heal")
+
+        #p2 using powers
+        if event.type == pg.KEYDOWN and event.key == pg.K_k:
+            if self.p2.pay_for_power("more"):
+                self.p1.activate_power("more")
+        elif event.type == pg.KEYDOWN and event.key == pg.K_l:
+            if self.p2.pay_for_power("speed"):
+                self.p1.activate_power("speed")
+        elif event.type == pg.KEYDOWN and event.key == pg.K_SEMICOLON:
+            if self.p2.pay_for_power("heal"):
+                self.p2.activate_power("heal")
 
     def process_end_event(self, event):
         pass

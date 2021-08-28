@@ -200,7 +200,7 @@ class World:
             self.money -= 2
             return True
 
-        elif power_name == "heal" and self.money >= 2:
+        elif power_name == "heal" and self.money >= 2 and self.player.max_lives != self.player.lives:
             self.money -= 2
             return True
 

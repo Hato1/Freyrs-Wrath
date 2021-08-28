@@ -18,6 +18,7 @@ class Entity(pg.sprite.Sprite):
         self.position[1] -= self.image.get_height() / 2
         # self.rect.center = position
         self.lives = lives
+        self.max_lives = lives
         self.speed = speed
         self.ai = ai
         self.type = type
