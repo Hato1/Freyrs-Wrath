@@ -19,7 +19,6 @@ class World:
         # Delete me self.dir_dict = {pg.K_w: 0, pg.K_s: 0, pg.K_a: 0, pg.K_d: 0}
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
 
-        self.entity_list = []
         self.coin_list = []
         self.enemy_list = []
         self.allsprites = pg.sprite.RenderPlain()
@@ -32,9 +31,6 @@ class World:
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
-
-
-
 
         sand_sprite_dict = {"DOWN" : 'sand'}
         self.experimental_background = Entity(sand_sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2))
@@ -60,8 +56,6 @@ class World:
     def update_world(self):
         self.world.fill((100, 250, 250))
         self.experimental_background.draw(self.world, self.dims)
-
-        self.update_money()
         self.player.move()
         for sprite in self.allsprites:
             sprite.move()
@@ -71,6 +65,7 @@ class World:
             sprite.draw(self.world, self.dims)
 
         self.update_shop()
+        self.update_money()
         self.world.blit(self.player.get_sprite(), self.player.get_position())
         pg.display.flip()
 
@@ -146,11 +141,11 @@ class World:
             self.coin_list.append(coin)
 
 
-    def gen_enemy(self):
+    def gen_enemy(self, speed=0.5):
         enemy_sprite_dict = {"DOWN": "sprite_demon_front", "UP": "sprite_demon_back", "LEFT": "sprite_demon_left", "RIGHT": "sprite_demon_right"}
         enemy = self.add_entity(enemy_sprite_dict,
                                 ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow',
-                                speed=0.5, name='Enemy')
+                                speed=speed, name='Enemy')
         enemy.update_info({'target': self.player, 'me': enemy})
         self.enemy_list.append(enemy)
 
