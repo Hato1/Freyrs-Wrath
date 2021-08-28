@@ -5,7 +5,7 @@ from pygame.compat import geterror
 from pygame.locals import *
 
 import helper
-from helper import load_sound, DATA_DIR, load_all_images
+from helper import load_sound, DATA_DIR, load_all_images, WIN_SIZE
 from world import World
 
 if not pg.font:
@@ -26,9 +26,12 @@ PLAYER_1_NAME = "VIKING"
 PLAYER_2_NAME = "MONK"
 PLAYER_1_SPRITE = "sprite_priest"
 PLAYER_2_SPRITE = "sprite_viking"
+P1DIRSC = {0: 'UP'}
 P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT'}
 P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT'}
-
+pg.init()
+js = pg.joystick.Joystick(0)
+js.init()
 
 class Game:
 
@@ -50,8 +53,7 @@ class Game:
             # self.players.append(World(dims=helper.WORLD_SIZE, player_sprite=sprites[i]))
 
     def setup_game(self):
-        pg.init()
-        self.screen = pg.display.set_mode(helper.WIN_SIZE, pg.SCALED | pg.RESIZABLE)
+        self.screen = pg.display.set_mode(WIN_SIZE, pg.SCALED | pg.RESIZABLE)
         pg.display.set_caption(GAME_NAME)
         load_all_images()
         self.draw_menu_background()
@@ -209,12 +211,26 @@ class Game:
             self.game_state = GAME
             button_sound = load_sound("button_sound.mp3")
             button_sound.play()
+        elif event.type == pg.JOYBUTTONDOWN and event.button == 0 and self.game_state == MENU:
+            self.game_state = GAME
+            button_sound = load_sound("button_sound.mp3")
+            button_sound.play()
 
     def process_game_event(self, event):
         if event.type == pg.KEYDOWN and event.key in P1DIRS:
             self.players[0].set_dir(P1DIRS[event.key], 1)
         elif event.type == pg.KEYUP and event.key in P1DIRS:
             self.players[0].set_dir(P1DIRS[event.key], 0)
+
+        #controller support for player 1
+        if event.type == pg.JOYHATMOTION and js.get_instance_id() == 0:
+            self.players[0].set_dir(P1DIRSC[event.hat], event.value)
+        if event.type == pg.JOYAXISMOTION and js.get_instance_id() == 0:
+            if abs(event.value) > 0.3:
+                self.players[0].set_dir(event.axis, event.value)
+            else:
+                self.players[0].set_dir(event.axis, 0.0)
+
 
         if event.type == pg.KEYDOWN and event.key in P2DIRS:
             self.players[1].set_dir(P2DIRS[event.key], 1)
@@ -227,7 +243,12 @@ class Game:
         elif event.type == pg.KEYDOWN and event.key == pg.K_p:
             self.players[1].shop.toggle_open()
 
-        #p1 using powers
+        #players[0] shop controller
+        if event.type == pg.JOYBUTTONDOWN and js.get_instance_id() == 0 and event.button == 4:
+            self.players[0].shop.toggle_open()
+
+
+        #players[0] using powers
         if event.type == pg.KEYDOWN and event.key == pg.K_f:
             if self.players[0].pay_for_power("more"):
                 self.players[1].activate_power("more")
@@ -238,7 +259,19 @@ class Game:
             if self.players[0].pay_for_power("heal"):
                 self.players[0].activate_power("heal")
 
-        #p2 using powers
+
+    #players[0] powers with controller
+        if event.type == pg.JOYBUTTONDOWN and js.get_instance_id() == 0 and event.button == 0:
+            if self.players[0].pay_for_power("more"):
+                    self.players[1].activate_power("more")
+        elif event.type == pg.JOYBUTTONDOWN and js.get_instance_id() == 0 and event.button == 1:
+            if self.players[0].pay_for_power("speed"):
+                self.players[1].activate_power("speed")
+        elif event.type == pg.JOYBUTTONDOWN and js.get_instance_id() == 0 and event.button == 2:
+            if self.players[0].pay_for_power("heal"):
+                self.players[0].activate_power("heal")
+
+        #players[1] using powers
         if event.type == pg.KEYDOWN and event.key == pg.K_k:
             if self.players[1].pay_for_power("more"):
                 self.players[0].activate_power("more")
