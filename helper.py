@@ -11,7 +11,12 @@ IMAGE_PATHS = [
     os.path.join(DATA_DIR, 'sprite_shop/shop_ability_k.png'),
     os.path.join(DATA_DIR, 'sprite_shop/shop_ability_l.png'),
     os.path.join(DATA_DIR, 'sprite_shop/shop_ability_;.png'),
-    os.path.join(DATA_DIR, 'sprite_shop/shop_icon_q.png')
+    os.path.join(DATA_DIR, 'sprite_shop/shop_icon_q.png'),
+    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_front.png'),
+    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_back.png'),
+    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_left.png'),
+    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_right.png'),
+    os.path.join(DATA_DIR, 'sprite_coin/sprite_coin.png')
 ]
 LOADED_IMAGES = {}
 
