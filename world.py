@@ -1,6 +1,7 @@
 import random
 
 import pygame as pg
+from pygame.locals import *
 import os
 
 from helper import DATA_DIR, load_image
@@ -28,20 +29,19 @@ class World:
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
         # 'sprite_viking', 'sprite_viking_front.png'
-        player_path = os.path.join(DATA_DIR, 'Fist.bmp')
+        player_path = os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_front.png')
         coin_path = os.path.join(DATA_DIR, 'chimp.bmp')
-
-        self.add_entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), None, name='Player')
-        self.player = self.entity_list[0]
-
+        # self.add_entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), None, name='Player')
+        self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), type='Player')
+        # self.player = self.entity_list[0]
 
         #spawns 5 coin entities
         for i in range(5):
             self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), name='Coin')
 
         fol = Follow()
-        self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, name='Enemy')
-        fol.update_info({'target': self.entity_list[0],'me':self.entity_list[-1]})
+        self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, speed=1, name='Enemy')
+        fol.update_info({'target': self.player,'me':self.entity_list[-1]})
 
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
@@ -59,11 +59,12 @@ class World:
 
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
+        self.world.blit(self.player.get_sprite(), self.player.get_rect())
         #self.allsprites.draw(self.world)
         pg.display.flip()
 
-    def add_entity(self, sprite, pos, ai_state=None, name="Entity"):
-        entity = Entity(sprite, pos, ai=ai_state, type=name)
+    def add_entity(self, sprite, pos, ai_state=None, name="Entity", speed=5):
+        entity = Entity(sprite, pos, ai=ai_state, type=name, speed=speed)
         self.entity_list.append(entity)
 
     def get_surface(self):
@@ -92,6 +93,11 @@ class World:
         for entity in self.entity_list:
             x = self.dir_dict['LEFT'] - self.dir_dict['RIGHT']
             y = self.dir_dict['UP'] - self.dir_dict['DOWN']
+            norm = (x**2 + y**2)**0.5
+            if norm == 0:
+                return
+            x = x / norm
+            y = y / norm
             entity.slide([x, y])
 
     def set_dir(self, key, val):
