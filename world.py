@@ -105,9 +105,9 @@ class World:
 
     def update_lives(self):
         full_heart = LOADED_IMAGES["sprite_heart"][0]
-        #full_heart = pg.transform.scale(full_heart, (60, 60))
+        # full_heart = pg.transform.scale(full_heart, (60, 60))
         empty_heart = LOADED_IMAGES["sprite_heart_empty"][0]
-        #empty_heart = pg.transform.scale(empty_heart, (60, 60))
+        # empty_heart = pg.transform.scale(empty_heart, (60, 60))
 
         heart_positions = [self.world.get_width() / 2 + full_heart.get_rect().width * -1.5,
                            self.world.get_width() / 2 + full_heart.get_rect().width * -0.5,
@@ -118,11 +118,9 @@ class World:
         for heart_pos in heart_positions:
             if self.player.lives > counter:
                 self.world.blit(full_heart, [int(heart_pos), 0])
-                #print(counter)
             else:
                 self.world.blit(empty_heart, [int(heart_pos), 0])
             counter += 1
-        print(counter)
 
     def check_alive(self):
         return self.player.is_alive()
