@@ -12,7 +12,7 @@ if not pg.font:
 if not pg.mixer:
     print("Warning, sound disabled")
 
-WIN_SIZE = (512, 288)
+WIN_SIZE = (512*2, 288*2)
 MENU = 1
 GAME = 2
 END = 3

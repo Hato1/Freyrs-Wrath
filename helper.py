@@ -32,13 +32,13 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_right.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 1),
     (os.path.join(DATA_DIR, 'dirt.png'), 0.2),
-    (os.path.join(DATA_DIR, 'sand.png'), 0.2),
+    (os.path.join(DATA_DIR, 'sand.png'), 0.4),
     (os.path.join(DATA_DIR, 'ground.jpg'), 0.5),
-    (os.path.join(DATA_DIR, 'sprite_heart.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 1)
+    (os.path.join(DATA_DIR, 'sprite_heart.png'), 0.125),
+    (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 0.125)
 ]
 LOADED_IMAGES = {}
-WORLD_DIMS = (255, 288)
+WORLD_DIMS = (255*2, 288*2)
 
 
 def load_image(name, colorkey=(0, 0, 0, 255)):
@@ -84,20 +84,21 @@ def load_all_images():
 
 
 def make_images():
-    brown = np.zeros((16, 18, 3))
-    brown[:] = (158, 119, 119)
-    # random boolean mask for which values will be changed
-    mask = np.random.randint(0, 5, size=(16, 8, 3))
+    pass
+    #brown = np.zeros((16, 18, 3))
+    #brown[:] = (158, 119, 119)
+    ## random boolean mask for which values will be changed
+    #mask = np.random.randint(0, 5, size=(16, 8, 3))
 
-    # random matrix the same shape of your data
-    # r = np.random.rand(*x.shape)*np.max(x)
-    dark = np.zeros((16, 18, 3))
-    dark[:] = (111, 76, 91)
-    # dark[] = (255, 255, 255)
+    ## random matrix the same shape of your data
+    ## r = np.random.rand(*x.shape)*np.max(x)
+    #dark = np.zeros((16, 18, 3))
+    #dark[:] = (111, 76, 91)
+    ## dark[] = (255, 255, 255)
 
-    # use your mask to replace values in your input array
-    brown[mask] = dark[mask]
+    ## use your mask to replace values in your input array
+    #brown[mask] = dark[mask]
 
-    brown = pg.surfarray.make_surface(brown)
-    brown = pg.transform.scale(brown, (256, 288))
-    LOADED_IMAGES.update({'background': (brown, brown)})
+    #brown = pg.surfarray.make_surface(brown)
+    #brown = pg.transform.scale(brown, (256, 288))
+    #LOADED_IMAGES.update({'background': (brown, brown)})

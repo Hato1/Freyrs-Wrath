@@ -103,28 +103,18 @@ class Entity(pg.sprite.Sprite):
         self.control = new_scheme
 
     def check_collision(self, object):
-        # entity_L = self.position[0] + self.get_height() * 0.2
-        # entity_T = self.position[1] + self.get_width() * 0.4
-        # entity_B = self.position[1] + self.get_height() * 0.8
-        # entity_R = self.position[0] + self.get_width() * 0.6
-
-        entity_C = [self.position[0] + self.get_width()/2, self.position[1] + self.get_height()/2]
+        """Fails if object completely encompases me"""
+        my_pos = [self.position[0] + self.get_width()/2, self.position[1] + self.get_height()/2]
 
         object_pos = object.get_position()
-        object_L = object_pos[0]
-        object_T = object_pos[1]
-        object_B = object_pos[1] + object.get_height()
-        object_R = object_pos[0] + object.get_width()
+        left = object_pos[0]
+        top = object_pos[1]
+        bottom = object_pos[1] + object.get_height()
+        right = object_pos[0] + object.get_width()
 
-        # if not(object_R <= entity_L or object_L >= entity_R):
-        #     if not(object_B <= entity_T or object_T >= entity_B):
-        #         return True
-        if object_T <= entity_C[1] <= object_B:
-            if object_L <= entity_C[0] <= object_R:
+        if top <= my_pos[1] <= bottom:
+            if left <= my_pos[0] <= right:
                 return True
-
-
-
 
     def is_alive(self):
         return self.lives > 0

@@ -14,7 +14,6 @@ class World:
     def __init__(self, dims, player_sprite):
 
         self.dims = dims
-        print(dims)
 
         # Delete me self.dir_dict = {pg.K_w: 0, pg.K_s: 0, pg.K_a: 0, pg.K_d: 0}
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
@@ -106,21 +105,24 @@ class World:
 
     def update_lives(self):
         full_heart = LOADED_IMAGES["sprite_heart"][0]
-        full_heart = pg.transform.scale(full_heart, (30, 30))
+        #full_heart = pg.transform.scale(full_heart, (60, 60))
         empty_heart = LOADED_IMAGES["sprite_heart_empty"][0]
-        empty_heart = pg.transform.scale(empty_heart, (30, 30))
+        #empty_heart = pg.transform.scale(empty_heart, (60, 60))
 
-        heart_positions = [(self.world.get_width() / 3, 0),
-                           (self.world.get_width() / 3 + full_heart.get_rect().width, 0),
-                           (self.world.get_width() / 3 + full_heart.get_rect().width * 2, 0)]
+        heart_positions = [self.world.get_width() / 2 + full_heart.get_rect().width * -1.5,
+                           self.world.get_width() / 2 + full_heart.get_rect().width * -0.5,
+                           self.world.get_width() / 2 + full_heart.get_rect().width * 0.5]
 
         counter = 0
+        print(len(heart_positions))
         for heart_pos in heart_positions:
             if self.player.lives > counter:
-                self.world.blit(full_heart, heart_pos)
+                self.world.blit(full_heart, [int(heart_pos), 0])
+                #print(counter)
             else:
-                self.world.blit(empty_heart, heart_pos)
+                self.world.blit(empty_heart, [int(heart_pos), 0])
             counter += 1
+        print(counter)
 
     def check_alive(self):
         return self.player.is_alive()
