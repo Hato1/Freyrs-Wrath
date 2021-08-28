@@ -4,7 +4,7 @@ import pygame as pg
 from pygame.locals import *
 import os
 
-from helper import DATA_DIR, load_image
+from helper import DATA_DIR, load_image, LOADED_IMAGES
 
 from entity import Entity, BaseAI, Follow
 from shop import Shop
@@ -28,19 +28,16 @@ class World:
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
-        # 'sprite_viking', 'sprite_viking_front.png'
-        player_path = os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_front.png')
-        coin_path = os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png')
         # self.add_entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), None, name='Player')
-        self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), type='Player')
+        self.player = Entity(player_sprite, (self.world.get_width()/2, self.world.get_height()/2), type='Player')
         # self.player = self.entity_list[0]
 
         #spawns 5 coin entities
         for i in range(5):
-            self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), name='Coin')
+            self.add_entity("sprite_coin", ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), name='Coin')
 
         fol = Follow()
-        enemy = self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, speed=0.5, name='Enemy')
+        enemy = self.add_entity("sprite_coin", ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, speed=0.5, name='Enemy')
         fol.update_info({'target': self.player, 'me': enemy})
 
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)

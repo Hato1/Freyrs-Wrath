@@ -1,7 +1,7 @@
 import random
 import pygame as pg
 
-from helper import DATA_DIR, load_image
+from helper import DATA_DIR, load_image, LOADED_IMAGES
 
 
 # To do:
@@ -11,7 +11,7 @@ class Entity(pg.sprite.Sprite):
     def __init__(self, sprite, position, lives=3, speed=5, ai=None, type="Entity"):
         """EG Entity([5.5, 7.64], ai=BaseAI())"""
         pg.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image(sprite, -1)
+        self.image, self.rect = LOADED_IMAGES[sprite]
         self.position = list(position)
         # self.rect.center = position
         self.lives = lives
