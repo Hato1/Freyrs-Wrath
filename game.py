@@ -12,6 +12,7 @@ if not pg.font:
 if not pg.mixer:
     print("Warning, sound disabled")
 
+WIN_SIZE = (512, 288)
 MENU = 1
 GAME = 2
 END = 3
@@ -45,7 +46,7 @@ class Game:
 
     def setup_game(self):
         pg.init()
-        self.screen = pg.display.set_mode((512, 288), pg.SCALED | pg.RESIZABLE)
+        self.screen = pg.display.set_mode(WIN_SIZE, pg.SCALED | pg.RESIZABLE)
         pg.display.set_caption(GAME_NAME)
         load_all_images()
         self.draw_menu_background()
