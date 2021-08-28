@@ -51,7 +51,7 @@ class Game:
         load_all_images()
         self.draw_menu_background()
         self.soundtrack = load_sound("Fishing song.mp3")
-        # self.soundtrack.play(-1)
+        self.soundtrack.play(-1)
 
     def draw_menu_background(self):
         # Create The Menu
