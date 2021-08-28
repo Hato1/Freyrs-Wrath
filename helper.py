@@ -81,6 +81,21 @@ def load_all_images():
 
 
 def make_images():
-    striped = np.zeros((128, 128, 3))
-    striped[:] = (255, 0, 0)
-    striped[:, ::3] = (0, 255, 255)
+    brown = np.zeros((16, 18, 3))
+    brown[:] = (158, 119, 119)
+    # random boolean mask for which values will be changed
+    mask = np.random.randint(0, 5, size=(16, 8, 3))
+
+    # random matrix the same shape of your data
+    # r = np.random.rand(*x.shape)*np.max(x)
+    dark = np.zeros((16, 18, 3))
+    dark[:] = (111, 76, 91)
+    # dark[] = (255, 255, 255)
+    print(mask)
+
+    # use your mask to replace values in your input array
+    brown[mask] = dark[mask]
+
+    brown = pg.surfarray.make_surface(brown)
+    brown = pg.transform.scale(brown, (256, 288))
+    LOADED_IMAGES.update({'background': (brown, brown)})
