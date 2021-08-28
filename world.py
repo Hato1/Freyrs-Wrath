@@ -32,10 +32,12 @@ class World:
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
 
         sand_sprite_dict = {"DOWN": 'sand'}
-        self.experimental_background = Entity(sand_sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2))
+        self.experimental_background = Entity(sand_sprite_dict,
+                                              (self.world.get_width() / 2, self.world.get_height() / 2))
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
-        self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player')
+        self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
+                             lives=3)
         self.gen_enemy()
         # spawns 5 coin entities
         for i in range(5):
@@ -61,8 +63,7 @@ class World:
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
 
-        self.update_shop()
-        self.update_money()
+        self.update_gui()
         self.world.blit(self.player.get_sprite(), self.player.get_position())
         pg.display.flip()
 
@@ -84,6 +85,11 @@ class World:
         #     self.player.check_collision()
         #     self.player.lives -= 1
 
+    def update_gui(self):
+        self.update_lives()
+        self.update_shop()
+        self.update_money()
+
     def update_money(self):
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
         textpos_money = self.text_money.get_rect(topright=((self.world.get_width()), 0))
@@ -93,6 +99,24 @@ class World:
         self.shop.draw_shop()
 
         self.world.blit(self.shop.shop_surface, (0, 0))
+
+    def update_lives(self):
+        full_heart = LOADED_IMAGES["sprite_heart"][0]
+        full_heart = pg.transform.scale(full_heart, (30, 30))
+        empty_heart = LOADED_IMAGES["sprite_heart_empty"][0]
+        empty_heart = pg.transform.scale(empty_heart, (30, 30))
+
+        heart_positions = [(self.world.get_width() / 3, 0),
+                           (self.world.get_width() / 3 + full_heart.get_rect().width, 0),
+                           (self.world.get_width() / 3 + full_heart.get_rect().width * 2, 0)]
+
+        counter = 0
+        for heart_pos in heart_positions:
+            if self.player.lives > counter:
+                self.world.blit(full_heart, heart_pos)
+            else:
+                self.world.blit(empty_heart, heart_pos)
+            counter += 1
 
     def check_alive(self):
         return self.player.is_alive()
@@ -125,7 +149,6 @@ class World:
         else:
             entity.set_position((1, (random.randint(1, self.dims[1]))))
 
-
     def gen_coin(self):
         coin_sprite_dict = {"DOWN": "sprite_coin"}
         side = random.randint(0, 3)
@@ -142,9 +165,9 @@ class World:
             coin = self.add_entity(coin_sprite_dict, (1, (random.randint(1, self.dims[1]))), name='Coin')
             self.coin_list.append(coin)
 
-
     def gen_enemy(self, speed=0.5):
-        enemy_sprite_dict = {"DOWN": "sprite_demon_front", "UP": "sprite_demon_back", "LEFT": "sprite_demon_left", "RIGHT": "sprite_demon_right"}
+        enemy_sprite_dict = {"DOWN": "sprite_demon_front", "UP": "sprite_demon_back", "LEFT": "sprite_demon_left",
+                             "RIGHT": "sprite_demon_right"}
         enemy = self.add_entity(enemy_sprite_dict,
                                 ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow',
                                 speed=speed, name='Enemy')
@@ -154,7 +177,34 @@ class World:
     def set_dir(self, key, val):
         self.dir_dict[key] = val
 
-
     def get_dir(self):
         return self.dir_dict
 
+    def activate_power(self, power_name):
+        if power_name == "speed":
+            for enemy in self.enemy_list:
+                enemy.speed = enemy.speed * 2
+
+        elif power_name == "more":
+            self.gen_enemy()
+
+        elif power_name == "heal":
+            self.player.lives += 1
+
+    def pay_for_power(self, power_name):
+        if not self.shop.open:
+            return False
+
+        if power_name == "speed" and self.money >= 2:
+            self.money -= 2
+            return True
+
+        elif power_name == "more" and self.money >= 2:
+            self.money -= 2
+            return True
+
+        elif power_name == "heal" and self.money >= 2:
+            self.money -= 2
+            return True
+
+        return False

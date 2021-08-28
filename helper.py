@@ -1,5 +1,8 @@
 import os
 import pygame as pg
+from pygame.locals import *
+import pygame.surfarray as surfarray
+import numpy as np
 from pygame.compat import geterror
 
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
@@ -31,6 +34,8 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'dirt.png'), 0.2),
     (os.path.join(DATA_DIR, 'sand.png'), 0.2),
     (os.path.join(DATA_DIR, 'ground.jpg'), 0.5),
+    (os.path.join(DATA_DIR, 'sprite_heart.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 1)
 ]
 LOADED_IMAGES = {}
 
@@ -74,8 +79,25 @@ def load_all_images():
         dims = (int(img[0].get_height()*scale), int(img[0].get_width()*scale))
         img = (pg.transform.scale(img[0], dims).convert(), img[1])
         LOADED_IMAGES.update({image_name: img})
-    #make_images()
+    make_images()
 
 
-# def make_images():
-#     x = LOADED_IMAGES['dirt']
+def make_images():
+    brown = np.zeros((16, 18, 3))
+    brown[:] = (158, 119, 119)
+    # random boolean mask for which values will be changed
+    mask = np.random.randint(0, 5, size=(16, 8, 3))
+
+    # random matrix the same shape of your data
+    # r = np.random.rand(*x.shape)*np.max(x)
+    dark = np.zeros((16, 18, 3))
+    dark[:] = (111, 76, 91)
+    # dark[] = (255, 255, 255)
+    print(mask)
+
+    # use your mask to replace values in your input array
+    brown[mask] = dark[mask]
+
+    brown = pg.surfarray.make_surface(brown)
+    brown = pg.transform.scale(brown, (256, 288))
+    LOADED_IMAGES.update({'background': (brown, brown)})
