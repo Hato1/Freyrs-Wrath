@@ -13,6 +13,7 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_back.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_right.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_left.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_front.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_icon_p.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_f.png'), 1),
@@ -68,8 +69,6 @@ def load_sound(name):
 def load_all_images():
     for image_path, scale in IMAGE_PATHS:
         image_name = os.path.basename(image_path).split('.')[0]
-        # image_name = image_path.split('\\')[-1]
-        # image_name = image_name.split('.')[0]
         img = load_image(image_path, -1)
         dims = (int(img[0].get_height()*scale), int(img[0].get_width()*scale))
         img = (pg.transform.scale(img[0], dims).convert(), img[1])

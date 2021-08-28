@@ -89,6 +89,9 @@ class Entity(pg.sprite.Sprite):
     def set_rect(self, rect):
         self.position = rect
 
+    def set_sprite(self, sprite):
+        self.image = sprite
+
     def get_position(self):
         return self.position
 

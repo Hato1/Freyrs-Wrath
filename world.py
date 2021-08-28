@@ -20,12 +20,15 @@ class World:
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
 
         self.entity_list = []
+        self.coin_list = []
+        self.enemy_list = []
+
         self.world = pg.Surface(self.dims)
         self.world = self.world.convert()
         self.draw_world()
         self.shop = Shop()
         self.money = 100
-        self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
+        self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
         sand_sprite_dict = {"DOWN" : 'sand'}
         self.experimental_background = Entity(sand_sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2))
@@ -59,9 +62,9 @@ class World:
             entity.move()
 
         self.allsprites.update()
-
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
+
         self.update_shop()
         self.world.blit(self.player.get_sprite(), self.player.get_position())
         pg.display.flip()
@@ -80,8 +83,7 @@ class World:
     def update_money(self):
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
 
-        textpos_money = self.text_money.get_rect(centerx=self.world.get_width() / 2,
-                                                 centery=self.world.get_height() / 4)
+        textpos_money = self.text_money.get_rect(topright=((self.world.get_width()), 0))
 
         self.world.blit(self.text_money, textpos_money)
 
@@ -106,17 +108,38 @@ class World:
             entity.slide([x, y])
         self.experimental_background.slide([x, y])
 
+    def reset_coin(self, coin):
+        side = random.randint(0,3)
+        if side == 0:
+            coin.set_position((random.randint(1, self.dims[0])), 1)
+
+        elif side == 1:
+            coin.set_position((self.dims[0], (random.randint(1, self.dims[1]))))
+
+        elif side == 2:
+            coin.set_position(((random.randint(1, self.dims[0])), self.dims[1]))
+
+        else:
+            coin.set_position((1, (random.randint(1, self.dims[1]))))
+
+
+
+
     def gen_coin(self):
         coin_sprite_dict = {"DOWN": "sprite_coin"}
         side = random.randint(0, 3)
         if side == 0:
-            self.add_entity(coin_sprite_dict, ((random.randint(1, self.dims[0])), 1), name='Coin')
+            coin = self.add_entity(coin_sprite_dict, ((random.randint(1, self.dims[0])), 1), name='Coin')
+            self.coin_list.append(coin)
         elif side == 1:
-            self.add_entity(coin_sprite_dict, (self.dims[0], (random.randint(1, self.dims[1]))), name='Coin')
+            coin = self.add_entity(coin_sprite_dict, (self.dims[0], (random.randint(1, self.dims[1]))), name='Coin')
+            self.coin_list.append(coin)
         elif side == 2:
-            self.add_entity(coin_sprite_dict, ((random.randint(1, self.dims[0])), self.dims[1]), name='Coin')
+            coin = self.add_entity(coin_sprite_dict, ((random.randint(1, self.dims[0])), self.dims[1]), name='Coin')
+            self.coin_list.append(coin)
         else:
-            self.add_entity(coin_sprite_dict, (1, (random.randint(1, self.dims[1]))), name='Coin')
+            coin = self.add_entity(coin_sprite_dict, (1, (random.randint(1, self.dims[1]))), name='Coin')
+            self.coin_list.append(coin)
 
     def gen_enemy(self):
         coin_sprite_dict = {"DOWN": "sprite_coin"}
@@ -124,6 +147,7 @@ class World:
                                 ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow',
                                 speed=0.5, name='Enemy')
         enemy.update_info({'target': self.player, 'me': enemy})
+        self.enemy_list.append(enemy)
 
     def set_dir(self, key, val):
         self.dir_dict[key] = val
