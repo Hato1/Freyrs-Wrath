@@ -203,8 +203,8 @@ class Game:
 
     def game_loop(self):
         self.p1.move()
-        self.p1.update_world()
         self.p2.move()
+        self.p1.update_world()
         self.p2.update_world()
         self.draw_game_background()
 
