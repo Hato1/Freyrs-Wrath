@@ -16,6 +16,10 @@ IMAGE_PATHS = [
     os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_back.png'),
     os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_left.png'),
     os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_right.png'),
+    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_front.png'),
+    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_back.png'),
+    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_left.png'),
+    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_right.png'),
     os.path.join(DATA_DIR, 'sprite_coin/sprite_coin.png')
 ]
 LOADED_IMAGES = {}
