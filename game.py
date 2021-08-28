@@ -33,6 +33,7 @@ pg.init()
 js = pg.joystick.Joystick(0)
 js.init()
 
+
 class Game:
 
     def __init__(self, state=MENU):
@@ -96,6 +97,11 @@ class Game:
         half_screen_height = self.screen.get_size()[1] / 2
         screen_height = self.screen.get_size()[1]
         screen_width = self.screen.get_size()[0]
+
+        #if len(self.players) == 2:
+        #    for i in self.players:
+        #        self.screen.blit(player.world, (posx, posy))
+
         for i, player in enumerate(self.players):
             if i % 2 == 0:
                 posx = 0
