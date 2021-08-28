@@ -34,7 +34,8 @@ class World:
 
         # spawns 5 coin entities
         for i in range(5):
-            self.add_entity("sprite_coin", ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), name='Coin')
+            self.gen_coin()
+
 
         enemy = self.add_entity("sprite_coin", ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow', speed=0.5, name='Enemy')
         enemy.update_info({'target': self.player, 'me': enemy})
@@ -103,7 +104,15 @@ class World:
     def get_dir(self):
         return self.dir_dict
 
-    def move_coin(self, coin):
-        pos = coin.get_position()
-        newpos = ((pos[0]-self.dims[0]) * -1, (pos[1]-self.dims[1]) * -1)
-        coin.set_position(newpos)
+    def gen_coin(self):
+        coin_path = "sprite_coin"
+        side = random.randint(0,3)
+        if side == 0:
+            self.add_entity(coin_path, ((random.randint(1, self.dims[0])), 1), name='Coin')
+        elif side == 1:
+            self.add_entity(coin_path, (self.dims[0], (random.randint(1, self.dims[1]))), name='Coin')
+        elif side == 2:
+            self.add_entity(coin_path, ((random.randint(1, self.dims[0])), self.dims[0]), name='Coin')
+        else:
+            self.add_entity(coin_path, (1, (random.randint(1, self.dims[1]))), name='Coin')
+

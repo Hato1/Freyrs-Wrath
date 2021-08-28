@@ -5,6 +5,16 @@ from pygame.compat import geterror
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
 DATA_DIR = os.path.join(MAIN_DIR, "data")
 IMAGE_PATHS = [
+    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_front.png'),
+    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_back.png'),
+    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_right.png'),
+    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_left.png'),
+    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_front.png'),
+    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_back.png'),
+    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_right.png'),
+    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_left.png'),
+    os.path.join(DATA_DIR, 'sprite_coin/sprite_coin.png'),
+    os.path.join(DATA_DIR, 'sprite_shop/shop_icon_p.png'),
     os.path.join(DATA_DIR, 'sprite_shop/shop_ability_f.png'),
     os.path.join(DATA_DIR, 'sprite_shop/shop_ability_g.png'),
     os.path.join(DATA_DIR, 'sprite_shop/shop_ability_h.png'),
@@ -19,6 +29,7 @@ IMAGE_PATHS = [
     os.path.join(DATA_DIR, 'sprite_coin/sprite_coin.png')
 ]
 LOADED_IMAGES = {}
+
 
 def load_image(name, colorkey=-1):
     fullname = os.path.join(DATA_DIR, name)
