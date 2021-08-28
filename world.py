@@ -176,7 +176,40 @@ class World:
         self.enemy_list.append(enemy)
 
     def set_dir(self, key, val):
-        self.dir_dict[key] = val
+        if type(val) == int:
+            self.dir_dict[key] = val
+        elif type(val) == tuple:
+            if val[0] == 1:
+                self.dir_dict['RIGHT'] = 1
+            elif val[0] == -1:
+                self.dir_dict['LEFT'] = 1
+            else:
+                self.dir_dict['RIGHT'] = 0
+                self.dir_dict['LEFT'] = 0
+            if val[1] == 1:
+                self.dir_dict['UP'] = 1
+            elif val[1] == -1:
+                self.dir_dict['DOWN'] = 1
+            else:
+                self.dir_dict['UP'] = 0
+                self.dir_dict['DOWN'] = 0
+        elif type(val) == float:
+            if key % 2 == 0:
+                if val > 0:
+                    self.dir_dict['LEFT'] = 0
+                    self.dir_dict['RIGHT'] = abs(val)
+                else:
+                    self.dir_dict['LEFT'] = abs(val)
+                    self.dir_dict['RIGHT'] = 0
+            elif key % 2 != 0:
+                if val > 0:
+                    self.dir_dict['UP'] = 0
+                    self.dir_dict['DOWN'] = abs(val)
+                else:
+                    self.dir_dict['UP'] = abs(val)
+                    self.dir_dict['DOWN'] = 0
+
+
 
     def get_dir(self):
         return self.dir_dict
