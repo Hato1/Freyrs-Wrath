@@ -40,8 +40,8 @@ class World:
             self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), name='Coin')
 
         fol = Follow()
-        self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, speed=1, name='Enemy')
-        fol.update_info({'target': self.player,'me':self.entity_list[-1]})
+        enemy = self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, speed=0.5, name='Enemy')
+        fol.update_info({'target': self.player, 'me': enemy})
 
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
@@ -59,13 +59,14 @@ class World:
 
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
-        self.world.blit(self.player.get_sprite(), self.player.get_rect())
+        self.world.blit(self.player.get_sprite(), self.player.get_position())
         #self.allsprites.draw(self.world)
         pg.display.flip()
 
     def add_entity(self, sprite, pos, ai_state=None, name="Entity", speed=5):
         entity = Entity(sprite, pos, ai=ai_state, type=name, speed=speed)
         self.entity_list.append(entity)
+        return entity
 
     def get_surface(self):
         return self.world
@@ -98,6 +99,7 @@ class World:
                 return
             x = x / norm
             y = y / norm
+            # print(x,y)
             entity.slide([x, y])
 
     def set_dir(self, key, val):
