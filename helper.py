@@ -10,7 +10,8 @@ IMAGE_PATHS = [
     os.path.join(DATA_DIR, 'sprite_shop/sprite_shop2.png'),
     os.path.join(DATA_DIR, 'sprite_shop/sprite_shop3.png'),
     os.path.join(DATA_DIR, 'sprite_shop/sprite_shop4.png'),
-    os.path.join(DATA_DIR, 'sprite_shop/sprite_shop5.png')
+    os.path.join(DATA_DIR, 'sprite_shop/sprite_shop5.png'),
+    os.path.join(DATA_DIR, 'sprite_shop_shop/sprite_shop_shop_p.png')
 ]
 LOADED_IMAGES = {}
 
@@ -50,3 +51,4 @@ def load_all_images():
         image_name = image_path.split('/')[-1]
         image_name = image_name.split('.')[0]
         LOADED_IMAGES.update({image_name: load_image(image_path)})
+    print("boop")

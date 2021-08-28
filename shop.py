@@ -2,7 +2,7 @@ import os
 
 import pygame as pg
 
-from helper import DATA_DIR, load_image
+from helper import DATA_DIR, load_image, LOADED_IMAGES
 
 
 class Shop:
@@ -27,8 +27,7 @@ class Shop:
     def draw_open_shop(self):
         self.shop.fill((10, 150, 50))
 
-        shop_icon_path = os.path.join(DATA_DIR, 'sprite_shop_shop/sprite_shop_shop_p.png')
-        shop_icon_image, rect = load_image(shop_icon_path, -1)
+        shop_icon_image, rect = LOADED_IMAGES["sprite_shop_shop_p"]
         shop_icon_image = pg.transform.scale(shop_icon_image, (30, 30))
         shop_icon_surface = pg.Surface((30, 30))
         self.shop.blit(shop_icon_image, shop_icon_surface.get_rect())
