@@ -141,8 +141,8 @@ class World:
             self.coin_list.append(coin)
 
     def gen_enemy(self):
-        coin_sprite_dict = {"DOWN": "sprite_demon_front"}
-        enemy = self.add_entity(coin_sprite_dict,
+        enemy_sprite_dict = {"DOWN": "sprite_demon_front", "UP": "sprite_demon_back", "LEFT": "sprite_demon_left", "RIGHT": "sprite_demon_right"}
+        enemy = self.add_entity(enemy_sprite_dict,
                                 ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow',
                                 speed=0.5, name='Enemy')
         enemy.update_info({'target': self.player, 'me': enemy})
