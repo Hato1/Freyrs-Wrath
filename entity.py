@@ -8,7 +8,7 @@ from helper import DATA_DIR, load_image, LOADED_IMAGES
 # Handle position wrapping. (helper function?)
 
 class Entity(pg.sprite.Sprite):
-    def __init__(self, sprite, position, lives=3, speed=5, ai=None, type="Entity"):
+    def __init__(self, sprite, position, lives=3, speed=5, ai=None, type="Entity", info={}):
         """EG Entity([5.5, 7.64], ai=BaseAI())"""
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = LOADED_IMAGES[sprite]
@@ -18,6 +18,8 @@ class Entity(pg.sprite.Sprite):
         self.speed = speed
         self.ai = ai
         self.type = type
+
+        self.info = info
 
     def __type__(self):
         return self.type
@@ -88,7 +90,7 @@ class Entity(pg.sprite.Sprite):
 
     def move(self):
         if self.ai:
-            x, y = self.ai.decide_move()
+            x, y = self.ai_follow() # .decide_move()
             norm = (x**2 + y**2)**0.5
             if norm == 0:
                 return (0, 0)
@@ -110,25 +112,11 @@ class Entity(pg.sprite.Sprite):
         self.position[0] += vec[0]
         self.position[1] += vec[1]
 
-
-class BaseAI():
-    """Generic AI goes down and right"""
-    def __init__(self, info={}):
-        """Info is a dictionary of decision making materials."""
-        self.info = info
-
-    def decide_move(self):
-        """Using info, decides the best direction vector to use"""
-        best_move = (2, 1)  # Down and right. More right than down.
-        return(best_move)
-
     def update_info(self, new_info):
+        # self.ai.update_info(info)
         self.info.update(new_info)
 
-
-class Follow(BaseAI):
-    """Moves from 'me' toward 'target'."""
-    def decide_move(self):
-        x, y = self.info['me'].get_position()
+    def ai_follow(self):
+        x, y = self.position
         tx, ty = self.info['target'].get_position()
         return (tx-x, ty-y)

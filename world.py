@@ -6,7 +6,7 @@ import os
 
 from helper import DATA_DIR, load_image, LOADED_IMAGES
 
-from entity import Entity, BaseAI, Follow
+from entity import Entity
 from shop import Shop
 
 
@@ -32,13 +32,12 @@ class World:
         self.player = Entity(player_sprite, (self.world.get_width()/2, self.world.get_height()/2), type='Player')
         # self.player = self.entity_list[0]
 
-        #spawns 5 coin entities
+        # spawns 5 coin entities
         for i in range(5):
             self.add_entity("sprite_coin", ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), name='Coin')
 
-        fol = Follow()
-        enemy = self.add_entity("sprite_coin", ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, speed=0.5, name='Enemy')
-        fol.update_info({'target': self.player, 'me': enemy})
+        enemy = self.add_entity("sprite_coin", ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow', speed=0.5, name='Enemy')
+        enemy.update_info({'target': self.player, 'me': enemy})
 
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
@@ -57,11 +56,10 @@ class World:
             sprite.draw(self.world, self.dims)
         self.update_shop()
         self.world.blit(self.player.get_sprite(), self.player.get_position())
-        #self.allsprites.draw(self.world)
         pg.display.flip()
 
-    def add_entity(self, sprite, pos, ai_state=None, name="Entity", speed=5):
-        entity = Entity(sprite, pos, ai=ai_state, type=name, speed=speed)
+    def add_entity(self, sprite, pos, ai=None, name="Entity", speed=5):
+        entity = Entity(sprite, pos, ai=ai, type=name, speed=speed)
         self.entity_list.append(entity)
         return entity
 
@@ -109,5 +107,3 @@ class World:
         pos = coin.get_position()
         newpos = ((pos[0]-self.dims[0]) * -1, (pos[1]-self.dims[1]) * -1)
         coin.set_position(newpos)
-
-
