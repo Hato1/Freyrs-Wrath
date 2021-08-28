@@ -69,8 +69,6 @@ def load_sound(name):
 def load_all_images():
     for image_path, scale in IMAGE_PATHS:
         image_name = os.path.basename(image_path).split('.')[0]
-        # image_name = image_path.split('\\')[-1]
-        # image_name = image_name.split('.')[0]
         img = load_image(image_path, -1)
         dims = (int(img[0].get_height()*scale), int(img[0].get_width()*scale))
         img = (pg.transform.scale(img[0], dims).convert(), img[1])
