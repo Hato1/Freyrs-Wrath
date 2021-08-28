@@ -82,9 +82,8 @@ class World:
                 self.reset_entity(coin)
         for enemy in self.enemy_list:
             if self.player.check_collision(enemy):
-                pass
-
-                # self.player.lives -= 1
+                self.reset_entity(enemy)
+                self.player.lives -= 1
 
     def update_gui(self):
         self.update_lives()
