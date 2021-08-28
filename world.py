@@ -114,7 +114,6 @@ class World:
                            self.world.get_width() / 2 + full_heart.get_rect().width * 0.5]
 
         counter = 0
-        print(len(heart_positions))
         for heart_pos in heart_positions:
             if self.player.lives > counter:
                 self.world.blit(full_heart, [int(heart_pos), 0])

@@ -52,7 +52,6 @@ def load_image(name, colorkey=(0, 0, 0, 255)):
     if colorkey is not None:
         if colorkey == -1:
             colorkey = image.get_at((0, 0))
-            print(colorkey)
         image.set_colorkey(colorkey, pg.RLEACCEL)
     return image, image.get_rect()
 
