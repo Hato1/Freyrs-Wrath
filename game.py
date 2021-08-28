@@ -51,7 +51,7 @@ class Game:
         load_all_images()
         self.draw_menu_background()
         self.soundtrack = load_sound("Fishing song.mp3")
-        # self.soundtrack.play(-1)
+        self.soundtrack.play(-1)
 
     def draw_menu_background(self):
         # Create The Menu
@@ -201,6 +201,16 @@ class Game:
             self.p1.shop.toggle_open()
         elif event.type == pg.KEYDOWN and event.key == pg.K_p:
             self.p2.shop.toggle_open()
+
+        if event.type == pg.KEYDOWN and event.key == pg.K_f:
+            if self.p1.pay_for_power("more"):
+                self.p2.activate_power("more")
+        elif event.type == pg.KEYDOWN and event.key == pg.K_g:
+            if self.p1.pay_for_power("speed"):
+                self.p2.activate_power("speed")
+        elif event.type == pg.KEYDOWN and event.key == pg.K_h:
+            if self.p1.pay_for_power("health"):
+                self.p1.activate_power("health")
 
     def process_end_event(self, event):
         pass

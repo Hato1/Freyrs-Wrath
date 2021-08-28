@@ -140,7 +140,6 @@ class Entity(pg.sprite.Sprite):
         return (tx-x, ty-y)
 
     def set_dir(self, vector):
-        print(vector)
         if vector[0] > 0.5:
             self.image, self.rect = LOADED_IMAGES[self.sprite_dict["LEFT"]]
         elif vector[0] < -0.5:

@@ -34,6 +34,8 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'dirt.png'), 0.2),
     (os.path.join(DATA_DIR, 'sand.png'), 0.2),
     (os.path.join(DATA_DIR, 'ground.jpg'), 0.5),
+    (os.path.join(DATA_DIR, 'sprite_heart.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 1)
 ]
 LOADED_IMAGES = {}
 
