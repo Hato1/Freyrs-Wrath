@@ -30,7 +30,7 @@ class World:
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
         # 'sprite_viking', 'sprite_viking_front.png'
         player_path = os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_front.png')
-        coin_path = os.path.join(DATA_DIR, 'chimp.bmp')
+        coin_path = os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png')
         # self.add_entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), None, name='Player')
         self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), type='Player')
         # self.player = self.entity_list[0]
