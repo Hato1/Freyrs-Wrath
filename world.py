@@ -182,5 +182,26 @@ class World:
             for enemy in self.enemy_list:
                 enemy.speed = enemy.speed * 2
 
+        elif power_name == "more":
+            self.gen_enemy()
 
+        elif power_name == "heal":
+            self.player.lives += 1
 
+    def pay_for_power(self, power_name):
+        if not self.shop.open:
+            return False
+
+        if power_name == "speed" and self.money >= 2:
+            self.money -= 2
+            return True
+
+        elif power_name == "more" and self.money >= 2:
+            self.money -= 2
+            return True
+
+        elif power_name == "heal" and self.money >= 2:
+            self.money -= 2
+            return True
+
+        return False
