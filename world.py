@@ -3,13 +3,16 @@ import pygame as pg
 from pygame.locals import *
 import os
 
+import helper
 from helper import DATA_DIR, load_image, LOADED_IMAGES, load_sound
 
 from entity import Entity
 from shop import Shop
 
-CHARACTERS = {'VIKING': {'player_sprite': 'sprite_viking'},
-              'PRIEST': {'player_sprite': 'sprite_priest'}}
+CHARACTERS = {'VIKING': {'player_sprite': 'sprite_viking', 'enemy_sprite': 'sprite_demon'},
+              'PRIEST': {'player_sprite': 'sprite_priest', 'enemy_sprite': 'sprite_demon'},  # Farmer
+              'FARMER': {'player_sprite': 'sprite_viking', 'enemy_sprite': 'sprite_viking'},
+              'DEMON': {'player_sprite': 'sprite_demon', 'enemy_sprite': 'sprite_priest'}}
 
 
 class World:
@@ -36,9 +39,7 @@ class World:
 
         self.ouch_sound = load_sound("ouch.mp3")
 
-        sand_sprite_dict = {"DOWN": 'sand'}
-        self.background = Entity(sand_sprite_dict,
-                                              (self.world.get_width() / 2, self.world.get_height() / 2))
+        self.background = Entity(helper.create_background(self.name), (0, 0))
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
         self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
@@ -167,8 +168,10 @@ class World:
             self.coin_list.append(coin)
 
     def gen_enemy(self, speed=0.5):
-        enemy_sprite_dict = {"DOWN": "sprite_demon_front", "UP": "sprite_demon_back", "LEFT": "sprite_demon_left",
-                             "RIGHT": "sprite_demon_right"}
+        enemy_sprite_dict = helper.create_sprite_dict(CHARACTERS[self.name]['enemy_sprite'])
+        #if self.name == 'DEMON':
+        #    enemy_sprite_dict = {"DOWN": "sprite_priest_front", "UP": "sprite_priest_back", "LEFT": "sprite_priest_left",
+        #                         "RIGHT": "sprite_priest_right"}
         enemy = self.add_entity(enemy_sprite_dict,
                                 ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow',
                                 speed=speed, name='Enemy')
@@ -208,8 +211,6 @@ class World:
                 else:
                     self.dir_dict['UP'] = abs(val)
                     self.dir_dict['DOWN'] = 0
-
-
 
     def get_dir(self):
         return self.dir_dict

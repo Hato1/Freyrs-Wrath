@@ -5,12 +5,14 @@ import pygame.surfarray as surfarray
 # import numpy as np
 from pygame.compat import geterror
 
+import random
+
 PLAYERCOUNT = 4
 WIN_SIZE = ((512*2)+2, (288*2)+2)
 
-WORLD_SIZE = (1024/2, 576)
+WORLD_SIZE = (1024//2, 576)
 if PLAYERCOUNT > 2:
-    WORLD_SIZE = (1024/2, 576/2)
+    WORLD_SIZE = (1024//2, 576//2)
 # WORLD_DIMS = (255*2, 288*2)
 
 # tilesize = 512/8 = 32
@@ -100,22 +102,79 @@ def load_all_images():
     make_images()
 
 
+roads = """
+"""
+
+
+def create_background(name):
+    # return {"DOWN": 'sand'}
+    # U = UR
+    # R = RD
+    # D = DL
+    # L = LU
+    roads = [
+        '           |    ',
+        '           |    ',
+        '---D    R--L  R-',
+        '   U-D 123    | ',
+        '     U-456----L ',
+        '       789      ',
+        '        |       ',
+        '        U--D    ',
+        '           |    '
+        ]
+    dims = (WORLD_SIZE[0]//32, WORLD_SIZE[1]//32)
+    bg = pg.Surface(WORLD_SIZE)
+    for i in range(dims[0]):
+        for j in range(dims[1]):
+            if roads[j][i] == ' ':
+                tile = random.choice(['43', '52'])
+            elif roads[j][i] == '-':
+                tile = '41'
+            elif roads[j][i] == '|':
+                tile = '38'
+            elif roads[j][i] == 'U':
+                tile = '34'
+            elif roads[j][i] == 'R':
+                tile = '28'
+            elif roads[j][i] == 'L':
+                tile = '36'
+            elif roads[j][i] == 'D':
+                tile = '30'
+            elif roads[j][i].isdigit():
+                tile = str(47+int(roads[j][i]))
+
+            bg.blit(LOADED_IMAGES[name[0] + tile], (i*32, j*32))
+            print(LOADED_IMAGES[name[0] + tile].get_size())
+    LOADED_IMAGES.update({name: bg})
+    return {"DOWN": name}
+
+
+def create_sprite_dict(sprite):
+    sprite_dict = {}
+    sprite_dict["LEFT"] = sprite + "_left"
+    sprite_dict["RIGHT"] = sprite + "_right"
+    sprite_dict["UP"] = sprite + "_back"
+    sprite_dict["DOWN"] = sprite + "_front"
+    return sprite_dict
+
+
 def make_images():
     pass
-    #brown = np.zeros((16, 18, 3))
-    #brown[:] = (158, 119, 119)
-    ## random boolean mask for which values will be changed
-    #mask = np.random.randint(0, 5, size=(16, 8, 3))
+    # brown = np.zeros((16, 18, 3))
+    # brown[:] = (158, 119, 119)
+    # # random boolean mask for which values will be changed
+    # mask = np.random.randint(0, 5, size=(16, 8, 3))
 
-    ## random matrix the same shape of your data
-    ## r = np.random.rand(*x.shape)*np.max(x)
-    #dark = np.zeros((16, 18, 3))
-    #dark[:] = (111, 76, 91)
-    ## dark[] = (255, 255, 255)
+    # # random matrix the same shape of your data
+    # # r = np.random.rand(*x.shape)*np.max(x)
+    # dark = np.zeros((16, 18, 3))
+    # dark[:] = (111, 76, 91)
+    # # dark[] = (255, 255, 255)
 
-    ## use your mask to replace values in your input array
-    #brown[mask] = dark[mask]
+    # # use your mask to replace values in your input array
+    # brown[mask] = dark[mask]
 
-    #brown = pg.surfarray.make_surface(brown)
-    #brown = pg.transform.scale(brown, (256, 288))
-    #LOADED_IMAGES.update({'background': (brown, brown)})
+    # brown = pg.surfarray.make_surface(brown)
+    # brown = pg.transform.scale(brown, (256, 288))
+    # LOADED_IMAGES.update({'background': (brown, brown)})

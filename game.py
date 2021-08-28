@@ -22,10 +22,6 @@ GREY = (122, 122, 122)
 GREEN = (20, 239, 20)
 BLACK = (0, 0, 0)
 GAME_NAME = "Name of the Game"
-PLAYER_1_NAME = "VIKING"
-PLAYER_2_NAME = "MONK"
-PLAYER_1_SPRITE = "sprite_priest"
-PLAYER_2_SPRITE = "sprite_viking"
 P1DIRSC = {0: 'UP'}
 P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT'}
 P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT'}
@@ -48,8 +44,7 @@ class Game:
         screen_height = self.screen.get_size()[1]
         self.players = []
 
-        sprites = [PLAYER_1_SPRITE, PLAYER_2_SPRITE, PLAYER_2_SPRITE, PLAYER_1_SPRITE]
-        characters = ["VIKING", "PRIEST", "PRIEST", "VIKING"]
+        characters = ["VIKING", "PRIEST", "FARMER", "DEMON"]
         for i in range(helper.PLAYERCOUNT):
             self.players.append(World(dims=helper.WORLD_SIZE, character=characters[i]))
             # self.players.append(World(dims=helper.WORLD_SIZE, player_sprite=sprites[i]))
@@ -112,7 +107,7 @@ class Game:
             self.screen.blit(self.players[0].world, (0, 0))
             self.screen.blit(self.players[1].world, (half_screen_width, 0))
             self.screen.blit(self.players[2].world, (0, half_screen_height))
-            self.screen.blit(self.players[1].world, (half_screen_width, half_screen_height))
+            self.screen.blit(self.players[3].world, (half_screen_width, half_screen_height))
 
         pg.display.flip()
 
