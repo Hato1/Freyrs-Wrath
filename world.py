@@ -106,6 +106,7 @@ class World:
         for entity in self.entity_list:
             # print(x,y)
             entity.slide([x, y])
+            self.player.set_dir([x, y])
         self.experimental_background.slide([x, y])
 
     def reset_coin(self, coin):
@@ -121,8 +122,6 @@ class World:
 
         else:
             coin.set_position((1, (random.randint(1, self.dims[1]))))
-
-
 
 
     def gen_coin(self):
@@ -151,7 +150,7 @@ class World:
 
     def set_dir(self, key, val):
         self.dir_dict[key] = val
-        self.player.set_dir(key)
+
 
     def get_dir(self):
         return self.dir_dict

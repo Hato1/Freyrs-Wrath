@@ -139,5 +139,12 @@ class Entity(pg.sprite.Sprite):
         tx, ty = self.info['target'].get_position()
         return (tx-x, ty-y)
 
-    def set_dir(self, dir):
-        self.image, self.rect = LOADED_IMAGES[self.sprite_dict[dir]]
+    def set_dir(self, vector):
+        if vector[0] > 0:
+            self.image, self.rect = LOADED_IMAGES[self.sprite_dict["LEFT"]]
+        elif vector[0] < 0:
+            self.image, self.rect = LOADED_IMAGES[self.sprite_dict["RIGHT"]]
+        elif vector[1] > 0:
+            self.image, self.rect = LOADED_IMAGES[self.sprite_dict["UP"]]
+        else:
+            self.image, self.rect = LOADED_IMAGES[self.sprite_dict["DOWN"]]
