@@ -6,12 +6,16 @@ import pygame.surfarray as surfarray
 from pygame.compat import geterror
 
 PLAYERCOUNT = 2
-WIN_SIZE = (512*2, 288*2)
+WIN_SIZE = ((512*2)+2, (288*2)+2)
 
-WORLD_SIZE = ((WIN_SIZE[0]-2)/2, WIN_SIZE[1])
+WORLD_SIZE = (1024/2, 576)
 if PLAYERCOUNT > 2:
-    WORLD_SIZE = ((WIN_SIZE[0]-2)/2, WIN_SIZE[1]/2)
+    WORLD_SIZE = (1024/2, 576/2)
 # WORLD_DIMS = (255*2, 288*2)
+
+# tilesize = 512/8 = 32
+# 2 players: 16 accross 18 high
+# 3-4 players: 16 accross 9 high
 
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
 DATA_DIR = os.path.join(MAIN_DIR, "data")
@@ -51,7 +55,7 @@ for i in os.listdir(tilesets):
     if os.path.isdir(os.path.join(tilesets, i)):
         for j in os.listdir(os.path.join(tilesets, i)):
             if j.endswith('png'):
-                IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), 1))
+                IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), 1/8))
 LOADED_IMAGES = {}
 
 
