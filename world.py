@@ -3,7 +3,7 @@ import pygame as pg
 from pygame.locals import *
 import os
 
-from helper import DATA_DIR, load_image, LOADED_IMAGES
+from helper import DATA_DIR, load_image, LOADED_IMAGES, load_sound
 
 from entity import Entity
 from shop import Shop
@@ -29,6 +29,8 @@ class World:
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
+
+        self.ouch_sound = load_sound("ouch.mp3")
 
         sand_sprite_dict = {"DOWN": 'sand'}
         self.experimental_background = Entity(sand_sprite_dict,
@@ -84,6 +86,7 @@ class World:
             if self.player.check_collision(enemy):
                 self.reset_entity(enemy)
                 self.player.lives -= 1
+                self.ouch_sound.play()
 
     def update_gui(self):
         self.update_lives()
