@@ -145,8 +145,7 @@ class Game:
                     going = False
                 elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                     going = False
-
-                elif event.type == pg.KEYDOWN and event.key == pg.K_f:
+                elif event.type == pg.KEYDOWN and event.key == pg.K_v:
                     pg.display.toggle_fullscreen()
                 elif event.type == pg.VIDEORESIZE:
                     pg.display._resize_event(event)
@@ -194,6 +193,11 @@ class Game:
             self.p2.set_dir(P2DIRS[event.key], 1)
         elif event.type == pg.KEYUP and event.key in P2DIRS:
             self.p2.set_dir(P2DIRS[event.key], 0)
+
+        if event.type == pg.KEYDOWN and event.key == pg.K_q:
+            self.p1.shop.toggle_open()
+        elif event.type == pg.KEYDOWN and event.key == pg.K_p:
+            self.p2.shop.toggle_open()
 
     def process_end_event(self, event):
         pass
