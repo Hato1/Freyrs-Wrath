@@ -202,6 +202,13 @@ class Game:
         elif event.type == pg.KEYDOWN and event.key == pg.K_p:
             self.p2.shop.toggle_open()
 
+        if event.type == pg.KEYDOWN and event.key == pg.K_f:
+            self.p2.activate_power("more")
+        elif event.type == pg.KEYDOWN and event.key == pg.K_g:
+            self.p2.activate_power("speed")
+        elif event.type == pg.KEYDOWN and event.key == pg.K_h:
+            self.p1.activate_power("health")
+
     def process_end_event(self, event):
         pass
 

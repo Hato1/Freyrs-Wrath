@@ -177,5 +177,10 @@ class World:
     def get_dir(self):
         return self.dir_dict
 
+    def activate_power(self, power_name):
+        if power_name == "speed":
+            for enemy in self.enemy_list:
+                enemy.speed = enemy.speed * 2
+
 
 
