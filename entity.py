@@ -122,7 +122,7 @@ class Entity(pg.sprite.Sprite):
             self.rect.move_ip(x * self.speed, y * self.speed)
             self.position[0] += x * self.speed
             self.position[1] += y * self.speed
-
+            self.set_dir([-x,-y])
             return (x, y)
         else:
             return False
@@ -140,11 +140,12 @@ class Entity(pg.sprite.Sprite):
         return (tx-x, ty-y)
 
     def set_dir(self, vector):
-        if vector[0] > 0:
+        print(vector)
+        if vector[0] > 0.5:
             self.image, self.rect = LOADED_IMAGES[self.sprite_dict["LEFT"]]
-        elif vector[0] < 0:
+        elif vector[0] < -0.5:
             self.image, self.rect = LOADED_IMAGES[self.sprite_dict["RIGHT"]]
         elif vector[1] > 0:
             self.image, self.rect = LOADED_IMAGES[self.sprite_dict["UP"]]
-        else:
+        elif vector[1] < 0:
             self.image, self.rect = LOADED_IMAGES[self.sprite_dict["DOWN"]]

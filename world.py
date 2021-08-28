@@ -19,31 +19,32 @@ class World:
         # Delete me self.dir_dict = {pg.K_w: 0, pg.K_s: 0, pg.K_a: 0, pg.K_d: 0}
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
 
-        self.entity_list = []
         self.coin_list = []
         self.enemy_list = []
+        self.allsprites = pg.sprite.RenderPlain()
 
         self.world = pg.Surface(self.dims)
         self.world = self.world.convert()
         self.draw_world()
         self.shop = Shop()
+
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
+
         sand_sprite_dict = {"DOWN": 'sand'}
         self.experimental_background = Entity(sand_sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2))
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
         self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player')
         # self.player = self.entity_list[0]
+        self.gen_enemy()
 
         # spawns 5 coin entities
         for i in range(5):
             self.gen_coin()
 
-        self.gen_enemy()
 
-        self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
 
     def create_sprite_dict(self, player_sprite):
@@ -55,23 +56,22 @@ class World:
     def update_world(self):
         self.world.fill((100, 250, 250))
         self.experimental_background.draw(self.world, self.dims)
-
-        self.update_money()
         self.player.move()
-        for entity in self.entity_list:
-            entity.move()
+        for sprite in self.allsprites:
+            sprite.move()
 
         self.allsprites.update()
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
 
         self.update_shop()
+        self.update_money()
         self.world.blit(self.player.get_sprite(), self.player.get_position())
         pg.display.flip()
 
     def add_entity(self, sprite_dict, pos, ai=None, name="Entity", speed=5):
         entity = Entity(sprite_dict, pos, ai=ai, type=name, speed=speed)
-        self.entity_list.append(entity)
+        self.allsprites.add(entity)
         return entity
 
     def get_surface(self):
@@ -103,9 +103,9 @@ class World:
             return
         x = x / norm
         y = y / norm
-        for entity in self.entity_list:
+        for sprite in self.allsprites:
             # print(x,y)
-            entity.slide([x, y])
+            sprite.slide([x, y])
             self.player.set_dir([x, y])
         self.experimental_background.slide([x, y])
 
@@ -140,11 +140,12 @@ class World:
             coin = self.add_entity(coin_sprite_dict, (1, (random.randint(1, self.dims[1]))), name='Coin')
             self.coin_list.append(coin)
 
-    def gen_enemy(self):
-        coin_sprite_dict = {"DOWN": "sprite_demon_front"}
-        enemy = self.add_entity(coin_sprite_dict,
+
+    def gen_enemy(self, speed=0.5):
+        enemy_sprite_dict = {"DOWN": "sprite_demon_front", "UP": "sprite_demon_back", "LEFT": "sprite_demon_left", "RIGHT": "sprite_demon_right"}
+        enemy = self.add_entity(enemy_sprite_dict,
                                 ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow',
-                                speed=0.5, name='Enemy')
+                                speed=speed, name='Enemy')
         enemy.update_info({'target': self.player, 'me': enemy})
         self.enemy_list.append(enemy)
 
@@ -154,3 +155,4 @@ class World:
 
     def get_dir(self):
         return self.dir_dict
+
