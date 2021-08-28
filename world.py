@@ -176,3 +176,6 @@ class World:
 
     def get_dir(self):
         return self.dir_dict
+
+
+
