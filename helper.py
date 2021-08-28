@@ -38,6 +38,7 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 1)
 ]
 LOADED_IMAGES = {}
+WORLD_DIMS = (255, 288)
 
 
 def load_image(name, colorkey=(0, 0, 0, 255)):
@@ -93,7 +94,6 @@ def make_images():
     dark = np.zeros((16, 18, 3))
     dark[:] = (111, 76, 91)
     # dark[] = (255, 255, 255)
-    print(mask)
 
     # use your mask to replace values in your input array
     brown[mask] = dark[mask]

@@ -14,6 +14,7 @@ class World:
     def __init__(self, dims, player_sprite):
 
         self.dims = dims
+        print(dims)
 
         # Delete me self.dir_dict = {pg.K_w: 0, pg.K_s: 0, pg.K_a: 0, pg.K_d: 0}
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
