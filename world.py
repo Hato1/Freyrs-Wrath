@@ -146,24 +146,18 @@ class World:
         width = entity.get_width()
         if side == 0:
             entity.set_position([ran*self.dims[0], -height/2])
-
         else:
             entity.set_position([-width/2, ran*self.dims[1]])
 
     def gen_coin(self):
         coin_sprite_dict = {"DOWN": "sprite_coin"}
         side = random.randint(0, 3)
+        ran = random.random()
         if side == 0:
-            coin = self.add_entity(coin_sprite_dict, ((random.randint(1, self.dims[0])), 1), name='Coin')
-            self.coin_list.append(coin)
-        elif side == 1:
-            coin = self.add_entity(coin_sprite_dict, (self.dims[0], (random.randint(1, self.dims[1]))), name='Coin')
-            self.coin_list.append(coin)
-        elif side == 2:
-            coin = self.add_entity(coin_sprite_dict, ((random.randint(1, self.dims[0])), self.dims[1]), name='Coin')
+            coin = self.add_entity(coin_sprite_dict, (ran*self.dims[0], 1), name='Coin')
             self.coin_list.append(coin)
         else:
-            coin = self.add_entity(coin_sprite_dict, (1, (random.randint(1, self.dims[1]))), name='Coin')
+            coin = self.add_entity(coin_sprite_dict, (1, ran*self.dims[1]), name='Coin')
             self.coin_list.append(coin)
 
     def gen_enemy(self, speed=0.5):
