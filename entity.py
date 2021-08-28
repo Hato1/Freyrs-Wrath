@@ -11,7 +11,7 @@ class Entity(pg.sprite.Sprite):
     def __init__(self, sprite_dict, position, lives=3, speed=5, ai=None, type="Entity", info={}):
         """EG Entity([5.5, 7.64], ai='follow')"""
         pg.sprite.Sprite.__init__(self)
-        self.image, self.rect = LOADED_IMAGES[sprite_dict["DOWN"]]
+        self.image = LOADED_IMAGES[sprite_dict["DOWN"]]
         self.sprite_dict = sprite_dict
         self.position = list(position)
         self.position[0] -= self.image.get_width() / 2
@@ -131,7 +131,7 @@ class Entity(pg.sprite.Sprite):
             x = x / norm
             y = y / norm
 
-            self.rect.move_ip(x * self.speed, y * self.speed)
+            # self.rect.move_ip(x * self.speed, y * self.speed)
             self.position[0] += x * self.speed
             self.position[1] += y * self.speed
             self.set_dir([-x,-y])
@@ -157,10 +157,10 @@ class Entity(pg.sprite.Sprite):
 
     def set_dir(self, vector):
         if vector[0] > 0.5:
-            self.image, self.rect = LOADED_IMAGES[self.sprite_dict["LEFT"]]
+            self.image = LOADED_IMAGES[self.sprite_dict["LEFT"]]
         elif vector[0] < -0.5:
-            self.image, self.rect = LOADED_IMAGES[self.sprite_dict["RIGHT"]]
+            self.image = LOADED_IMAGES[self.sprite_dict["RIGHT"]]
         elif vector[1] > 0:
-            self.image, self.rect = LOADED_IMAGES[self.sprite_dict["UP"]]
+            self.image = LOADED_IMAGES[self.sprite_dict["UP"]]
         elif vector[1] < 0:
-            self.image, self.rect = LOADED_IMAGES[self.sprite_dict["DOWN"]]
+            self.image = LOADED_IMAGES[self.sprite_dict["DOWN"]]

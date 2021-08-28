@@ -2,7 +2,7 @@ import os
 import pygame as pg
 from pygame.locals import *
 import pygame.surfarray as surfarray
-import numpy as np
+# import numpy as np
 from pygame.compat import geterror
 
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
@@ -78,7 +78,7 @@ def load_all_images():
         img = load_image(image_path)
         dims = (int(img[0].get_height()*scale), int(img[0].get_width()*scale))
         img = (pg.transform.scale(img[0], dims).convert(), img[1])
-        LOADED_IMAGES.update({image_name: img})
+        LOADED_IMAGES.update({image_name: img[0]})
     make_images()
 
 

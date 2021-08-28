@@ -104,9 +104,9 @@ class World:
         self.world.blit(self.shop.shop_surface, (0, 0))
 
     def update_lives(self):
-        full_heart = LOADED_IMAGES["sprite_heart"][0]
+        full_heart = LOADED_IMAGES["sprite_heart"]
         # full_heart = pg.transform.scale(full_heart, (60, 60))
-        empty_heart = LOADED_IMAGES["sprite_heart_empty"][0]
+        empty_heart = LOADED_IMAGES["sprite_heart_empty"]
         # empty_heart = pg.transform.scale(empty_heart, (60, 60))
 
         heart_positions = [self.world.get_width() / 2 + full_heart.get_rect().width * -1.5,
