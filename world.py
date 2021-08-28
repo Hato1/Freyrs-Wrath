@@ -28,7 +28,7 @@ class World:
         self.draw_world()
         self.shop = Shop()
         self.money = 100
-        self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
+        self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
         self.experimental_background = Entity('sand', (self.world.get_width()/2, self.world.get_height()/2))
         self.player = Entity(player_sprite, (self.world.get_width()/2, self.world.get_height()/2), type='Player')
@@ -74,8 +74,7 @@ class World:
     def update_money(self):
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
 
-        textpos_money = self.text_money.get_rect(centerx=self.world.get_width() / 2,
-                                                 centery=self.world.get_height() / 4)
+        textpos_money = self.text_money.get_rect(topright=((self.world.get_width()), 0))
 
         self.world.blit(self.text_money, textpos_money)
 
