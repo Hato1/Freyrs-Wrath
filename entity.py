@@ -9,7 +9,7 @@ from helper import DATA_DIR, load_image, LOADED_IMAGES
 
 class Entity(pg.sprite.Sprite):
     def __init__(self, sprite, position, lives=3, speed=5, ai=None, type="Entity", info={}):
-        """EG Entity([5.5, 7.64], ai=BaseAI())"""
+        """EG Entity([5.5, 7.64], ai='follow')"""
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = LOADED_IMAGES[sprite]
         self.position = list(position)
@@ -35,33 +35,46 @@ class Entity(pg.sprite.Sprite):
     def get_height(self):
         return self.image.get_height()
 
-    def move_ip(self, x, y):
-        self.rect.move_ip(x, y)
-
     def draw(self, surface, dims):
-        wrap_around = False
+        wrap_x = False
+        wrap_y = False
         # position = sprite.get_rect()
         if self.position[0] < 0:
             # off screen left
-            self.position[0] += dims[0]
-            wrap_around = True
+            # self.position[0] += dims[0]
+            xmod = dims[0]
+            wrap_x = True
 
         if self.position[0] + self.image.get_width() > dims[0]:
             # off screen right
-            self.position[0] += -dims[0]
-            wrap_around = True
+            # self.position[0] += -dims[0]
+            xmod = -dims[0]
+            wrap_x = True
 
         if self.position[1] < 0:
             # off screen top
-            self.position[1] += dims[1]
-            wrap_around = True
+            # self.position[1] += dims[1]
+            ymod = dims[1]
+            wrap_y = True
 
         if self.position[1] + self.image.get_height() > dims[1]:
             # off screen bottom
-            self.position[1] += -dims[1]
-            wrap_around = True
+            # self.position[1] += -dims[1]
+            ymod = -dims[1]
+            wrap_y = True
 
-        if wrap_around:
+        if wrap_x and wrap_y:
+            x, y = self.position
+            surface.blit(self.image, (x+xmod, y))
+            surface.blit(self.image, (x, y+ymod))
+            self.position[0] += xmod
+            self.position[1] += ymod
+
+        elif wrap_x:
+            self.position[0] += xmod
+            surface.blit(self.image, self.position)
+        elif wrap_y:
+            self.position[1] += ymod
             surface.blit(self.image, self.position)
 
         self.position[0] %= dims[0]
@@ -101,24 +114,20 @@ class Entity(pg.sprite.Sprite):
                 return (0, 0)
             x = x / norm
             y = y / norm
-            # self.rect.topleft = (self.rect.topleft[0] + x * self.speed, self.rect.topleft[1] + y * self.speed)
-            # self.rect.move_ip(x * self.speed, y * self.speed)
+
             self.rect.move_ip(x * self.speed, y * self.speed)
             self.position[0] += x * self.speed
             self.position[1] += y * self.speed
-            # += x * self.speed
-            # self.rect.center[1] += y * self.speed
+
             return (x, y)
         else:
             return False
 
     def slide(self, vec):
-        #self.rect.move_ip(vec)
         self.position[0] += vec[0]
         self.position[1] += vec[1]
 
     def update_info(self, new_info):
-        # self.ai.update_info(info)
         self.info.update(new_info)
 
     def ai_follow(self):

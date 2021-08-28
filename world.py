@@ -20,7 +20,6 @@ class World:
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
 
         self.entity_list = []
-
         self.world = pg.Surface(self.dims)
         self.world = self.world.convert()
         self.draw_world()
@@ -28,14 +27,13 @@ class World:
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
-        # self.add_entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), None, name='Player')
+        self.experimental_background = Entity('dirt', (self.world.get_width()/2, self.world.get_height()/2))
         self.player = Entity(player_sprite, (self.world.get_width()/2, self.world.get_height()/2), type='Player')
         # self.player = self.entity_list[0]
 
         # spawns 5 coin entities
         for i in range(5):
             self.gen_coin()
-
 
         enemy = self.add_entity("sprite_coin", ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow', speed=0.5, name='Enemy')
         enemy.update_info({'target': self.player, 'me': enemy})
@@ -45,6 +43,7 @@ class World:
 
     def update_world(self):
         self.world.fill((100, 250, 250))
+        self.experimental_background.draw(self.world, self.dims)
 
         self.update_money()
         self.player.move()
@@ -87,16 +86,17 @@ class World:
         return self.player.is_alive()
 
     def move(self):
+        x = self.dir_dict['LEFT'] - self.dir_dict['RIGHT']
+        y = self.dir_dict['UP'] - self.dir_dict['DOWN']
+        norm = (x**2 + y**2)**0.5
+        if norm == 0:
+            return
+        x = x / norm
+        y = y / norm
         for entity in self.entity_list:
-            x = self.dir_dict['LEFT'] - self.dir_dict['RIGHT']
-            y = self.dir_dict['UP'] - self.dir_dict['DOWN']
-            norm = (x**2 + y**2)**0.5
-            if norm == 0:
-                return
-            x = x / norm
-            y = y / norm
             # print(x,y)
             entity.slide([x, y])
+        self.experimental_background.slide([x, y])
 
     def set_dir(self, key, val):
         self.dir_dict[key] = val

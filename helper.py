@@ -5,28 +5,31 @@ from pygame.compat import geterror
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
 DATA_DIR = os.path.join(MAIN_DIR, "data")
 IMAGE_PATHS = [
-    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_front.png'),
-    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_back.png'),
-    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_right.png'),
-    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_left.png'),
-    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_front.png'),
-    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_back.png'),
-    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_right.png'),
-    os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_left.png'),
-    os.path.join(DATA_DIR, 'sprite_coin/sprite_coin.png'),
-    os.path.join(DATA_DIR, 'sprite_shop/shop_icon_p.png'),
-    os.path.join(DATA_DIR, 'sprite_shop/shop_ability_f.png'),
-    os.path.join(DATA_DIR, 'sprite_shop/shop_ability_g.png'),
-    os.path.join(DATA_DIR, 'sprite_shop/shop_ability_h.png'),
-    os.path.join(DATA_DIR, 'sprite_shop/shop_ability_k.png'),
-    os.path.join(DATA_DIR, 'sprite_shop/shop_ability_l.png'),
-    os.path.join(DATA_DIR, 'sprite_shop/shop_ability_;.png'),
-    os.path.join(DATA_DIR, 'sprite_shop/shop_icon_q.png'),
-    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_front.png'),
-    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_back.png'),
-    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_left.png'),
-    os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_right.png'),
-    os.path.join(DATA_DIR, 'sprite_coin/sprite_coin.png')
+    (os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_front.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_back.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_right.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_left.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_front.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_back.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_right.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_viking/sprite_viking_left.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_coin/sprite_coin.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_shop/shop_icon_p.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_shop/shop_ability_f.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_shop/shop_ability_g.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_shop/shop_ability_h.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_shop/shop_ability_k.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_shop/shop_ability_l.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_shop/shop_ability_;.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_shop/shop_icon_q.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_front.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_back.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_left.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_priest/sprite_priest_right.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_coin/sprite_coin.png'), 1),
+    (os.path.join(DATA_DIR, 'dirt.png'), 0.1),
+    (os.path.join(DATA_DIR, 'sand.png'), 0.1),
+    (os.path.join(DATA_DIR, 'ground.jpg'), 0.5),
 ]
 LOADED_IMAGES = {}
 
@@ -63,7 +66,10 @@ def load_sound(name):
 
 
 def load_all_images():
-    for image_path in IMAGE_PATHS:
+    for image_path, scale in IMAGE_PATHS:
         image_name = image_path.split('/')[-1]
         image_name = image_name.split('.')[0]
-        LOADED_IMAGES.update({image_name: load_image(image_path)})
+        img = load_image(image_path)
+        dims = (int(img[0].get_height()*scale), int(img[0].get_width()*scale))
+        img = (pg.transform.scale(img[0], dims).convert(), img[1])
+        LOADED_IMAGES.update({image_name: img})
