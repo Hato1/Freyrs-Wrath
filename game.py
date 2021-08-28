@@ -30,8 +30,9 @@ P1DIRSC = {0: 'UP'}
 P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT'}
 P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT'}
 pg.init()
-js = pg.joystick.Joystick(0)
-js.init()
+if pg.joystick.get_count() > 0:
+    js = pg.joystick.Joystick(0)
+    js.init()
 
 class Game:
 
