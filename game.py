@@ -94,40 +94,26 @@ class Game:
         self.background_surface.blit(text_space_to_begin, textpos_space_to_begin)
 
     def draw_game_background(self):
-        half_screen_width = self.screen.get_size()[0] / 2
-        half_screen_height = self.screen.get_size()[1] / 2
         screen_height = self.screen.get_size()[1]
         screen_width = self.screen.get_size()[0]
+        half_screen_width = (screen_width / 2) + 1
+        half_screen_height = (screen_height / 2) + 1
 
-        #if len(self.players) == 2:
-        #    for i in self.players:
-        #        self.screen.blit(player.world, (posx, posy))
+        self.screen.fill(BLACK)
 
-        for i, player in enumerate(self.players):
-            if i % 2 == 0:
-                posx = 0
-            else:
-                posx = half_screen_width + 1
-            if i < 2:
-                posy = 0
-            else:
-                posy = half_screen_height + 1
-            self.screen.blit(player.world, (posx, posy))
-        if len(self.players) == 3:
-            filler = pg.Surface(helper.WORLD_SIZE)
-            filler = filler.convert()
-            filler.fill(BLACK)
-            self.screen.blit(filler, (half_screen_width+1, half_screen_height+1))
-        if len(self.players) > 2:
-            h_divider = pg.Surface((screen_width, 2))
-            h_divider = h_divider.convert()
-            h_divider.fill(BLACK)
-            self.screen.blit(h_divider, (0, half_screen_height-1))
+        if len(self.players) == 2:
+            self.screen.blit(self.players[0].world, (0, 1))
+            self.screen.blit(self.players[1].world, (half_screen_width, 1))
+        elif len(self.players) == 3:
+            self.screen.blit(self.players[0].world, (0, 0))
+            self.screen.blit(self.players[1].world, (half_screen_width, 0))
+            self.screen.blit(self.players[2].world, (screen_width/4, half_screen_height))
+        elif len(self.players) == 4:
+            self.screen.blit(self.players[0].world, (0, 0))
+            self.screen.blit(self.players[1].world, (half_screen_width, 0))
+            self.screen.blit(self.players[2].world, (0, half_screen_height))
+            self.screen.blit(self.players[1].world, (half_screen_width, half_screen_height))
 
-        v_divider = pg.Surface((2, screen_height))
-        v_divider = v_divider.convert()
-        v_divider.fill(BLACK)
-        self.screen.blit(v_divider, (half_screen_width-1, 0))
         pg.display.flip()
 
     def draw_end_background(self):

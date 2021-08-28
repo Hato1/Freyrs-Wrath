@@ -37,7 +37,7 @@ class World:
         self.ouch_sound = load_sound("ouch.mp3")
 
         sand_sprite_dict = {"DOWN": 'sand'}
-        self.experimental_background = Entity(sand_sprite_dict,
+        self.background = Entity(sand_sprite_dict,
                                               (self.world.get_width() / 2, self.world.get_height() / 2))
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
@@ -60,7 +60,7 @@ class World:
         self.sprite_dict.update({"DOWN": player_sprite + "_front"})
 
     def update_world(self):
-        self.experimental_background.draw(self.world, self.dims)
+        self.background.draw(self.world, self.dims)
         self.player_update()
         for sprite in self.allsprites:
             sprite.move()
@@ -143,10 +143,10 @@ class World:
             # print(x,y)
             sprite.slide([x, y])
             self.player.set_dir([x, y])
-        self.experimental_background.slide([x, y])
+        self.background.slide([x, y])
 
     def reset_entity(self, entity):
-        side = random.randint(0,1)
+        side = random.randint(0, 1)
         ran = random.random()
         height = entity.get_height()
         width = entity.get_width()

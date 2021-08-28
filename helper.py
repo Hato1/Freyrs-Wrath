@@ -5,7 +5,7 @@ import pygame.surfarray as surfarray
 # import numpy as np
 from pygame.compat import geterror
 
-PLAYERCOUNT = 2
+PLAYERCOUNT = 4
 WIN_SIZE = ((512*2)+2, (288*2)+2)
 
 WORLD_SIZE = (1024/2, 576)
