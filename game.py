@@ -24,7 +24,7 @@ GAME_NAME = "Name of the Game"
 PLAYER_1_NAME = "VIKING"
 PLAYER_2_NAME = "MONK"
 PLAYER_1_SPRITE = "sprite_priest_front"
-PLAYER_2_SPRITE = "sprite_viking_front"
+PLAYER_2_SPRITE = "sprite_viking_back"
 P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT'}
 P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT'}
 
@@ -41,7 +41,7 @@ class Game:
         half_screen_width = self.screen.get_size()[0] / 2
         screen_height = self.screen.get_size()[1]
         self.p1 = World(dims=(half_screen_width, screen_height), player_sprite = PLAYER_1_SPRITE)
-        self.p2 = World(dims=(half_screen_width, screen_height), player_sprite = PLAYER_1_SPRITE)
+        self.p2 = World(dims=(half_screen_width, screen_height), player_sprite = PLAYER_2_SPRITE)
 
     def setup_game(self):
         pg.init()
