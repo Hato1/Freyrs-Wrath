@@ -26,9 +26,7 @@ P1DIRSC = {0: 'UP'}
 P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT'}
 P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT'}
 pg.init()
-if pg.joystick.get_count() > 0:
-    js = pg.joystick.Joystick(0)
-    js.init()
+joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
 
 
 class Game:
@@ -211,13 +209,21 @@ class Game:
             self.players[0].set_dir(P1DIRS[event.key], 0)
 
         #controller support for player 1
-        if event.type == pg.JOYHATMOTION and js.get_instance_id() == 0:
-            self.players[0].set_dir(P1DIRSC[event.hat], event.value)
-        if event.type == pg.JOYAXISMOTION and js.get_instance_id() == 0:
-            if abs(event.value) > 0.3:
-                self.players[0].set_dir(event.axis, event.value)
-            else:
-                self.players[0].set_dir(event.axis, 0.0)
+
+        for index, player in enumerate(self.players):
+            try:
+                if event.type == pg.JOYHATMOTION and joysticks[index].get_instance_id() == event.instance_id:
+                    player.set_dir(0, event.value)
+            except IndexError:
+                pass
+            try:
+                if event.type == pg.JOYAXISMOTION and joysticks[index].get_instance_id() == event.instance_id:
+                    if abs(event.value) > 0.3:
+                        player.set_dir(event.axis, event.value)
+                    else:
+                        player.set_dir(event.axis, 0.0)
+            except IndexError:
+                pass
 
 
         if event.type == pg.KEYDOWN and event.key in P2DIRS:
@@ -231,9 +237,13 @@ class Game:
         elif event.type == pg.KEYDOWN and event.key == pg.K_p:
             self.players[1].shop.toggle_open()
 
-        #players[0] shop controller
-        if event.type == pg.JOYBUTTONDOWN and js.get_instance_id() == 0 and event.button == 4:
-            self.players[0].shop.toggle_open()
+        #players shop controller
+        for index, player in enumerate(self.players):
+            try:
+                if event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == 4:
+                    player.shop.toggle_open()
+            except IndexError:
+                pass
 
 
         #players[0] using powers
@@ -249,15 +259,20 @@ class Game:
 
 
     #players[0] powers with controller
-        if event.type == pg.JOYBUTTONDOWN and js.get_instance_id() == 0 and event.button == 0:
-            if self.players[0].pay_for_power("more"):
-                    self.players[1].activate_power("more")
-        elif event.type == pg.JOYBUTTONDOWN and js.get_instance_id() == 0 and event.button == 1:
-            if self.players[0].pay_for_power("speed"):
-                self.players[1].activate_power("speed")
-        elif event.type == pg.JOYBUTTONDOWN and js.get_instance_id() == 0 and event.button == 2:
-            if self.players[0].pay_for_power("heal"):
-                self.players[0].activate_power("heal")
+        for index, player in enumerate(self.players):
+            enemy_player = (index % 2) - 1
+            try:
+                if event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == 0:
+                    if player.pay_for_power("more"):
+                            self.players[enemy_player].activate_power("more")
+                elif event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == 1:
+                    if player.pay_for_power("speed"):
+                        self.players[enemy_player].activate_power("speed")
+                elif event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == 2:
+                    if player.pay_for_power("heal"):
+                        player.activate_power("heal")
+            except IndexError:
+                pass
 
         #players[1] using powers
         if event.type == pg.KEYDOWN and event.key == pg.K_k:
