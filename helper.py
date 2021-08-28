@@ -5,6 +5,14 @@ import pygame.surfarray as surfarray
 # import numpy as np
 from pygame.compat import geterror
 
+PLAYERCOUNT = 2
+WIN_SIZE = (512*2, 288*2)
+
+WORLD_SIZE = ((WIN_SIZE[0]-2)/2, WIN_SIZE[1])
+if PLAYERCOUNT > 2:
+    WORLD_SIZE = ((WIN_SIZE[0]-2)/2, WIN_SIZE[1]/2)
+# WORLD_DIMS = (255*2, 288*2)
+
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
 DATA_DIR = os.path.join(MAIN_DIR, "data")
 IMAGE_PATHS = [
@@ -37,8 +45,14 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_heart.png'), 0.1),
     (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 0.1)
 ]
+
+tilesets = os.path.join(DATA_DIR, 'tilesets')
+for i in os.listdir(tilesets):
+    if os.path.isdir(os.path.join(tilesets, i)):
+        for j in os.listdir(os.path.join(tilesets, i)):
+            if j.endswith('png'):
+                IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), 1))
 LOADED_IMAGES = {}
-WORLD_DIMS = (255*2, 288*2)
 
 
 def load_image(name, colorkey=(0, 0, 0, 255)):

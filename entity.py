@@ -1,7 +1,7 @@
 import random
 import pygame as pg
 
-from helper import DATA_DIR, load_image, LOADED_IMAGES, WORLD_DIMS
+from helper import DATA_DIR, load_image, LOADED_IMAGES, WORLD_SIZE
 
 
 # To do:
@@ -147,8 +147,8 @@ class Entity(pg.sprite.Sprite):
         self.info.update(new_info)
 
     def get_center(self):
-        return ((self.position[0] + self.image.get_width()/2) % WORLD_DIMS[0],
-                (self.position[1] + self.image.get_height()/2) % WORLD_DIMS[1])
+        return ((self.position[0] + self.image.get_width()/2) % WORLD_SIZE[0],
+                (self.position[1] + self.image.get_height()/2) % WORLD_SIZE[1])
 
     def ai_follow(self):
         x, y = self.get_center()

@@ -4,6 +4,7 @@ import pygame as pg
 from pygame.compat import geterror
 from pygame.locals import *
 
+import helper
 from helper import load_sound, DATA_DIR, load_all_images
 from world import World
 
@@ -12,7 +13,6 @@ if not pg.font:
 if not pg.mixer:
     print("Warning, sound disabled")
 
-WIN_SIZE = (512*2, 288*2)
 MENU = 1
 GAME = 2
 END = 3
@@ -41,12 +41,17 @@ class Game:
 
         half_screen_width = self.screen.get_size()[0] / 2
         screen_height = self.screen.get_size()[1]
-        self.p1 = World(dims=(half_screen_width-1, screen_height), player_sprite=PLAYER_1_SPRITE)
-        self.p2 = World(dims=(half_screen_width-1, screen_height), player_sprite=PLAYER_2_SPRITE)
+        self.players = []
+
+        sprites = [PLAYER_1_SPRITE, PLAYER_2_SPRITE, PLAYER_2_SPRITE, PLAYER_1_SPRITE]
+        characters = ["VIKING", "PRIEST", "PRIEST", "VIKING"]
+        for i in range(helper.PLAYERCOUNT):
+            self.players.append(World(dims=helper.WORLD_SIZE, character=characters[i]))
+            # self.players.append(World(dims=helper.WORLD_SIZE, player_sprite=sprites[i]))
 
     def setup_game(self):
         pg.init()
-        self.screen = pg.display.set_mode(WIN_SIZE, pg.SCALED | pg.RESIZABLE)
+        self.screen = pg.display.set_mode(helper.WIN_SIZE, pg.SCALED | pg.RESIZABLE)
         pg.display.set_caption(GAME_NAME)
         load_all_images()
         self.draw_menu_background()
@@ -86,13 +91,34 @@ class Game:
 
     def draw_game_background(self):
         half_screen_width = self.screen.get_size()[0] / 2
+        half_screen_height = self.screen.get_size()[1] / 2
         screen_height = self.screen.get_size()[1]
-        self.screen.blit(self.p1.world, (0, 0))
-        self.screen.blit(self.p2.world, (half_screen_width + 1, 0))
-        divider = pg.Surface((2, screen_height))
-        divider = divider.convert()
-        divider.fill(BLACK)
-        self.screen.blit(divider, (half_screen_width-1, 0))
+        screen_width = self.screen.get_size()[0]
+        for i, player in enumerate(self.players):
+            if i % 2 == 0:
+                posx = 0
+            else:
+                posx = half_screen_width + 1
+            if i < 2:
+                posy = 0
+            else:
+                posy = half_screen_height + 1
+            self.screen.blit(player.world, (posx, posy))
+        if len(self.players) == 3:
+            filler = pg.Surface(helper.WORLD_SIZE)
+            filler = filler.convert()
+            filler.fill(BLACK)
+            self.screen.blit(filler, (half_screen_width+1, half_screen_height+1))
+        if len(self.players) > 2:
+            h_divider = pg.Surface((screen_width, 2))
+            h_divider = h_divider.convert()
+            h_divider.fill(BLACK)
+            self.screen.blit(h_divider, (0, half_screen_height-1))
+
+        v_divider = pg.Surface((2, screen_height))
+        v_divider = v_divider.convert()
+        v_divider.fill(BLACK)
+        self.screen.blit(v_divider, (half_screen_width-1, 0))
         pg.display.flip()
 
     def draw_end_background(self):
@@ -102,15 +128,13 @@ class Game:
         self.write_end_text()
 
     def write_end_text(self):
-
-        loser = ""
-        if not self.p1.check_alive():
-            loser = PLAYER_1_NAME
-        elif not self.p2.check_alive():
-            loser = PLAYER_2_NAME
+        winner = ""
+        for player in self.players:
+            if player.check_alive():
+                winner = player.get_name()
 
         font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
-        text_title = font_title.render(loser, 1, (255, 20, 30))
+        text_title = font_title.render(winner + ' WINS!', 1, (255, 20, 30))
         textpos_title = text_title.get_rect(centerx=self.background_surface.get_width() / 2,
                                             centery=self.background_surface.get_height() / 5)
         self.background_surface.blit(text_title, textpos_title)
@@ -188,42 +212,42 @@ class Game:
 
     def process_game_event(self, event):
         if event.type == pg.KEYDOWN and event.key in P1DIRS:
-            self.p1.set_dir(P1DIRS[event.key], 1)
+            self.players[0].set_dir(P1DIRS[event.key], 1)
         elif event.type == pg.KEYUP and event.key in P1DIRS:
-            self.p1.set_dir(P1DIRS[event.key], 0)
+            self.players[0].set_dir(P1DIRS[event.key], 0)
 
         if event.type == pg.KEYDOWN and event.key in P2DIRS:
-            self.p2.set_dir(P2DIRS[event.key], 1)
+            self.players[1].set_dir(P2DIRS[event.key], 1)
         elif event.type == pg.KEYUP and event.key in P2DIRS:
-            self.p2.set_dir(P2DIRS[event.key], 0)
+            self.players[1].set_dir(P2DIRS[event.key], 0)
 
         #shop open/close keys
         if event.type == pg.KEYDOWN and event.key == pg.K_q:
-            self.p1.shop.toggle_open()
+            self.players[0].shop.toggle_open()
         elif event.type == pg.KEYDOWN and event.key == pg.K_p:
-            self.p2.shop.toggle_open()
+            self.players[1].shop.toggle_open()
 
         #p1 using powers
         if event.type == pg.KEYDOWN and event.key == pg.K_f:
-            if self.p1.pay_for_power("more"):
-                self.p2.activate_power("more")
+            if self.players[0].pay_for_power("more"):
+                self.players[1].activate_power("more")
         elif event.type == pg.KEYDOWN and event.key == pg.K_g:
-            if self.p1.pay_for_power("speed"):
-                self.p2.activate_power("speed")
+            if self.players[0].pay_for_power("speed"):
+                self.players[1].activate_power("speed")
         elif event.type == pg.KEYDOWN and event.key == pg.K_h:
-            if self.p1.pay_for_power("heal"):
-                self.p1.activate_power("heal")
+            if self.players[0].pay_for_power("heal"):
+                self.players[0].activate_power("heal")
 
         #p2 using powers
         if event.type == pg.KEYDOWN and event.key == pg.K_k:
-            if self.p2.pay_for_power("more"):
-                self.p1.activate_power("more")
+            if self.players[1].pay_for_power("more"):
+                self.players[0].activate_power("more")
         elif event.type == pg.KEYDOWN and event.key == pg.K_l:
-            if self.p2.pay_for_power("speed"):
-                self.p1.activate_power("speed")
+            if self.players[1].pay_for_power("speed"):
+                self.players[0].activate_power("speed")
         elif event.type == pg.KEYDOWN and event.key == pg.K_SEMICOLON:
-            if self.p2.pay_for_power("heal"):
-                self.p2.activate_power("heal")
+            if self.players[1].pay_for_power("heal"):
+                self.players[1].activate_power("heal")
 
     def process_end_event(self, event):
         pass
@@ -232,13 +256,16 @@ class Game:
         self.screen.blit(self.background_surface, (0, 0))
 
     def game_loop(self):
-        self.p1.move()
-        self.p2.move()
-        self.p1.update_world()
-        self.p2.update_world()
+        for i in self.players:
+            i.move()
+            i.update_world()
         self.draw_game_background()
 
-        if (not self.p1.check_alive()) or (not self.p2.check_alive()):
+        players_left = 0
+        for player in self.players:
+            players_left += player.check_alive()
+
+        if players_left < 2:
             self.game_state = END
             self.draw_end_background()
 

@@ -8,18 +8,22 @@ from helper import DATA_DIR, load_image, LOADED_IMAGES, load_sound
 from entity import Entity
 from shop import Shop
 
+CHARACTERS = {'VIKING': {'player_sprite': 'sprite_viking'},
+              'PRIEST': {'player_sprite': 'sprite_priest'}}
+
 
 class World:
 
-    def __init__(self, dims, player_sprite):
+    def __init__(self, dims, character):
 
         self.dims = dims
-
+        self.name = character
         # Delete me self.dir_dict = {pg.K_w: 0, pg.K_s: 0, pg.K_a: 0, pg.K_d: 0}
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
 
         self.coin_list = []
         self.enemy_list = []
+        player_sprite = CHARACTERS[character]['player_sprite']
         self.allsprites = pg.sprite.RenderPlain()
 
         self.world = pg.Surface(self.dims)
@@ -45,6 +49,9 @@ class World:
             self.gen_coin()
 
         self.update_world()
+
+    def get_name(self):
+        return self.name
 
     def create_sprite_dict(self, player_sprite):
         self.sprite_dict.update({"LEFT": player_sprite + "_left"})
