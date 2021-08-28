@@ -24,6 +24,9 @@ class Entity(pg.sprite.Sprite):
     def get_rect(self):
         return self.rect.center
 
+    def get_sprite(self):
+        return self.image
+
     def get_height(self):
         return self.image.get_height()
 
