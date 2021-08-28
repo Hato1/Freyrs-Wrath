@@ -34,7 +34,6 @@ class World:
         self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), type='Player')
         # self.player = self.entity_list[0]
 
-
         #spawns 5 coin entities
         for i in range(5):
             self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), speed=1, name='Coin')
