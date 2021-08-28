@@ -41,8 +41,8 @@ class Game:
 
         half_screen_width = self.screen.get_size()[0] / 2
         screen_height = self.screen.get_size()[1]
-        self.p1 = World(dims=(half_screen_width, screen_height), player_sprite = PLAYER_1_SPRITE)
-        self.p2 = World(dims=(half_screen_width, screen_height), player_sprite = PLAYER_2_SPRITE)
+        self.p1 = World(dims=(half_screen_width-1, screen_height), player_sprite=PLAYER_1_SPRITE)
+        self.p2 = World(dims=(half_screen_width-1, screen_height), player_sprite=PLAYER_2_SPRITE)
 
     def setup_game(self):
         pg.init()
@@ -89,10 +89,10 @@ class Game:
         screen_height = self.screen.get_size()[1]
         self.screen.blit(self.p1.world, (0, 0))
         self.screen.blit(self.p2.world, (half_screen_width + 1, 0))
-        divider = pg.Surface((1, screen_height))
+        divider = pg.Surface((2, screen_height))
         divider = divider.convert()
         divider.fill(BLACK)
-        self.screen.blit(divider, (half_screen_width, 0))
+        self.screen.blit(divider, (half_screen_width-1, 0))
         pg.display.flip()
 
     def draw_end_background(self):

@@ -1,5 +1,4 @@
 import random
-
 import pygame as pg
 from pygame.locals import *
 import os
@@ -25,7 +24,6 @@ class World:
 
         self.world = pg.Surface(self.dims)
         self.world = self.world.convert()
-        self.draw_world()
         self.shop = Shop(player_sprite)
 
         self.money = 100
@@ -39,9 +37,7 @@ class World:
         self.create_sprite_dict(player_sprite)
         self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
                              lives=3)
-        # self.player = self.entity_list[0]
         self.gen_enemy()
-
         # spawns 5 coin entities
         for i in range(5):
             self.gen_coin()
@@ -55,9 +51,8 @@ class World:
         self.sprite_dict.update({"DOWN": player_sprite + "_front"})
 
     def update_world(self):
-        self.world.fill((100, 250, 250))
         self.experimental_background.draw(self.world, self.dims)
-        self.player.move()
+        self.player_update()
         for sprite in self.allsprites:
             sprite.move()
 
@@ -77,8 +72,18 @@ class World:
     def get_surface(self):
         return self.world
 
-    def draw_world(self):
-        self.world.fill((100, 250, 250))
+    def player_update(self):
+        self.player.move()
+
+        for coin in self.coin_list:
+
+            if self.player.check_collision(coin):
+                self.money += 1
+                self.reset_entity(coin)
+        for enemy in self.enemy_list:
+            if self.player.check_collision(enemy):
+                self.reset_entity(enemy)
+                self.player.lives -= 1
 
     def update_gui(self):
         self.update_lives()
@@ -87,9 +92,7 @@ class World:
 
     def update_money(self):
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
-
         textpos_money = self.text_money.get_rect(topright=((self.world.get_width()), 0))
-
         self.world.blit(self.text_money, textpos_money)
 
     def update_shop(self):
@@ -132,19 +135,16 @@ class World:
             self.player.set_dir([x, y])
         self.experimental_background.slide([x, y])
 
-    def reset_coin(self, coin):
-        side = random.randint(0, 3)
+    def reset_entity(self, entity):
+        side = random.randint(0,1)
+        ran = random.random()
+        height = entity.get_height()
+        width = entity.get_width()
         if side == 0:
-            coin.set_position((random.randint(1, self.dims[0])), 1)
-
-        elif side == 1:
-            coin.set_position((self.dims[0], (random.randint(1, self.dims[1]))))
-
-        elif side == 2:
-            coin.set_position(((random.randint(1, self.dims[0])), self.dims[1]))
+            entity.set_position([ran*self.dims[0], -height/2])
 
         else:
-            coin.set_position((1, (random.randint(1, self.dims[1]))))
+            entity.set_position([-width/2, ran*self.dims[1]])
 
     def gen_coin(self):
         coin_sprite_dict = {"DOWN": "sprite_coin"}
