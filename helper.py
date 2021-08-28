@@ -1,5 +1,8 @@
 import os
 import pygame as pg
+from pygame.locals import *
+import pygame.surfarray as surfarray
+import numpy as np
 from pygame.compat import geterror
 
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
@@ -74,8 +77,10 @@ def load_all_images():
         dims = (int(img[0].get_height()*scale), int(img[0].get_width()*scale))
         img = (pg.transform.scale(img[0], dims).convert(), img[1])
         LOADED_IMAGES.update({image_name: img})
-    #make_images()
+    make_images()
 
 
-# def make_images():
-#     x = LOADED_IMAGES['dirt']
+def make_images():
+    striped = np.zeros((128, 128, 3))
+    striped[:] = (255, 0, 0)
+    striped[:, ::3] = (0, 255, 255)
