@@ -23,6 +23,8 @@ BLACK = (0, 0, 0)
 GAME_NAME = "Name of the Game"
 PLAYER_1_NAME = "VIKING"
 PLAYER_2_NAME = "MONK"
+PLAYER_1_SPRITE = "sprite_priest"
+PLAYER_2_SPRITE = "sprite_viking"
 P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT'}
 P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT'}
 
@@ -38,8 +40,8 @@ class Game:
 
         half_screen_width = self.screen.get_size()[0] / 2
         screen_height = self.screen.get_size()[1]
-        self.p1 = World((half_screen_width, screen_height))
-        self.p2 = World((half_screen_width, screen_height))
+        self.p1 = World(dims=(half_screen_width, screen_height), player_sprite = PLAYER_1_SPRITE)
+        self.p2 = World(dims=(half_screen_width, screen_height), player_sprite = PLAYER_2_SPRITE)
 
     def setup_game(self):
         pg.init()
@@ -145,8 +147,7 @@ class Game:
                     going = False
                 elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                     going = False
-
-                elif event.type == pg.KEYDOWN and event.key == pg.K_f:
+                elif event.type == pg.KEYDOWN and event.key == pg.K_v:
                     pg.display.toggle_fullscreen()
                 elif event.type == pg.VIDEORESIZE:
                     pg.display._resize_event(event)
@@ -194,6 +195,11 @@ class Game:
             self.p2.set_dir(P2DIRS[event.key], 1)
         elif event.type == pg.KEYUP and event.key in P2DIRS:
             self.p2.set_dir(P2DIRS[event.key], 0)
+
+        if event.type == pg.KEYDOWN and event.key == pg.K_q:
+            self.p1.shop.toggle_open()
+        elif event.type == pg.KEYDOWN and event.key == pg.K_p:
+            self.p2.shop.toggle_open()
 
     def process_end_event(self, event):
         pass

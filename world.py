@@ -12,7 +12,7 @@ from shop import Shop
 
 class World:
 
-    def __init__(self, dims):
+    def __init__(self, dims, player_sprite):
 
         self.dims = dims
 
@@ -49,12 +49,12 @@ class World:
         self.player.move()
         for entity in self.entity_list:
             entity.move()
-        self.update_shop()
 
         self.allsprites.update()
 
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
+        self.update_shop()
         self.world.blit(self.player.get_sprite(), self.player.get_position())
         pg.display.flip()
 
@@ -80,7 +80,7 @@ class World:
     def update_shop(self):
         self.shop.draw_shop()
 
-        self.world.blit(self.shop.shop, (0, 0))
+        self.world.blit(self.shop.shop_surface, (0, 0))
 
     def check_alive(self):
         return self.player.is_alive()
