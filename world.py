@@ -26,7 +26,7 @@ class World:
         self.world = pg.Surface(self.dims)
         self.world = self.world.convert()
         self.draw_world()
-        self.shop = Shop()
+        self.shop = Shop(player_sprite)
 
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
