@@ -6,7 +6,7 @@ import os
 
 from helper import DATA_DIR, load_image
 
-from entity import Entity, BaseAI, Follow
+from entity import Entity
 from shop import Shop
 
 
@@ -16,7 +16,6 @@ class World:
 
         self.dims = dims
 
-        # Delete me self.dir_dict = {pg.K_w: 0, pg.K_s: 0, pg.K_a: 0, pg.K_d: 0}
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
 
         self.entity_list = []
@@ -31,17 +30,14 @@ class World:
         # 'sprite_viking', 'sprite_viking_front.png'
         player_path = os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_front.png')
         coin_path = os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png')
-        # self.add_entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), None, name='Player')
         self.player = Entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), type='Player')
-        # self.player = self.entity_list[0]
 
-        #spawns 5 coin entities
+        # spawns 5 coin entities
         for i in range(5):
             self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), name='Coin')
 
-        fol = Follow()
-        enemy = self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, speed=0.5, name='Enemy')
-        fol.update_info({'target': self.player, 'me': enemy})
+        enemy = self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow', speed=0.5, name='Enemy')
+        enemy.update_info({'target': self.player, 'me': enemy})
 
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
         self.update_world()
@@ -60,11 +56,10 @@ class World:
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
         self.world.blit(self.player.get_sprite(), self.player.get_position())
-        #self.allsprites.draw(self.world)
         pg.display.flip()
 
-    def add_entity(self, sprite, pos, ai_state=None, name="Entity", speed=5):
-        entity = Entity(sprite, pos, ai=ai_state, type=name, speed=speed)
+    def add_entity(self, sprite, pos, ai=None, name="Entity", speed=5):
+        entity = Entity(sprite, pos, ai=ai, type=name, speed=speed)
         self.entity_list.append(entity)
         return entity
 
@@ -112,5 +107,3 @@ class World:
         pos = coin.get_position()
         newpos = ((pos[0]-self.dims[0]) * -1, (pos[1]-self.dims[1]) * -1)
         coin.set_position(newpos)
-
-
