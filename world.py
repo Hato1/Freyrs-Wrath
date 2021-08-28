@@ -36,10 +36,10 @@ class World:
 
         #spawns 5 coin entities
         for i in range(5):
-            self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), speed=1, name='Coin')
+            self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), name='Coin')
 
         fol = Follow()
-        self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, name='Enemy')
+        self.add_entity(coin_path, ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), fol, speed=1, name='Enemy')
         fol.update_info({'target': self.player,'me':self.entity_list[-1]})
 
         self.allsprites = pg.sprite.RenderPlain(self.entity_list)
@@ -63,7 +63,7 @@ class World:
         pg.display.flip()
 
     def add_entity(self, sprite, pos, ai_state=None, name="Entity", speed=5):
-        entity = Entity(sprite, pos, ai=ai_state, type=name)
+        entity = Entity(sprite, pos, ai=ai_state, type=name, speed=speed)
         self.entity_list.append(entity)
 
     def get_surface(self):
