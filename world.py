@@ -12,7 +12,7 @@ from shop import Shop
 
 class World:
 
-    def __init__(self, dims):
+    def __init__(self, dims, player_sprite):
 
         self.dims = dims
 
