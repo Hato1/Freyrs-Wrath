@@ -8,10 +8,11 @@ from helper import DATA_DIR, load_image, LOADED_IMAGES
 # Handle position wrapping. (helper function?)
 
 class Entity(pg.sprite.Sprite):
-    def __init__(self, sprite, position, lives=3, speed=5, ai=None, type="Entity", info={}):
+    def __init__(self, sprite_dict, position, lives=3, speed=5, ai=None, type="Entity", info={}):
         """EG Entity([5.5, 7.64], ai='follow')"""
         pg.sprite.Sprite.__init__(self)
-        self.image, self.rect = LOADED_IMAGES[sprite]
+        self.image, self.rect = LOADED_IMAGES[sprite_dict["DOWN"]]
+        self.sprite_dict = sprite_dict
         self.position = list(position)
         self.position[0] -= self.image.get_width() / 2
         self.position[1] -= self.image.get_height() / 2
@@ -134,3 +135,6 @@ class Entity(pg.sprite.Sprite):
         x, y = self.position
         tx, ty = self.info['target'].get_position()
         return (tx-x, ty-y)
+
+    def set_dir(self, dir):
+        self.image, self.rect = LOADED_IMAGES[self.sprite_dict[dir]]
