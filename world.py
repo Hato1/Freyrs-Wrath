@@ -136,6 +136,7 @@ class World:
         x = self.dir_dict['LEFT'] - self.dir_dict['RIGHT']
         y = self.dir_dict['UP'] - self.dir_dict['DOWN']
         norm = (x ** 2 + y ** 2) ** 0.5
+        norm = norm / 2 # Double move speed
         if norm == 0:
             return
         x = x / norm
@@ -167,11 +168,8 @@ class World:
             coin = self.add_entity(coin_sprite_dict, (1, ran*self.dims[1]), name='Coin')
             self.coin_list.append(coin)
 
-    def gen_enemy(self, speed=0.5):
+    def gen_enemy(self, speed=1):
         enemy_sprite_dict = helper.create_sprite_dict(CHARACTERS[self.name]['enemy_sprite'])
-        #if self.name == 'DEMON':
-        #    enemy_sprite_dict = {"DOWN": "sprite_priest_front", "UP": "sprite_priest_back", "LEFT": "sprite_priest_left",
-        #                         "RIGHT": "sprite_priest_right"}
         enemy = self.add_entity(enemy_sprite_dict,
                                 ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow',
                                 speed=speed, name='Enemy')

@@ -8,11 +8,11 @@ from pygame.compat import geterror
 import random
 
 PLAYERCOUNT = 4
-WIN_SIZE = ((512*2)+2, (288*2)+2)
+WIN_SIZE = ((512*4)+2, (288*4)+2)
 
-WORLD_SIZE = (1024//2, 576)
+WORLD_SIZE = ((512*4)//2, (288*4))
 if PLAYERCOUNT > 2:
-    WORLD_SIZE = (1024//2, 576//2)
+    WORLD_SIZE = ((512*4)//2, (288*4)//2)
 # WORLD_DIMS = (255*2, 288*2)
 
 # tilesize = 512/8 = 32
@@ -22,16 +22,16 @@ if PLAYERCOUNT > 2:
 MAIN_DIR = os.path.split(os.path.abspath(__file__))[0]
 DATA_DIR = os.path.join(MAIN_DIR, "data")
 IMAGE_PATHS = [
-    (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_front.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_back.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_right.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_left.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_front.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_back.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_right.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_left.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_front.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_front.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_back.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_right.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_left.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_front.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_back.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_right.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_left.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_front.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 2),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_icon_p.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_f.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_g.png'), 1),
@@ -40,11 +40,10 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_l.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_;.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_icon_q.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_front.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_back.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_left.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_right.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_front.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_back.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_left.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_right.png'), 2),
     (os.path.join(DATA_DIR, 'dirt.png'), 0.2),
     (os.path.join(DATA_DIR, 'sand.png'), 0.4),
     (os.path.join(DATA_DIR, 'ground.jpg'), 0.5),
@@ -57,7 +56,7 @@ for i in os.listdir(tilesets):
     if os.path.isdir(os.path.join(tilesets, i)):
         for j in os.listdir(os.path.join(tilesets, i)):
             if j.endswith('png'):
-                IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), 1/8))
+                IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), 1/4))
 LOADED_IMAGES = {}
 
 
@@ -102,10 +101,6 @@ def load_all_images():
     make_images()
 
 
-roads = """
-"""
-
-
 def create_background(name):
     # return {"DOWN": 'sand'}
     # U = UR
@@ -123,7 +118,7 @@ def create_background(name):
         '        U--D    ',
         '           |    '
         ]
-    dims = (WORLD_SIZE[0]//32, WORLD_SIZE[1]//32)
+    dims = (WORLD_SIZE[0]//64, WORLD_SIZE[1]//64)
     bg = pg.Surface(WORLD_SIZE)
     for i in range(dims[0]):
         for j in range(dims[1]):
@@ -141,11 +136,18 @@ def create_background(name):
                 tile = '36'
             elif roads[j][i] == 'D':
                 tile = '30'
+            elif roads[j][i] == "2":
+                tile = '11'
+            elif roads[j][i] == "4":
+                tile = '13'
+            elif roads[j][i] == "6":
+                tile = '15'
+            elif roads[j][i] == "8":
+                tile = '17'
             elif roads[j][i].isdigit():
-                tile = str(47+int(roads[j][i]))
+                tile = str(18+int(roads[j][i]))
 
-            bg.blit(LOADED_IMAGES[name[0] + tile], (i*32, j*32))
-            print(LOADED_IMAGES[name[0] + tile].get_size())
+            bg.blit(LOADED_IMAGES[name[0] + tile], (i*64, j*64))
     LOADED_IMAGES.update({name: bg})
     return {"DOWN": name}
 
