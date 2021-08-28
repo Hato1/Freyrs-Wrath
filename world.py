@@ -30,6 +30,7 @@ class World:
         # 'sprite_viking', 'sprite_viking_front.png'
         player_path = os.path.join(DATA_DIR, 'Fist.bmp')
         coin_path = os.path.join(DATA_DIR, 'chimp.bmp')
+
         self.add_entity(player_path, (self.world.get_width()/2, self.world.get_height()/2), None, name='Player')
         self.player = self.entity_list[0]
 
