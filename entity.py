@@ -21,6 +21,52 @@ class Entity(pg.sprite.Sprite):
     def __type__(self):
         return self.type
 
+    def get_rect(self):
+        return self.rect.center
+
+    def get_height(self):
+        return self.image.get_height()
+
+    def move_ip(self, x, y):
+        self.rect.move_ip(x, y)
+
+    def draw(self, surface, dims):
+        wrap_around = False
+        # position = sprite.get_rect()
+        if self.rect[0] < 0:
+            # off screen left
+            self.rect.move_ip(dims[0], 0)
+            wrap_around = True
+
+        if self.rect[0] + self.image.get_width() > dims[0]:
+            # off screen right
+            self.rect.move_ip(-dims[0], 0)
+            wrap_around = True
+
+        if self.rect[1] < 0:
+            # off screen top
+            self.rect.move_ip(0, dims[1])
+            wrap_around = True
+
+        if self.rect[1] + self.image.get_height() > dims[1]:
+            # off screen bottom
+            self.rect.move_ip(0, -dims[1])
+            wrap_around = True
+
+        if wrap_around:
+            surface.blit(self.image, self.rect)
+
+        self.rect[0] %= dims[0]
+        self.rect[1] %= dims[1]
+
+        surface.blit(self.image, self.rect)
+
+    def get_width(self):
+        return self.image.get_width()
+
+    def set_rect(self, rect):
+        self.rect.center = rect
+
     def get_position(self):
         return self.rect.topleft
 

@@ -79,8 +79,8 @@ while True:
 
     position[0] %= WIDTH
     position[1] %= HEIGHT  
-    carX %= WIDTH
-    carY %= HEIGHT
+    # carX %= WIDTH
+    # carY %= HEIGHT
 
 
     SCREEN.blit(rotcar, position)
