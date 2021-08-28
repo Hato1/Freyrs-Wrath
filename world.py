@@ -1,5 +1,4 @@
 import random
-
 import pygame as pg
 from pygame.locals import *
 import os
@@ -57,8 +56,6 @@ class World:
         for sprite in self.allsprites:
             sprite.move()
 
-
-
         self.allsprites.update()
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
@@ -77,13 +74,17 @@ class World:
 
     def player_update(self):
         self.player.move()
-        # for coin in self.coin_list:
-        #     self.player.check_collision()
-        #     self.money += 1
-        #     reset_entity(coin)
-        # for enemy in self.enemy_list:
-        #     self.player.check_collision()
-        #     self.player.lives -= 1
+
+        for coin in self.coin_list:
+
+            if self.player.check_collision(coin):
+                self.money += 1
+                self.reset_entity(coin)
+        for enemy in self.enemy_list:
+            if self.player.check_collision(enemy):
+                pass
+
+                # self.player.lives -= 1
 
     def update_gui(self):
         self.update_lives()
@@ -136,18 +137,15 @@ class World:
         self.experimental_background.slide([x, y])
 
     def reset_entity(self, entity):
-        side = random.randint(0,3)
+        side = random.randint(0,1)
+        ran = random.random()
+        height = entity.get_height()
+        width = entity.get_width()
         if side == 0:
-            entity.set_position((random.randint(1, self.dims[0])), 1)
-
-        elif side == 1:
-            entity.set_position((self.dims[0], (random.randint(1, self.dims[1]))))
-
-        elif side == 2:
-            entity.set_position(((random.randint(1, self.dims[0])), self.dims[1]))
+            entity.set_position([ran*self.dims[0], -height/2])
 
         else:
-            entity.set_position((1, (random.randint(1, self.dims[1]))))
+            entity.set_position([-width/2, ran*self.dims[1]])
 
     def gen_coin(self):
         coin_sprite_dict = {"DOWN": "sprite_coin"}
