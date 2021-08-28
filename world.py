@@ -99,7 +99,7 @@ class World:
 
     def gen_coin(self):
         coin_path = "sprite_coin"
-        side = random.randint(0,3)
+        side = random.randint(0, 3)
         if side == 0:
             self.add_entity(coin_path, ((random.randint(1, self.dims[0])), 1), name='Coin')
         elif side == 1:

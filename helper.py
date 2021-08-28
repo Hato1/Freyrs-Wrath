@@ -69,7 +69,7 @@ def load_all_images():
     for image_path, scale in IMAGE_PATHS:
         image_name = image_path.split('/')[-1]
         image_name = image_name.split('.')[0]
-        img = load_image(image_path)
+        img = load_image(image_path, -1)
         dims = (int(img[0].get_height()*scale), int(img[0].get_width()*scale))
         img = (pg.transform.scale(img[0], dims).convert(), img[1])
         LOADED_IMAGES.update({image_name: img})
