@@ -2,6 +2,7 @@ import os
 
 import pygame as pg
 from pygame.compat import geterror
+from pygame.locals import *
 
 from helper import load_sound, DATA_DIR
 from world import World

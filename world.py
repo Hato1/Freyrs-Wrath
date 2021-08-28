@@ -1,6 +1,7 @@
 import random
 
 import pygame as pg
+from pygame.locals import *
 import os
 
 from helper import DATA_DIR, load_image
