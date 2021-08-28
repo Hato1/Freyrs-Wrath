@@ -34,8 +34,8 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'dirt.png'), 0.2),
     (os.path.join(DATA_DIR, 'sand.png'), 0.4),
     (os.path.join(DATA_DIR, 'ground.jpg'), 0.5),
-    (os.path.join(DATA_DIR, 'sprite_heart.png'), 0.125),
-    (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 0.125)
+    (os.path.join(DATA_DIR, 'sprite_heart.png'), 0.1),
+    (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 0.1)
 ]
 LOADED_IMAGES = {}
 WORLD_DIMS = (255*2, 288*2)
