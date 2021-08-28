@@ -4,7 +4,7 @@ import pygame as pg
 from pygame.compat import geterror
 from pygame.locals import *
 
-from helper import load_sound, DATA_DIR
+from helper import load_sound, DATA_DIR, load_all_images
 from world import World
 
 if not pg.font:
@@ -45,8 +45,8 @@ class Game:
         pg.init()
         self.screen = pg.display.set_mode((512, 288), pg.SCALED | pg.RESIZABLE)
         pg.display.set_caption(GAME_NAME)
+        load_all_images()
         self.draw_menu_background()
-
         self.soundtrack = load_sound("Fishing song.mp3")
         # self.soundtrack.play(-1)
 
