@@ -27,7 +27,7 @@ class World:
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
-        self.experimental_background = Entity('sand', (self.world.get_width()/2, self.world.get_height()/2))
+        self.experimental_background = Entity('dirt', (self.world.get_width()/2, self.world.get_height()/2))
         self.player = Entity(player_sprite, (self.world.get_width()/2, self.world.get_height()/2), type='Player')
         # self.player = self.entity_list[0]
 
@@ -118,6 +118,3 @@ class World:
 
     def get_dir(self):
         return self.dir_dict
-
-
-

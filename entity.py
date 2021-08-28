@@ -67,9 +67,9 @@ class Entity(pg.sprite.Sprite):
             x, y = self.position
             surface.blit(self.image, (x+xmod, y))
             surface.blit(self.image, (x, y+ymod))
+            surface.blit(self.image, (x+xmod, y+ymod))
             self.position[0] += xmod
             self.position[1] += ymod
-
         elif wrap_x:
             self.position[0] += xmod
             surface.blit(self.image, self.position)
