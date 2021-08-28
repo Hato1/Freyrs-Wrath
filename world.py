@@ -30,7 +30,7 @@ class World:
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
-        sand_sprite_dict = {"DOWN" : 'sand'}
+        sand_sprite_dict = {"DOWN": 'sand'}
         self.experimental_background = Entity(sand_sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2))
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
