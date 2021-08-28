@@ -13,6 +13,8 @@ class Entity(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = LOADED_IMAGES[sprite]
         self.position = list(position)
+        self.position[0] -= self.image.get_width() / 2
+        self.position[1] -= self.image.get_height() / 2
         # self.rect.center = position
         self.lives = lives
         self.speed = speed
@@ -90,7 +92,10 @@ class Entity(pg.sprite.Sprite):
 
     def move(self):
         if self.ai:
-            x, y = self.ai_follow() # .decide_move()
+            if self.ai == 'follow':
+                x, y = self.ai_follow()
+            else:
+                raise ValueError('No such ai method {}'.format())
             norm = (x**2 + y**2)**0.5
             if norm == 0:
                 return (0, 0)
