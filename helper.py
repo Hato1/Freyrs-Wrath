@@ -13,6 +13,7 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_back.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_right.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_left.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_front.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_icon_p.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_f.png'), 1),
