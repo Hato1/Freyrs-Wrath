@@ -2,7 +2,10 @@ import os
 
 import pygame as pg
 
-from helper import DATA_DIR, load_image, LOADED_IMAGES
+from helper import LOADED_IMAGES, DATA_DIR
+
+STARTING_PRICE_LIST = [0, 2, 2, 2]
+STARTING_ABILITY_IMAGE_LIST = ["shop_icon_blank", "sprite_shop_blank0", "sprite_shop_blank1", "sprite_shop_blank2"]
 
 
 class Shop:
@@ -15,26 +18,18 @@ class Shop:
         self.shop_surface = self.shop_surface.convert()
         self.shop_bg_color = (10, 150, 50)
         self.shop_card_list = []
+
         self.populate_card_list(player_sprite)
 
     def populate_card_list(self, player_sprite):
         image_size = (self.closed_surface.get_width(), self.closed_surface.get_height())
 
-        if player_sprite == "sprite_viking":
-            self.shop_card_list = [
-                ShopCard("shop_icon", LOADED_IMAGES["shop_icon_q"], 0, image_size=image_size),
-                ShopCard("ability1", LOADED_IMAGES["shop_ability_f"], 2, image_size=image_size),
-                ShopCard("ability2", LOADED_IMAGES["shop_ability_g"], 2, image_size=image_size),
-                ShopCard("ability3", LOADED_IMAGES["shop_ability_h"], 2, image_size=image_size)
-            ]
-
-        else:
-            self.shop_card_list = [
-                ShopCard("shop_icon", LOADED_IMAGES["shop_icon_p"], 0, image_size=image_size),
-                ShopCard("ability1", LOADED_IMAGES["shop_ability_k"], 2, image_size=image_size),
-                ShopCard("ability2", LOADED_IMAGES["shop_ability_l"], 2, image_size=image_size),
-                ShopCard("ability3", LOADED_IMAGES["shop_ability_;"], 2, image_size=image_size)
-            ]
+        self.shop_card_list = [
+            ShopCard("shop_icon", LOADED_IMAGES[STARTING_ABILITY_IMAGE_LIST[0]], STARTING_PRICE_LIST[0], image_size),
+            ShopCard("ability1", LOADED_IMAGES[STARTING_ABILITY_IMAGE_LIST[1]], STARTING_PRICE_LIST[1], image_size),
+            ShopCard("ability2", LOADED_IMAGES[STARTING_ABILITY_IMAGE_LIST[2]], STARTING_PRICE_LIST[2], image_size),
+            ShopCard("ability3", LOADED_IMAGES[STARTING_ABILITY_IMAGE_LIST[3]], STARTING_PRICE_LIST[3], image_size)
+        ]
 
     def draw_shop(self):
         if self.open:
@@ -71,8 +66,22 @@ class Shop:
 
 class ShopCard:
 
-    def __init__(self, name, image, price, image_size, control="f"):
+    def __init__(self, name, image, price, image_size, control="q"):
         self.name = name
-        self.image = pg.transform.scale(image, image_size)
+        self.base_image = pg.transform.scale(image, image_size)
+        self.image = self.base_image
         self.price = price
         self.control = control
+        font_name = 'MomcakeBold-WyonA.otf'
+        if name != "shop_icon":
+            font = pg.font.Font(os.path.join(DATA_DIR, font_name), 18)
+            text_control = font.render(control, 1, (255, 255, 255))
+            text_pos = text_control.get_rect(centerx=self.base_image.get_width() / 2,
+                                             centery=self.base_image.get_height() / 1.1)
+            self.base_image.blit(text_control, text_pos)
+        else:
+            font = pg.font.Font(os.path.join(DATA_DIR, font_name), 36)
+            text_control = font.render(control, 1, (255, 255, 255))
+            text_pos = text_control.get_rect(centerx=self.base_image.get_width() / 2,
+                                             centery=self.base_image.get_height() / 1.6)
+            self.base_image.blit(text_control, text_pos)
