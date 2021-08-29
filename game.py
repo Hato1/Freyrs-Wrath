@@ -283,6 +283,16 @@ class Game:
                 self.number_of_players += 1
                 self.button_sound.play()
 
+        elif event.type == JOYBUTTONDOWN and event.button == 4:
+            if self.number_of_players > 2:
+                self.number_of_players -= 1
+                self.button_sound.play()
+
+        elif event.type == JOYBUTTONDOWN and event.button == 5:
+            if self.number_of_players < 4:
+                self.number_of_players += 1
+                self.button_sound.play()
+
     def process_select_event(self, event):
         if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == SELECT:
             self.game_state = GAME
@@ -406,8 +416,14 @@ class Game:
             for player in self.players:
                 player.reset()
             self.game_state = MENU
-            self.soundtrack.play(-1)
             self.draw_menu_background()
+            self.soundtrack.play(-1)
+        if event.type == JOYBUTTONDOWN and event.button == XBOX360['A']:
+            for player in self.players:
+                player.reset()
+            self.game_state = MENU
+            self.draw_menu_background()
+            self.soundtrack.play(-1)
 
     def menu_loop(self):
         self.write_menu_text()
