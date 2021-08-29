@@ -58,6 +58,7 @@ class World:
     def get_name(self):
         return self.name
 
+
     def init_character(self, name):
         self.name = name
         self.background = Entity(helper.create_background(self.name), (0, 0))
@@ -68,12 +69,9 @@ class World:
             enemy.set_sprite_dict(enemy_dict)
 
     def draw_pit(self):
-        x, y = self.background.get_position()
-        x += 8.5*48 % self.world.get_width()
-        y += 4.25*48 % self.world.get_height()
-        #rect = LOADED_IMAGES[self.name[0] + 'pit'].get_rect(center=(x, y))
-        Entity(helper.create_background(self.name), (0, 0))
-        self.world.blit(LOADED_IMAGES[self.name[0] + 'pit'], (x,y))
+        # rect = LOADED_IMAGES[self.name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
+        # self.world.blit(LOADED_IMAGES[self.name[0] + 'pit'], rect)
+        pass
 
     def create_sprite_dict(self, player_sprite):
         self.sprite_dict.update({"LEFT": player_sprite + "_left"})
