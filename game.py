@@ -50,8 +50,9 @@ class Game:
     def setup_game(self):
         self.screen = pg.display.set_mode(WIN_SIZE, pg.SCALED | pg.RESIZABLE)
         pg.display.set_caption(GAME_NAME)
-        load_all_images()
         self.draw_menu_background()
+        load_all_images()
+
         self.soundtrack = load_sound("Fishing song.mp3")
         self.soundtrack.set_volume(0.2)
         self.soundtrack.play(-1)

@@ -41,12 +41,10 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_right.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_icon_p.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_f.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_g.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_h.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_k.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_l.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_;.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'sprite_shop_blank0.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'sprite_shop_blank1.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'sprite_shop_blank2.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'shop_icon_blank.png'), 2),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_icon_q.png'), 2),
     (os.path.join(DATA_DIR, 'dirt.png'), 0.2),
     (os.path.join(DATA_DIR, 'sand.png'), 0.4),
@@ -68,7 +66,7 @@ for i in os.listdir(tilesets):
                         scale = scale * 1.5
                     elif j == "Vpit.png":
                         scale = scale * 2.9
-                    elif j == "Ppit.png":
+                    elif j == "Ppit2.png":
                         scale = scale * 2.7
                 IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), scale))
 LOADED_IMAGES = {}
