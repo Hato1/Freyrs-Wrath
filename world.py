@@ -39,6 +39,8 @@ class World:
 
         self.ouch_sound = load_sound("ouch.mp3")
         self.ouch_sound.set_volume(0.2)
+        self.coin_sound = load_sound("coin_sound.mp3")
+        self.coin_sound.set_volume(0.05)
 
         self.init_background()
         self.sprite_dict = {}
@@ -97,6 +99,7 @@ class World:
 
             if self.player.check_collision(coin):
                 self.money += 1
+                self.coin_sound.play()
                 self.reset_entity(coin)
         for enemy in self.enemy_list:
             if self.player.check_collision(enemy):
