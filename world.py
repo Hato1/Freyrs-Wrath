@@ -66,6 +66,7 @@ class World:
     def draw_pit(self):
         # rect = LOADED_IMAGES[self.name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
         # self.world.blit(LOADED_IMAGES[self.name[0] + 'pit'], rect)
+        pass
 
     def create_sprite_dict(self, player_sprite):
         self.sprite_dict.update({"LEFT": player_sprite + "_left"})
