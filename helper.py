@@ -169,7 +169,6 @@ def create_background(name, world_size, number_of_players):
     bg = pg.Surface(world_size)
     for i in range(dims[0]):
         for j in range(dims[1]):
-            print(i,j)
             if roads[j][i] == ' ':
                 tile = random.choice(['43', '52'])
             elif roads[j][i] == '-':
@@ -203,7 +202,9 @@ def create_background(name, world_size, number_of_players):
                 if len(num) == 1:
                     num = '0' + num
                 img = LOADED_IMAGES[name[0] + "E" + num]
-                bg.blit(img, (i*48 + img.get_height(), j*48 + img.get_width()))
+                #if name[0] + "E" + num == "DE19":
+                #    print(LOADED_IMAGES[name[0] + "E" + num].get_width(), LOADED_IMAGES[name[0] + "E" + num].get_height())
+                bg.blit(img, (i*48 + img.get_width(), j*48 + img.get_height()))
 
     LOADED_IMAGES.update({name: bg})
     return {"DOWN": name}
