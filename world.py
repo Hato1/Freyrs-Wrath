@@ -71,6 +71,7 @@ class World:
         for enemy in self.enemy_list:
             enemy_dict = helper.create_sprite_dict(CHARACTERS[name]['enemy_sprite'])
             enemy.set_sprite_dict(enemy_dict)
+        self.pit.set_sprite_dict({"DOWN": self.name[0] + 'pit'})
 
     def draw_pit(self):
         x, y = self.background.position
