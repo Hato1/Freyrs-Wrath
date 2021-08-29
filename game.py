@@ -417,12 +417,14 @@ class Game:
                 player.reset()
             self.game_state = MENU
             self.draw_menu_background()
+            self.victory_sound.stop()
             self.soundtrack.play(-1)
         if event.type == JOYBUTTONDOWN and event.button == XBOX360['A']:
             for player in self.players:
                 player.reset()
             self.game_state = MENU
             self.draw_menu_background()
+            self.victory_sound.stop()
             self.soundtrack.play(-1)
 
     def menu_loop(self):
