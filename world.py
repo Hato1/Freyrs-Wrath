@@ -48,12 +48,13 @@ class World:
         self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
                              lives=3)
 
+        self.draw_world()
+
+    def start(self):
         self.gen_enemy()
         # spawns 5 coin entities
         for i in range(5):
             self.gen_coin()
-
-        self.draw_world()
 
     def get_name(self):
         return self.name
@@ -276,3 +277,10 @@ class World:
 
     def get_height(self):
         return self.dims[1]
+
+    def reset(self):
+        self.player.lives = 3
+        for index, enemy in enumerate(self.enemy_list):
+            del self.enemy_list[index]
+        self.allsprites.empty()
+        self.shop.close_shop()

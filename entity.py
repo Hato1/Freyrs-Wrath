@@ -92,7 +92,6 @@ class Entity(pg.sprite.Sprite):
         self.position = rect
 
     def set_sprite_dict(self, sprite_dict):
-        print(sprite_dict)
         self.sprite_dict = sprite_dict
 
     def get_position(self):
