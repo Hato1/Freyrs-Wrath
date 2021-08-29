@@ -7,7 +7,7 @@ from pygame.compat import geterror
 
 import random
 
-PLAYERCOUNT = 2
+PLAYERCOUNT = 4
 WIN_SIZE = ((512*3)+2, (288*3)+2)
 
 WORLD_SIZE = ((512*3)//2, (288*3))
@@ -39,7 +39,7 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_back.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_left.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_right.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_icon_p.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_f.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_g.png'), 1),
