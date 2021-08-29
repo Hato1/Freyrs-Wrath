@@ -6,7 +6,8 @@ from helper import LOADED_IMAGES, DATA_DIR
 
 STARTING_PRICE_LIST = [0, 2, 2, 2]
 STARTING_ABILITY_IMAGE_LIST = ["shop_icon_blank", "sprite_shop_blank0", "sprite_shop_blank1", "sprite_shop_blank2"]
-
+BLACK = (0,0,0)
+WHITE = (255,255,255)
 
 class Shop:
 
@@ -71,17 +72,30 @@ class ShopCard:
         self.base_image = pg.transform.scale(image, image_size)
         self.image = self.base_image
         self.price = price
-        self.control = control
-        font_name = 'MomcakeBold-WyonA.otf'
-        if name != "shop_icon":
-            font = pg.font.Font(os.path.join(DATA_DIR, font_name), 18)
+        self.font_name = 'MomcakeBold-WyonA.otf'
+        self.set_control(control)
+        self.set_price(price)
+
+    def set_control(self, control):
+        if self.name != "shop_icon":
+            font = pg.font.Font(os.path.join(DATA_DIR, self.font_name), 18)
             text_control = font.render(control, 1, (255, 255, 255))
             text_pos = text_control.get_rect(centerx=self.base_image.get_width() / 2,
                                              centery=self.base_image.get_height() / 1.1)
             self.base_image.blit(text_control, text_pos)
         else:
-            font = pg.font.Font(os.path.join(DATA_DIR, font_name), 36)
-            text_control = font.render(control, 1, (255, 255, 255))
+            font = pg.font.Font(os.path.join(DATA_DIR, self.font_name), 36)
+            text_control = font.render(control, 1, WHITE)
             text_pos = text_control.get_rect(centerx=self.base_image.get_width() / 2,
                                              centery=self.base_image.get_height() / 1.6)
             self.base_image.blit(text_control, text_pos)
+
+    def set_price(self, price):
+        if self.name != "shop_icon":
+            font = pg.font.Font(os.path.join(DATA_DIR, self.font_name), 18)
+            text_control = font.render(str(price), 1, BLACK)
+            text_pos = text_control.get_rect(centerx=self.base_image.get_width()/1.5,
+                                             centery=self.base_image.get_height() / 5.6)
+            self.base_image.blit(text_control, text_pos)
+        else:
+            pass

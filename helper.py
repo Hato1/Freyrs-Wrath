@@ -66,7 +66,7 @@ for i in os.listdir(tilesets):
                         scale = scale * 1.5
                     elif j == "Vpit.png":
                         scale = scale * 2.9
-                    elif j == "Ppit.png":
+                    elif j == "Ppit2.png":
                         scale = scale * 2.7
                 IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), scale))
 LOADED_IMAGES = {}
