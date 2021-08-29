@@ -243,6 +243,15 @@ class Game:
         elif event.type == pg.KEYUP and event.key in P2DIRS:
             self.players[1].set_dir(P2DIRS[event.key], 0)
 
+        if event.type == pg.KEYDOWN and event.key in P2DIRS:
+            self.players[2].set_dir(P2DIRS[event.key], 1)
+        elif event.type == pg.KEYUP and event.key in P2DIRS:
+            self.players[2].set_dir(P2DIRS[event.key], 0)
+        if event.type == pg.KEYDOWN and event.key in P1DIRS:
+            self.players[3].set_dir(P1DIRS[event.key], 1)
+        elif event.type == pg.KEYUP and event.key in P1DIRS:
+            self.players[3].set_dir(P1DIRS[event.key], 0)
+
         #shop open/close keys
         if event.type == pg.KEYDOWN and event.key == pg.K_q:
             self.players[0].shop.toggle_open()

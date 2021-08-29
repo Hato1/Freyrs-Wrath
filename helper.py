@@ -39,7 +39,7 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_back.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_left.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_right.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_icon_p.png'), 2),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_f.png'), 2),
     (os.path.join(DATA_DIR, 'sprite_shop', 'shop_ability_g.png'), 2),
@@ -174,7 +174,9 @@ def create_background(name):
                 tile = str(18+int(roads[j][i]))
 
             bg.blit(LOADED_IMAGES[name[0] + tile], (i*48, j*48))
-    bg.blit(LOADED_IMAGES[name[0] + 'pit'], (8*48, 4*48))
+    x = LOADED_IMAGES[name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
+    bg.blit(LOADED_IMAGES[name[0] + 'pit'], x)
+    # bg.blit(LOADED_IMAGES[name[0] + 'pit'], (8*48, 4*48))
     LOADED_IMAGES.update({name: bg})
     return {"DOWN": name}
 
