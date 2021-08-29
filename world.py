@@ -31,7 +31,7 @@ class World:
 
         self.world = pg.Surface(self.dims)
         self.world = self.world.convert()
-        self.shop = Shop(player_sprite, (60,60))
+        self.shop = Shop(player_sprite, (60, 60))
 
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
@@ -63,6 +63,10 @@ class World:
     def init_background(self):
         self.background = Entity(helper.create_background(self.name), (0, 0))
 
+    def draw_pit(self):
+        # rect = LOADED_IMAGES[self.name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
+        # self.world.blit(LOADED_IMAGES[self.name[0] + 'pit'], rect)
+
     def create_sprite_dict(self, player_sprite):
         self.sprite_dict.update({"LEFT": player_sprite + "_left"})
         self.sprite_dict.update({"RIGHT": player_sprite + "_right"})
@@ -80,6 +84,7 @@ class World:
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
 
+        self.draw_pit()
         self.update_gui()
         self.world.blit(self.player.get_sprite(), self.player.get_position())
         pg.display.flip()
