@@ -261,22 +261,15 @@ class World:
             self.player.lives += 1
 
     def pay_for_power(self, power_name):
-        if not self.shop.open:
+        if not self.shop.open or (power_name == "heal" and self.player.max_lives == self.player.lives):
             return False
-
-        if power_name == "speed" and self.money >= 2:
-            self.money -= 2
-            return True
-
-        elif power_name == "more" and self.money >= 2:
-            self.money -= 2
-            return True
-
-        elif power_name == "heal" and self.money >= 2 and self.player.max_lives != self.player.lives:
-            self.money -= 2
-            return True
-
-        return False
+        else:
+            shop_power = self.shop.get_shopcard(power_name)
+            if self.money >= shop_power.price:
+                self.money -= shop_power.price
+                self.shop.increase_price_of_power(power_name)
+                return True
+            return False
 
     def get_width(self):
         return self.dims[0]
