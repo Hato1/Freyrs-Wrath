@@ -40,7 +40,7 @@ class World:
         self.ouch_sound = load_sound("ouch.mp3")
         self.ouch_sound.set_volume(0.2)
 
-        self.background = Entity(helper.create_background(self.name), (0, 0))
+        self.init_background()
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
         self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
@@ -50,10 +50,16 @@ class World:
         for i in range(5):
             self.gen_coin()
 
-        self.update_world()
+        self.draw_world()
 
     def get_name(self):
         return self.name
+
+    def change_name(self, name):
+        self.name = name
+
+    def init_background(self):
+        self.background = Entity(helper.create_background(self.name), (0, 0))
 
     def create_sprite_dict(self, player_sprite):
         self.sprite_dict.update({"LEFT": player_sprite + "_left"})
@@ -62,12 +68,13 @@ class World:
         self.sprite_dict.update({"DOWN": player_sprite + "_front"})
 
     def update_world(self):
-        self.background.draw(self.world, self.dims)
         self.player_update()
         for sprite in self.allsprites:
             sprite.move()
+        self.draw_world()
 
-        self.allsprites.update()
+    def draw_world(self):
+        self.background.draw(self.world, self.dims)
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
 
