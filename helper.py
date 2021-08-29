@@ -185,7 +185,8 @@ def create_background(name, world_size, number_of_players):
                 tile = str(18+int(roads[j][i]))
 
             bg.blit(LOADED_IMAGES[name[0] + tile], (i*48, j*48))
-
+    for i in range(dims[0]):
+        for j in range(dims[1]):
             if roads[j][i] == " " and random.random() > 0.7:
                 num = str(random.randint(1, feature_counts[name]))
                 if len(num) == 1:
