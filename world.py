@@ -17,12 +17,14 @@ CHARACTERS = {'VIKING': {'player_sprite': 'sprite_viking', 'enemy_sprite': 'spri
 
 class World:
 
-    def __init__(self, dims, character):
+    def __init__(self, dims, character, world_size, number_of_players):
 
         self.dims = dims
         self.name = character
         # Delete me self.dir_dict = {pg.K_w: 0, pg.K_s: 0, pg.K_a: 0, pg.K_d: 0}
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
+        self.number_of_players = number_of_players
+        self.world_size = world_size
 
         self.coin_list = []
         self.enemy_list = []
@@ -42,7 +44,7 @@ class World:
         self.coin_sound = load_sound("coin_sound.mp3")
         self.coin_sound.set_volume(0.05)
 
-        self.background = Entity(helper.create_background(self.name), (0, 0))
+        self.background = Entity(helper.create_background(self.name, self.world_size, self.number_of_players), (0, 0))
         self.pit = Entity({"DOWN": self.name[0] + 'pit'}, (0, 0))
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
@@ -63,7 +65,7 @@ class World:
 
     def init_character(self, name):
         self.name = name
-        self.background = Entity(helper.create_background(self.name), (0, 0))
+        self.background = Entity(helper.create_background(self.name, self.world_size, self.number_of_players), (0, 0))
         self.create_sprite_dict(CHARACTERS[name]['player_sprite'])
         self.player.set_sprite_dict(self.sprite_dict)
         for enemy in self.enemy_list:

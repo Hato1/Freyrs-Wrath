@@ -116,12 +116,7 @@ def load_all_images():
     make_images()
 
 
-def create_background(name):
-    # return {"DOWN": 'sand'}
-    # U = UR
-    # R = RD
-    # D = DL
-    # L = LU
+def create_background(name, world_size, number_of_players):
     roads = [
         '           |    ',
         '           |    ',
@@ -133,7 +128,7 @@ def create_background(name):
         '        U--D    ',
         '           |    '
         ]
-    if PLAYERCOUNT:
+    if number_of_players == 2:
         roads = [
             '           |    ',
             '           |    ',
@@ -160,8 +155,8 @@ def create_background(name):
         'PRIEST': 17,
         'VIKING': 21
         }
-    dims = (WORLD_SIZE[0]//48, WORLD_SIZE[1]//48)
-    bg = pg.Surface(WORLD_SIZE)
+    dims = (world_size[0]//48, world_size[1]//48)
+    bg = pg.Surface(world_size)
     for i in range(dims[0]):
         for j in range(dims[1]):
             if roads[j][i] == ' ':
