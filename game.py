@@ -53,6 +53,7 @@ class Game:
         load_all_images()
         self.draw_menu_background()
         self.soundtrack = load_sound("Fishing song.mp3")
+        self.soundtrack.set_volume(0.2)
         self.soundtrack.play(-1)
 
     def draw_menu_background(self):
@@ -196,10 +197,12 @@ class Game:
         if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == MENU:
             self.game_state = GAME
             button_sound = load_sound("button_sound.mp3")
+            button_sound.set_volume(0.2)
             button_sound.play()
         elif event.type == pg.JOYBUTTONDOWN and event.button == 0 and self.game_state == MENU:
             self.game_state = GAME
             button_sound = load_sound("button_sound.mp3")
+            button_sound.set_volume(0.2)
             button_sound.play()
 
     def process_game_event(self, event):

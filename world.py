@@ -38,6 +38,7 @@ class World:
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
 
         self.ouch_sound = load_sound("ouch.mp3")
+        self.ouch_sound.set_volume(0.2)
 
         self.background = Entity(helper.create_background(self.name), (0, 0))
         self.sprite_dict = {}
