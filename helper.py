@@ -61,7 +61,12 @@ for i in os.listdir(tilesets):
         for j in os.listdir(os.path.join(tilesets, i)):
             print(j)
             if j.endswith('png'):
-                IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), 3/16))
+                scale = 3/16
+                if j in ['Vpit.png', 'Fpit.png']:
+                    scale = scale * 2.5
+                elif j == "Dpit.png":
+                    scale = scale * 1.5
+                IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), scale))
 LOADED_IMAGES = {}
 
 
