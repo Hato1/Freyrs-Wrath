@@ -40,7 +40,7 @@ class World:
         self.ouch_sound = load_sound("ouch.mp3")
         self.ouch_sound.set_volume(0.2)
 
-        self.background = Entity(helper.create_background(self.name), (0, 0))
+        self.init_background()
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
         self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
@@ -54,6 +54,12 @@ class World:
 
     def get_name(self):
         return self.name
+
+    def change_name(self, name):
+        self.name = name
+
+    def init_background(self):
+        self.background = Entity(helper.create_background(self.name), (0, 0))
 
     def create_sprite_dict(self, player_sprite):
         self.sprite_dict.update({"LEFT": player_sprite + "_left"})
