@@ -65,7 +65,7 @@ for i in os.listdir(tilesets):
             elif j == "Environment":
                 for k in os.listdir(os.path.join(tilesets, i, j)):
                     if k.endswith('png'):
-                        IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j, k), scale))
+                        IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j, k), scale*2))
 LOADED_IMAGES = {}
 
 
@@ -104,7 +104,7 @@ def load_all_images():
     for image_path, scale in IMAGE_PATHS:
         image_name = os.path.basename(image_path).split('.')[0]
         img = load_image(image_path)
-        dims = (int(img[0].get_height()*scale), int(img[0].get_width()*scale))
+        dims = (int(img[0].get_width()*scale), int(img[0].get_height()*scale))
         img = (pg.transform.scale(img[0], dims), img[1])
         LOADED_IMAGES.update({image_name: img[0]})
 
@@ -202,9 +202,11 @@ def create_background(name, world_size, number_of_players):
                 if len(num) == 1:
                     num = '0' + num
                 img = LOADED_IMAGES[name[0] + "E" + num]
-                #if name[0] + "E" + num == "DE19":
-                #    print(LOADED_IMAGES[name[0] + "E" + num].get_width(), LOADED_IMAGES[name[0] + "E" + num].get_height())
-                bg.blit(img, (i*48 + img.get_width(), j*48 + img.get_height()))
+                rect = img.get_rect(topleft=(i*48, j*48))
+                if name[0] + "E" + num == 'DE08':
+                    print(img.get_width(), img.get_height())
+                z = (i*48, j*48)
+                bg.blit(img, rect)
 
     LOADED_IMAGES.update({name: bg})
     return {"DOWN": name}
