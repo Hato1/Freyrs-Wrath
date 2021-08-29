@@ -7,22 +7,22 @@ from helper import DATA_DIR, load_image, LOADED_IMAGES
 
 class Shop:
 
-    def __init__(self, player_sprite):
+    def __init__(self, player_sprite, closed_dims):
         self.open = False
-        self.open_surface = pg.Surface((150, 30))
-        self.closed_surface = pg.Surface((30, 30))
+        self.open_surface = pg.Surface((closed_dims[0]*4, closed_dims[1]))
+        self.closed_surface = pg.Surface(closed_dims)
         self.shop_surface = self.closed_surface
         self.shop_surface = self.shop_surface.convert()
         if player_sprite == "sprite_viking":
-            self.shop_icon_image = LOADED_IMAGES["shop_icon_p"]
-            self.shop_f_image = LOADED_IMAGES["shop_ability_k"]
-            self.shop_g_image = LOADED_IMAGES["shop_ability_l"]
-            self.shop_h_image = LOADED_IMAGES["shop_ability_;"]
-        else:
             self.shop_icon_image = LOADED_IMAGES["shop_icon_q"]
             self.shop_f_image = LOADED_IMAGES["shop_ability_f"]
             self.shop_g_image = LOADED_IMAGES["shop_ability_g"]
             self.shop_h_image = LOADED_IMAGES["shop_ability_h"]
+        else:
+            self.shop_icon_image = LOADED_IMAGES["shop_icon_p"]
+            self.shop_f_image = LOADED_IMAGES["shop_ability_k"]
+            self.shop_g_image = LOADED_IMAGES["shop_ability_l"]
+            self.shop_h_image = LOADED_IMAGES["shop_ability_;"]
 
     def draw_shop(self):
         if self.open:

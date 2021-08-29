@@ -31,13 +31,14 @@ class World:
 
         self.world = pg.Surface(self.dims)
         self.world = self.world.convert()
-        self.shop = Shop(player_sprite)
+        self.shop = Shop(player_sprite, (60,60))
 
         self.money = 100
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
 
         self.ouch_sound = load_sound("ouch.mp3")
+        self.ouch_sound.set_volume(0.2)
 
         self.background = Entity(helper.create_background(self.name), (0, 0))
         self.sprite_dict = {}
@@ -114,9 +115,7 @@ class World:
 
     def update_lives(self):
         full_heart = LOADED_IMAGES["sprite_heart"]
-        # full_heart = pg.transform.scale(full_heart, (60, 60))
         empty_heart = LOADED_IMAGES["sprite_heart_empty"]
-        # empty_heart = pg.transform.scale(empty_heart, (60, 60))
 
         heart_positions = [self.world.get_width() / 2 + full_heart.get_rect().width * -1.5,
                            self.world.get_width() / 2 + full_heart.get_rect().width * -0.5,

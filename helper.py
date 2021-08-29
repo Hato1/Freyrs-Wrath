@@ -7,7 +7,7 @@ from pygame.compat import geterror
 
 import random
 
-PLAYERCOUNT = 4
+PLAYERCOUNT = 2
 WIN_SIZE = ((512*3)+2, (288*3)+2)
 
 WORLD_SIZE = ((512*3)//2, (288*3))
