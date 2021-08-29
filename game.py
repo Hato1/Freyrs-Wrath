@@ -279,6 +279,16 @@ class Game:
                 self.number_of_players += 1
                 self.button_sound.play()
 
+        elif event.type == JOYBUTTONDOWN and event.button == 4:
+            if self.number_of_players > 2:
+                self.number_of_players -= 1
+                self.button_sound.play()
+
+        elif event.type == JOYBUTTONDOWN and event.button == 5:
+            if self.number_of_players < 4:
+                self.number_of_players += 1
+                self.button_sound.play()
+
     def process_select_event(self, event):
         if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == SELECT:
             self.game_state = GAME
