@@ -49,12 +49,14 @@ class World:
         self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
                              lives=3)
 
+        self.draw_world()
+
+    def start(self):
         self.gen_enemy()
         # spawns 5 coin entities
         for i in range(5):
             self.gen_coin()
-
-        self.draw_world()
+        self.player.image = 'DOWN'
 
     def get_name(self):
         return self.name
@@ -82,6 +84,7 @@ class World:
         self.sprite_dict.update({"RIGHT": player_sprite + "_right"})
         self.sprite_dict.update({"UP": player_sprite + "_back"})
         self.sprite_dict.update({"DOWN": player_sprite + "_front"})
+        self.sprite_dict.update({"DEAD": player_sprite + "_dead"})
 
     def update_world(self):
         self.player_update()
@@ -90,12 +93,19 @@ class World:
         self.draw_world()
 
     def draw_world(self):
+
         self.background.draw(self.world, self.dims)
+        if not self.check_alive():
+            self.player.image = "DEAD"
+            self.world.blit(self.player.get_sprite(), self.player.get_position())
+
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
 
         self.update_gui()
-        self.world.blit(self.player.get_sprite(), self.player.get_position())
+
+        if self.check_alive():
+            self.world.blit(self.player.get_sprite(), self.player.get_position())
         self.draw_pit()
         pg.display.flip()
 
@@ -124,7 +134,7 @@ class World:
                 self.coin_sound.play()
                 self.reset_entity(coin)
         for enemy in self.enemy_list:
-            if self.player.check_collision(enemy):
+            if self.player.check_collision(enemy) and self.player.is_alive():
                 self.reset_entity(enemy)
                 self.player.lives -= 1
                 self.ouch_sound.play()
@@ -164,6 +174,8 @@ class World:
         return self.player.is_alive()
 
     def move(self):
+        if not self.check_alive():
+            return
         x = self.dir_dict['LEFT'] - self.dir_dict['RIGHT']
         y = self.dir_dict['UP'] - self.dir_dict['DOWN']
         norm = (x ** 2 + y ** 2) ** 0.5
@@ -256,25 +268,25 @@ class World:
             self.player.lives += 1
 
     def pay_for_power(self, power_name):
-        if not self.shop.open:
+        if not self.shop.open or (power_name == "heal" and self.player.max_lives == self.player.lives):
             return False
-
-        if power_name == "speed" and self.money >= 2:
-            self.money -= 2
-            return True
-
-        elif power_name == "more" and self.money >= 2:
-            self.money -= 2
-            return True
-
-        elif power_name == "heal" and self.money >= 2 and self.player.max_lives != self.player.lives:
-            self.money -= 2
-            return True
-
-        return False
+        else:
+            shop_power = self.shop.get_shopcard(power_name)
+            if self.money >= shop_power.price:
+                self.money -= shop_power.price
+                self.shop.increase_price_of_power(power_name)
+                return True
+            return False
 
     def get_width(self):
         return self.dims[0]
 
     def get_height(self):
         return self.dims[1]
+
+    def reset(self):
+        self.player.lives = 3
+        for index, enemy in enumerate(self.enemy_list):
+            del self.enemy_list[index]
+        self.allsprites.empty()
+        self.shop.close_shop()

@@ -89,7 +89,6 @@ class Entity(pg.sprite.Sprite):
         return LOADED_IMAGES[self.sprite_dict[self.image]].get_width()
 
     def set_sprite_dict(self, sprite_dict):
-        print(sprite_dict)
         self.sprite_dict = sprite_dict
 
     def get_position(self):

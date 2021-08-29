@@ -7,7 +7,7 @@ from pygame.compat import geterror
 
 import random
 
-PLAYERCOUNT = 4
+PLAYERCOUNT = 2
 WIN_SIZE = ((512*3)+2, (288*3)+2)
 
 WORLD_SIZE = ((512*3)//2, (288*3))
@@ -26,26 +26,28 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_back.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_right.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_left.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_priest', 'sprite_priest_dead.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_front.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_back.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_right.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_left.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_viking', 'sprite_viking_dead.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_front.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_front.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_back.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_left.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_right.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_demon', 'sprite_demon_dead.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_front.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_back.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_left.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_right.png'), 1),
+    (os.path.join(DATA_DIR, 'sprite_farmer', 'sprite_farmer_dead.png'), 1),
     (os.path.join(DATA_DIR, 'sprite_coin', 'sprite_coin.png'), 1),
-    (os.path.join(DATA_DIR, 'sprite_shop', 'shop_icon_p.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'sprite_shop_blank0.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'sprite_shop_blank1.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'sprite_shop_blank2.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'shop_icon_blank.png'), 2),
-    (os.path.join(DATA_DIR, 'sprite_shop', 'shop_icon_q.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'more.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'speed.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'heal.png'), 2),
+    (os.path.join(DATA_DIR, 'sprite_shop_blank', 'shop_icon.png'), 2),
     (os.path.join(DATA_DIR, 'dirt.png'), 0.2),
     (os.path.join(DATA_DIR, 'sand.png'), 0.4),
     (os.path.join(DATA_DIR, 'ground.jpg'), 0.5),
