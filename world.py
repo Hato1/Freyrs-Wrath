@@ -67,8 +67,6 @@ class World:
             enemy_dict = helper.create_sprite_dict(CHARACTERS[name]['enemy_sprite'])
             enemy.set_sprite_dict(enemy_dict)
 
-
-
     def draw_pit(self):
         x, y = self.background.get_position()
         x += 8.5*48 % self.world.get_width()
@@ -82,6 +80,7 @@ class World:
         self.sprite_dict.update({"RIGHT": player_sprite + "_right"})
         self.sprite_dict.update({"UP": player_sprite + "_back"})
         self.sprite_dict.update({"DOWN": player_sprite + "_front"})
+        self.sprite_dict.update({"DEAD": player_sprite + "_dead"})
 
     def update_world(self):
         self.player_update()
@@ -90,13 +89,19 @@ class World:
         self.draw_world()
 
     def draw_world(self):
+
         self.background.draw(self.world, self.dims)
+        if not self.check_alive():
+            self.player.image = "DEAD"
+            self.world.blit(self.player.get_sprite(), self.player.get_position())
+
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
-
         self.draw_pit()
         self.update_gui()
-        self.world.blit(self.player.get_sprite(), self.player.get_position())
+
+        if self.check_alive():
+            self.world.blit(self.player.get_sprite(), self.player.get_position())
         pg.display.flip()
 
     def draw_select(self):
@@ -124,7 +129,7 @@ class World:
                 self.coin_sound.play()
                 self.reset_entity(coin)
         for enemy in self.enemy_list:
-            if self.player.check_collision(enemy):
+            if self.player.check_collision(enemy) and self.player.is_alive():
                 self.reset_entity(enemy)
                 self.player.lives -= 1
                 self.ouch_sound.play()
@@ -164,6 +169,8 @@ class World:
         return self.player.is_alive()
 
     def move(self):
+        if not self.check_alive():
+            return
         x = self.dir_dict['LEFT'] - self.dir_dict['RIGHT']
         y = self.dir_dict['UP'] - self.dir_dict['DOWN']
         norm = (x ** 2 + y ** 2) ** 0.5
