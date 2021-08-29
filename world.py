@@ -64,7 +64,7 @@ class World:
     def update_world(self):
         self.player_update()
         for sprite in self.allsprites:
-           sprite.move()
+            sprite.move()
         self.draw_world()
 
     def draw_world(self):
