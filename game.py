@@ -7,6 +7,7 @@ from pygame.locals import *
 import helper
 from helper import load_sound, DATA_DIR, load_all_images, WIN_SIZE
 from world import World
+from select import Select
 
 if not pg.font:
     print("Warning, fonts disabled")
@@ -16,13 +17,14 @@ if not pg.mixer:
 MENU = 1
 GAME = 2
 END = 3
+SELECT = 4
 GAME_STATE = MENU
 WHITE = (255, 255, 255)
 GREY = (122, 122, 122)
 GREEN = (20, 239, 20)
 BLACK = (0, 0, 0)
 GAME_NAME = "Freyr's Wrath"
-P1DIRSC = {0: 'UP'}
+XBOX360 = {'A': 0, 'B': 1, 'X': 2, 'Y': 3, 'LB': 4, 'RB': 5}
 P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT'}
 P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT'}
 pg.init()
@@ -41,10 +43,11 @@ class Game:
         half_screen_width = self.screen.get_size()[0] / 2
         screen_height = self.screen.get_size()[1]
         self.players = []
-
-        characters = ["VIKING", "PRIEST", "FARMER", "DEMON"]
+        self.characters = ["VIKING", "PRIEST", "FARMER", "DEMON"]
+        # for i in range(helper.PLAYERCOUNT):
+        #     self.players.append(Select(dims=helper.WORLD_SIZE))
         for i in range(helper.PLAYERCOUNT):
-            self.players.append(World(dims=helper.WORLD_SIZE, character=characters[i]))
+            self.players.append(World(dims=helper.WORLD_SIZE, character=self.characters[i]))
             # self.players.append(World(dims=helper.WORLD_SIZE, player_sprite=sprites[i]))
 
     def setup_game(self):
@@ -109,6 +112,28 @@ class Game:
             self.screen.blit(self.players[2].world, (0, half_screen_height))
             self.screen.blit(self.players[3].world, (half_screen_width, half_screen_height))
 
+        pg.display.flip()
+
+    def draw_select_background(self):
+        screen_height = self.screen.get_size()[1]
+        screen_width = self.screen.get_size()[0]
+        half_screen_width = (screen_width / 2) + 1
+        half_screen_height = (screen_height / 2) + 1
+
+        self.screen.fill(BLACK)
+
+        if len(self.players) == 2:
+            self.screen.blit(self.players[0].world, (0, 1))
+            self.screen.blit(self.players[1].world, (half_screen_width, 1))
+        elif len(self.players) == 3:
+            self.screen.blit(self.players[0].world, (0, 0))
+            self.screen.blit(self.players[1].world, (half_screen_width, 0))
+            self.screen.blit(self.players[2].world, (screen_width/4, half_screen_height))
+        elif len(self.players) == 4:
+            self.screen.blit(self.players[0].world, (0, 0))
+            self.screen.blit(self.players[1].world, (half_screen_width, 0))
+            self.screen.blit(self.players[2].world, (0, half_screen_height))
+            self.screen.blit(self.players[3].world, (half_screen_width, half_screen_height))
         pg.display.flip()
 
     def draw_end_background(self):
@@ -182,6 +207,8 @@ class Game:
 
             if self.game_state == MENU:
                 self.menu_loop()
+            elif self.game_state == SELECT:
+                self.select_loop()
             elif self.game_state == GAME:
                 self.game_loop()
             elif self.game_state == END:
@@ -198,6 +225,8 @@ class Game:
     def process_event(self, event):
         if self.game_state == MENU:
             self.process_menu_event(event)
+        elif self.game_state == SELECT:
+            self.process_select_event(event)
         elif self.game_state == GAME:
             self.process_game_event(event)
         elif self.game_state == END:
@@ -205,15 +234,48 @@ class Game:
 
     def process_menu_event(self, event):
         if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == MENU:
-            self.game_state = GAME
+            self.game_state = SELECT
             button_sound = load_sound("button_sound.mp3")
-            button_sound.set_volume(0.2)
             button_sound.play()
         elif event.type == pg.JOYBUTTONDOWN and event.button == 0 and self.game_state == MENU:
+            self.game_state = SELECT
+            button_sound = load_sound("button_sound.mp3")
+            button_sound.play()
+
+    def process_select_event(self, event):
+        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == SELECT:
             self.game_state = GAME
             button_sound = load_sound("button_sound.mp3")
             button_sound.set_volume(0.2)
             button_sound.play()
+        elif event.type == pg.JOYBUTTONDOWN and event.button == 0 and self.game_state == SELECT:
+            self.game_state = GAME
+            button_sound = load_sound("button_sound.mp3")
+            button_sound.set_volume(0.2)
+            button_sound.play()
+
+        if event.type == pg.KEYDOWN and event.key == pg.K_a:
+            self.players[0].init_character(self.characters[(self.characters.index(self.players[0].get_name()) - 1) % 4])
+        elif event.type == pg.KEYDOWN and event.key == pg.K_d:
+            self.players[0].init_character(self.characters[(self.characters.index(self.players[0].get_name()) + 1) % 4])
+        elif event.type == pg.KEYDOWN and event.key == pg.K_LEFT:
+            self.players[1].init_character(self.characters[(self.characters.index(self.players[1].get_name()) + 1) % 4])
+        elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
+            self.players[1].init_character(self.characters[(self.characters.index(self.players[1].get_name()) + 1) % 4])
+
+        for index, player in enumerate(self.players):
+            try:
+                if event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == XBOX360['LB']:
+                    player.init_character(self.characters[(self.characters.index(player.get_name()) - 1) % 4])
+            except IndexError:
+                pass
+            try:
+                if event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == XBOX360['RB']:
+                    player.init_character(self.characters[(self.characters.index(player.get_name()) + 1) % 4])
+            except IndexError:
+                pass
+
+
 
     def process_game_event(self, event):
         if event.type == pg.KEYDOWN and event.key in P1DIRS:
@@ -222,7 +284,6 @@ class Game:
             self.players[0].set_dir(P1DIRS[event.key], 0)
 
         #controller support for player 1
-
         for index, player in enumerate(self.players):
             try:
                 if event.type == pg.JOYHATMOTION and joysticks[index].get_instance_id() == event.instance_id:
@@ -262,7 +323,7 @@ class Game:
         #players shop controller
         for index, player in enumerate(self.players):
             try:
-                if event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == 4:
+                if event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == XBOX360['LB']:
                     player.shop.toggle_open()
             except IndexError:
                 pass
@@ -280,17 +341,17 @@ class Game:
                 self.players[0].activate_power("heal")
 
 
-    #players[0] powers with controller
+        #players[0] powers with controller
         for index, player in enumerate(self.players):
-            enemy_player = (index % 2) - 1
+            enemy_player = (index % 2) + 1
             try:
-                if event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == 0:
+                if event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == XBOX360['A']:
                     if player.pay_for_power("more"):
                             self.players[enemy_player].activate_power("more")
-                elif event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == 1:
+                elif event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == XBOX360['B']:
                     if player.pay_for_power("speed"):
                         self.players[enemy_player].activate_power("speed")
-                elif event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == 2:
+                elif event.type == pg.JOYBUTTONDOWN and joysticks[index].get_instance_id() == event.instance_id and event.button == XBOX360['X']:
                     if player.pay_for_power("heal"):
                         player.activate_power("heal")
             except IndexError:
@@ -312,6 +373,13 @@ class Game:
 
     def menu_loop(self):
         self.screen.blit(self.background_surface, (0, 0))
+
+    def select_loop(self):
+        self.draw_select_background()
+        for i in self.players:
+            i.draw_world()
+            i.draw_select()
+
 
     def game_loop(self):
         for i in self.players:
