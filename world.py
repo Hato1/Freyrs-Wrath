@@ -42,11 +42,12 @@ class World:
         self.coin_sound = load_sound("coin_sound.mp3")
         self.coin_sound.set_volume(0.05)
 
-        self.init_background()
+        self.background = Entity(helper.create_background(self.name), (0, 0))
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
         self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
                              lives=3)
+
         self.gen_enemy()
         # spawns 5 coin entities
         for i in range(5):
@@ -57,16 +58,24 @@ class World:
     def get_name(self):
         return self.name
 
-    def change_name(self, name):
+    def init_character(self, name):
         self.name = name
-
-    def init_background(self):
         self.background = Entity(helper.create_background(self.name), (0, 0))
+        self.create_sprite_dict(CHARACTERS[name]['player_sprite'])
+        self.player.set_sprite_dict(self.sprite_dict)
+        for enemy in self.enemy_list:
+            enemy_dict = helper.create_sprite_dict(CHARACTERS[name]['enemy_sprite'])
+            enemy.set_sprite_dict(enemy_dict)
+
+
 
     def draw_pit(self):
-        # rect = LOADED_IMAGES[self.name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
-        # self.world.blit(LOADED_IMAGES[self.name[0] + 'pit'], rect)
-        pass
+        x, y = self.background.get_position()
+        x += 8.5*48 % self.world.get_width()
+        y += 4.25*48 % self.world.get_height()
+        #rect = LOADED_IMAGES[self.name[0] + 'pit'].get_rect(center=(x, y))
+        Entity(helper.create_background(self.name), (0, 0))
+        self.world.blit(LOADED_IMAGES[self.name[0] + 'pit'], (x,y))
 
     def create_sprite_dict(self, player_sprite):
         self.sprite_dict.update({"LEFT": player_sprite + "_left"})
@@ -89,6 +98,13 @@ class World:
         self.update_gui()
         self.world.blit(self.player.get_sprite(), self.player.get_position())
         pg.display.flip()
+
+    def draw_select(self):
+        font_select = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
+        text_select = font_select.render('Choose Your Character', 1, (220, 20, 60))
+        textpos_select = text_select.get_rect(centerx=self.get_width() / 2,
+                                          centery=self.get_height() / 5)
+        self.world.blit(text_select, textpos_select)
 
     def add_entity(self, sprite_dict, pos, ai=None, name="Entity", speed=5):
         entity = Entity(sprite_dict, pos, ai=ai, type=name, speed=speed)
@@ -256,3 +272,9 @@ class World:
             return True
 
         return False
+
+    def get_width(self):
+        return self.dims[0]
+
+    def get_height(self):
+        return self.dims[1]
