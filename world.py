@@ -9,6 +9,7 @@ from helper import DATA_DIR, load_image, LOADED_IMAGES, load_sound
 from entity import Entity
 from shop import Shop
 
+GOLD = (254, 224, 34)
 CHARACTERS = {'VIKING': {'player_sprite': 'sprite_viking', 'enemy_sprite': 'sprite_demon'},
               'PRIEST': {'player_sprite': 'sprite_priest', 'enemy_sprite': 'sprite_farmer'},
               'FARMER': {'player_sprite': 'sprite_farmer', 'enemy_sprite': 'sprite_viking'},
@@ -33,7 +34,7 @@ class World:
         self.shop = Shop(player_sprite, (60, 60))
 
         self.money = 0
-        self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
+        self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 20 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
 
         self.ouch_sound = load_sound("ouch.mp3")
@@ -115,6 +116,12 @@ class World:
                                           centery=self.get_height() / 5)
         self.world.blit(text_select, textpos_select)
 
+        font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
+        text_space_to_begin = font_space_to_begin.render("Press Spacebar to Start", 1, (220, 20, 60))
+        textpos_space_to_begin = text_space_to_begin.get_rect(centerx=self.get_width() / 2,
+                                                              centery=self.get_height() / 1.2)
+        self.world.blit(text_space_to_begin, textpos_space_to_begin)
+
     def add_entity(self, sprite_dict, pos, ai=None, name="Entity", speed=5):
         entity = Entity(sprite_dict, pos, ai=ai, type=name, speed=speed)
         self.allsprites.add(entity)
@@ -127,7 +134,6 @@ class World:
         self.player.move()
 
         for coin in self.coin_list:
-
             if self.player.check_collision(coin):
                 self.money += 1
                 self.coin_sound.play()
@@ -145,8 +151,10 @@ class World:
 
     def update_money(self):
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
-        textpos_money = self.text_money.get_rect(topright=((self.world.get_width()), 0))
+        textpos_money = self.text_money.get_rect(topright=((self.world.get_width() - 20), 20))
+        pg.draw.circle(self.world, GOLD, textpos_money.center,40)
         self.world.blit(self.text_money, textpos_money)
+
 
     def update_shop(self):
         self.shop.draw_shop()

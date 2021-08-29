@@ -48,9 +48,6 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_shop_blank', 'speed.png'), 2),
     (os.path.join(DATA_DIR, 'sprite_shop_blank', 'heal.png'), 2),
     (os.path.join(DATA_DIR, 'sprite_shop_blank', 'shop_icon.png'), 2),
-    (os.path.join(DATA_DIR, 'dirt.png'), 0.2),
-    (os.path.join(DATA_DIR, 'sand.png'), 0.4),
-    (os.path.join(DATA_DIR, 'ground.jpg'), 0.5),
     (os.path.join(DATA_DIR, 'sprite_heart.png'), 0.1),
     (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 0.1)
 ]
@@ -71,6 +68,10 @@ for i in os.listdir(tilesets):
                     elif j == "Ppit.png":
                         scale = scale * 2.7
                 IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), scale))
+            elif j == "Environment":
+                for k in os.listdir(os.path.join(tilesets, i, j)):
+                    if k.endswith('png'):
+                        IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j, k), scale))
 LOADED_IMAGES = {}
 
 
@@ -132,7 +133,7 @@ def create_background(name):
         '        U--D    ',
         '           |    '
         ]
-    if PLAYERCOUNT < 3:
+    if PLAYERCOUNT:
         roads = [
             '           |    ',
             '           |    ',
@@ -153,6 +154,12 @@ def create_background(name):
             '           |    ',
             '           |    ',
             ]
+    feature_counts = {
+        'FARMER': 22,
+        'DEMON': 19,
+        'PRIEST': 17,
+        'VIKING': 21
+        }
     dims = (WORLD_SIZE[0]//48, WORLD_SIZE[1]//48)
     bg = pg.Surface(WORLD_SIZE)
     for i in range(dims[0]):
@@ -183,6 +190,14 @@ def create_background(name):
                 tile = str(18+int(roads[j][i]))
 
             bg.blit(LOADED_IMAGES[name[0] + tile], (i*48, j*48))
+
+            if roads[j][i] == " " and random.random() > 0.7:
+                num = str(random.randint(1, feature_counts[name]))
+                if len(num) == 1:
+                    num = '0' + num
+                img = LOADED_IMAGES[name[0] + "E" + num]
+                bg.blit(img, (i*48 + img.get_height(), j*48 + img.get_width()))
+
     # x = LOADED_IMAGES[name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
     # bg.blit(LOADED_IMAGES[name[0] + 'pit'], x)
     LOADED_IMAGES.update({name: bg})
