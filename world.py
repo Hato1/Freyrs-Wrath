@@ -92,7 +92,7 @@ class World:
     def update_world(self):
         self.player_update()
         for sprite in self.allsprites:
-            sprite.move()
+            sprite.move(self.world_size)
         self.draw_world()
 
     def draw_world(self):
@@ -134,7 +134,7 @@ class World:
         return self.world
 
     def player_update(self):
-        self.player.move()
+        self.player.move(self.world_size)
 
         for coin in self.coin_list:
             if self.player.check_collision(coin):

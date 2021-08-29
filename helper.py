@@ -7,13 +7,8 @@ from pygame.compat import geterror
 
 import random
 
-PLAYERCOUNT = 2
 WIN_SIZE = ((512*3)+2, (288*3)+2)
 
-WORLD_SIZE = ((512*3)//2, (288*3))
-if PLAYERCOUNT > 2:
-    WORLD_SIZE = ((512*3)//2, (288*3)//2)
-# WORLD_DIMS = (255*2, 288*2)
 
 # tilesize = 512/8 = 32
 # 2 players: 16 accross 18 high

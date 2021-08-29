@@ -1,7 +1,7 @@
 import random
 import pygame as pg
 
-from helper import DATA_DIR, load_image, LOADED_IMAGES, WORLD_SIZE
+from helper import DATA_DIR, load_image, LOADED_IMAGES
 
 
 # To do:
@@ -117,10 +117,10 @@ class Entity(pg.sprite.Sprite):
     def is_alive(self):
         return self.lives > 0
 
-    def move(self):
+    def move(self, world_size):
         if self.ai:
             if self.ai == 'follow':
-                x, y = self.ai_follow()
+                x, y = self.ai_follow(world_size)
             else:
                 raise ValueError('No such ai method {}'.format())
             norm = (x**2 + y**2)**0.5
@@ -144,13 +144,13 @@ class Entity(pg.sprite.Sprite):
     def update_info(self, new_info):
         self.info.update(new_info)
 
-    def get_center(self):
-        return ((self.position[0] + self.get_width()/2) % WORLD_SIZE[0],
-                (self.position[1] + self.get_height()/2) % WORLD_SIZE[1])
+    def get_center(self, world_size):
+        return ((self.position[0] + self.get_width()/2) % world_size[0],
+                (self.position[1] + self.get_height()/2) % world_size[1])
 
-    def ai_follow(self):
-        x, y = self.get_center()
-        tx, ty = self.info['target'].get_center()
+    def ai_follow(self, world_size):
+        x, y = self.get_center(world_size)
+        tx, ty = self.info['target'].get_center(world_size)
         return (tx-x, ty-y)
 
     def set_dir(self, vector):

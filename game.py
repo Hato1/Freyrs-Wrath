@@ -40,6 +40,7 @@ class Game:
         self.screen = None  # init in setup_game
         self.soundtrack = None
         self.button_sound = None
+        self.victory_sound = None
         self.number_of_players = 2
         self.setup_game()
         self.players = []
@@ -57,6 +58,9 @@ class Game:
 
         self.button_sound = load_sound("button_sound.mp3")
         self.button_sound.set_volume(0.5)
+
+        self.victory_sound = load_sound("victory.mp3")
+        self.victory_sound.set_volume(0.3)
 
     def draw_menu_background(self):
         # Create The Menu
@@ -402,6 +406,8 @@ class Game:
             for player in self.players:
                 player.reset()
             self.game_state = MENU
+            self.soundtrack.play(-1)
+            self.draw_menu_background()
 
     def menu_loop(self):
         self.write_menu_text()
@@ -427,6 +433,8 @@ class Game:
         if players_left < 2:
             self.game_state = END
             self.draw_end_background()
+            self.soundtrack.stop()
+            self.victory_sound.play()
 
     def end_loop(self):
         self.screen.blit(self.background_surface, (0, 0))
