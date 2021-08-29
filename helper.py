@@ -109,7 +109,6 @@ def load_all_images():
         LOADED_IMAGES.update({image_name: img[0]})
 
 
-
 def create_background(name, world_size, number_of_players):
     roads = [
         '           |    ',
@@ -136,7 +135,7 @@ def create_background(name, world_size, number_of_players):
         ]
         for i in range(len(roads)):
             while len(roads[i]) < int(world_size[0]):
-                roads[i] = roads[i] + ' '
+                roads[i] = roads[i] + roads[i][-1]
         while len(roads) < int(world_size[1]):
             roads.append('           |    ' + ' ' * (int(world_size[0])-16))
     if number_of_players == 2:
