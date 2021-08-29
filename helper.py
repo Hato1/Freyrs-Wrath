@@ -2,18 +2,12 @@ import os
 import pygame as pg
 from pygame.locals import *
 import pygame.surfarray as surfarray
-# import numpy as np
 from pygame.compat import geterror
 
 import random
 
-PLAYERCOUNT = 2
 WIN_SIZE = ((512*3)+2, (288*3)+2)
 
-WORLD_SIZE = ((512*3)//2, (288*3))
-if PLAYERCOUNT > 2:
-    WORLD_SIZE = ((512*3)//2, (288*3)//2)
-# WORLD_DIMS = (255*2, 288*2)
 
 # tilesize = 512/8 = 32
 # 2 players: 16 accross 18 high
@@ -113,7 +107,7 @@ def load_all_images():
         dims = (int(img[0].get_height()*scale), int(img[0].get_width()*scale))
         img = (pg.transform.scale(img[0], dims), img[1])
         LOADED_IMAGES.update({image_name: img[0]})
-    make_images()
+
 
 
 def create_background(name, world_size, number_of_players):
@@ -203,17 +197,15 @@ def create_background(name, world_size, number_of_players):
                 tile = str(18+int(roads[j][i]))
 
             bg.blit(LOADED_IMAGES[name[0] + tile], (i*48, j*48))
-    for i in range(dims[0]):
-        for j in range(dims[1]):
-            if roads[j][i] == " " and random.random() > 0.7:
+    for i in range(dims[0]-1):
+        for j in range(dims[1]-1):
+            if roads[j][i] == " " and random.random() > 0.95:
                 num = str(random.randint(1, feature_counts[name]))
                 if len(num) == 1:
                     num = '0' + num
                 img = LOADED_IMAGES[name[0] + "E" + num]
                 bg.blit(img, (i*48 + img.get_height(), j*48 + img.get_width()))
 
-    # x = LOADED_IMAGES[name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
-    # bg.blit(LOADED_IMAGES[name[0] + 'pit'], x)
     LOADED_IMAGES.update({name: bg})
     return {"DOWN": name}
 
@@ -226,23 +218,3 @@ def create_sprite_dict(sprite):
     sprite_dict["DOWN"] = sprite + "_front"
     return sprite_dict
 
-
-def make_images():
-    pass
-    # brown = np.zeros((16, 18, 3))
-    # brown[:] = (158, 119, 119)
-    # # random boolean mask for which values will be changed
-    # mask = np.random.randint(0, 5, size=(16, 8, 3))
-
-    # # random matrix the same shape of your data
-    # # r = np.random.rand(*x.shape)*np.max(x)
-    # dark = np.zeros((16, 18, 3))
-    # dark[:] = (111, 76, 91)
-    # # dark[] = (255, 255, 255)
-
-    # # use your mask to replace values in your input array
-    # brown[mask] = dark[mask]
-
-    # brown = pg.surfarray.make_surface(brown)
-    # brown = pg.transform.scale(brown, (256, 288))
-    # LOADED_IMAGES.update({'background': (brown, brown)})

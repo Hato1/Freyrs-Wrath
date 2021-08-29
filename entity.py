@@ -1,11 +1,7 @@
 import random
 import pygame as pg
 
-from helper import DATA_DIR, load_image, LOADED_IMAGES, WORLD_SIZE
-
-
-# To do:
-# Handle position wrapping. (helper function?)
+from helper import LOADED_IMAGES
 
 class Entity(pg.sprite.Sprite):
     def __init__(self, sprite_dict, position, lives=3, speed=5, ai=None, type="Entity", info={}):
@@ -50,19 +46,16 @@ class Entity(pg.sprite.Sprite):
 
         if self.position[0] + image.get_width() > dims[0]:
             # off screen right
-            # self.position[0] += -dims[0]
             xmod = -dims[0]
             wrap_x = True
 
         if self.position[1] < 0:
             # off screen top
-            # self.position[1] += dims[1]
             ymod = dims[1]
             wrap_y = True
 
         if self.position[1] + image.get_height() > dims[1]:
             # off screen bottom
-            # self.position[1] += -dims[1]
             ymod = -dims[1]
             wrap_y = True
 
@@ -117,10 +110,10 @@ class Entity(pg.sprite.Sprite):
     def is_alive(self):
         return self.lives > 0
 
-    def move(self):
+    def move(self, world_size):
         if self.ai:
             if self.ai == 'follow':
-                x, y = self.ai_follow()
+                x, y = self.ai_follow(world_size)
             else:
                 raise ValueError('No such ai method {}'.format())
             norm = (x**2 + y**2)**0.5
@@ -144,13 +137,13 @@ class Entity(pg.sprite.Sprite):
     def update_info(self, new_info):
         self.info.update(new_info)
 
-    def get_center(self):
-        return ((self.position[0] + self.get_width()/2) % WORLD_SIZE[0],
-                (self.position[1] + self.get_height()/2) % WORLD_SIZE[1])
+    def get_center(self, world_size):
+        return ((self.position[0] + self.get_width()/2) % world_size[0],
+                (self.position[1] + self.get_height()/2) % world_size[1])
 
-    def ai_follow(self):
-        x, y = self.get_center()
-        tx, ty = self.info['target'].get_center()
+    def ai_follow(self, world_size):
+        x, y = self.get_center(world_size)
+        tx, ty = self.info['target'].get_center(world_size)
         return (tx-x, ty-y)
 
     def set_dir(self, vector):
