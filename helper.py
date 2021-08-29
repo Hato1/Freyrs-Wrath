@@ -7,7 +7,7 @@ from pygame.compat import geterror
 
 import random
 
-PLAYERCOUNT = 2
+PLAYERCOUNT = 4
 WIN_SIZE = ((512*3)+2, (288*3)+2)
 
 WORLD_SIZE = ((512*3)//2, (288*3))
@@ -59,19 +59,20 @@ tilesets = os.path.join(DATA_DIR, 'tilesets')
 for i in os.listdir(tilesets):
     if os.path.isdir(os.path.join(tilesets, i)):
         for j in os.listdir(os.path.join(tilesets, i)):
+            print(j)
             if j.endswith('png'):
                 IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), 3/16))
 LOADED_IMAGES = {}
 
 
-def load_image(name, colorkey=(0, 0, 0, 255)):
+def load_image(name, colorkey=(0,0,0,255)):
     fullname = os.path.join(DATA_DIR, name)
     try:
         image = pg.image.load(fullname)
     except pg.error:
         print("Cannot load image:", fullname)
         raise SystemExit(str(geterror()))
-    image = image.convert()
+    image = image.convert_alpha()
     if colorkey is not None:
         if colorkey == -1:
             colorkey = image.get_at((0, 0))
@@ -100,7 +101,7 @@ def load_all_images():
         image_name = os.path.basename(image_path).split('.')[0]
         img = load_image(image_path)
         dims = (int(img[0].get_height()*scale), int(img[0].get_width()*scale))
-        img = (pg.transform.scale(img[0], dims).convert(), img[1])
+        img = (pg.transform.scale(img[0], dims), img[1])
         LOADED_IMAGES.update({image_name: img[0]})
     make_images()
 
@@ -173,7 +174,7 @@ def create_background(name):
                 tile = str(18+int(roads[j][i]))
 
             bg.blit(LOADED_IMAGES[name[0] + tile], (i*48, j*48))
-    #bg.blit(LOADED_IMAGES[name[0] + pit.png], (4*48, 8*48))
+    bg.blit(LOADED_IMAGES[name[0] + 'pit'], (8*48, 4*48))
     LOADED_IMAGES.update({name: bg})
     return {"DOWN": name}
 
