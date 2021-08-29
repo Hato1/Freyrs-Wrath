@@ -155,7 +155,7 @@ class World:
     def update_money(self):
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
         textpos_money = self.text_money.get_rect(topright=((self.world.get_width() - 20), 20))
-        pg.draw.circle(self.world, GOLD, textpos_money.center,40)
+        pg.draw.circle(self.world, GOLD, textpos_money.center, 40)
         self.world.blit(self.text_money, textpos_money)
 
 

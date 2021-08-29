@@ -402,6 +402,12 @@ class Game:
             for player in self.players:
                 player.reset()
             self.game_state = MENU
+            self.draw_menu_background()
+        if event.type == JOYBUTTONDOWN and event.button == XBOX360['A']:
+            for player in self.players:
+                player.reset()
+            self.game_state = MENU
+            self.draw_menu_background()
 
     def menu_loop(self):
         self.write_menu_text()
