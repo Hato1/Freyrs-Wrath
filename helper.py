@@ -128,6 +128,23 @@ def create_background(name, world_size, number_of_players):
         '        U--D    ',
         '           |    '
         ]
+    if number_of_players == 0:
+        roads = [
+                 '           |    ',
+                 '           |    ',
+                 '---D    R--L  R-',
+                 '   U-D 123    | ',
+                 '     U-456----L ',
+                 '       789      ',
+                 '        |       ',
+                 '        U--D    ',
+                 '           |    '
+        ]
+        for i in range(len(roads)):
+            while len(roads[i]) < int(world_size[0]):
+                roads[i] = roads[i] + ' '
+        while len(roads) < int(world_size[1]):
+            roads.append('           |    ' + ' ' * (int(world_size[0])-16))
     if number_of_players == 2:
         roads = [
             '           |    ',
@@ -159,6 +176,7 @@ def create_background(name, world_size, number_of_players):
     bg = pg.Surface(world_size)
     for i in range(dims[0]):
         for j in range(dims[1]):
+            print(i,j)
             if roads[j][i] == ' ':
                 tile = random.choice(['43', '52'])
             elif roads[j][i] == '-':
