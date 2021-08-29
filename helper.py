@@ -66,7 +66,7 @@ for i in os.listdir(tilesets):
                         scale = scale * 1.5
                     elif j == "Vpit.png":
                         scale = scale * 2.9
-                    elif j == "Ppit2.png":
+                    elif j == "Ppit.png":
                         scale = scale * 2.7
                 IMAGE_PATHS.append((os.path.join(DATA_DIR, 'tilesets', i, j), scale))
 LOADED_IMAGES = {}
@@ -181,8 +181,8 @@ def create_background(name):
                 tile = str(18+int(roads[j][i]))
 
             bg.blit(LOADED_IMAGES[name[0] + tile], (i*48, j*48))
-    # x = LOADED_IMAGES[name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
-    # bg.blit(LOADED_IMAGES[name[0] + 'pit'], x)
+    x = LOADED_IMAGES[name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
+    bg.blit(LOADED_IMAGES[name[0] + 'pit'], x)
     LOADED_IMAGES.update({name: bg})
     return {"DOWN": name}
 
