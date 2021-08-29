@@ -9,10 +9,11 @@ class Shop:
 
     def __init__(self, player_sprite, closed_dims):
         self.open = False
-        self.open_surface = pg.Surface((closed_dims[0]*4, closed_dims[1]))
+        self.open_surface = pg.Surface((closed_dims[0], closed_dims[1]*4.5))
         self.closed_surface = pg.Surface(closed_dims)
         self.shop_surface = self.closed_surface
         self.shop_surface = self.shop_surface.convert()
+        self.shop_bg_color = (10, 150, 50)
         if player_sprite == "sprite_viking":
             self.shop_icon_image = LOADED_IMAGES["shop_icon_q"]
             self.shop_f_image = LOADED_IMAGES["shop_ability_f"]
@@ -31,34 +32,35 @@ class Shop:
             self.draw_closed_shop()
 
     def draw_open_shop(self):
-        self.shop_surface.fill((10, 150, 50))
-        self.shop_icon_image = pg.transform.scale(self.shop_icon_image, (30,30))
+        self.shop_surface.fill(self.shop_bg_color)
+        image_size = (self.closed_surface.get_width(),self.closed_surface.get_height())
+        self.shop_icon_image = pg.transform.scale(self.shop_icon_image, image_size)
         shop_icon_image_pos = self.shop_icon_image.get_rect(
-            centerx=self.shop_surface.get_width() - self.shop_icon_image.get_rect().width*0.5,
-            centery=self.shop_surface.get_height() / 2)
+            centerx=0 + self.shop_icon_image.get_rect().width*0.5,
+            centery=self.shop_surface.get_height() - self.shop_icon_image.get_rect().height*0.5)
         self.shop_surface.blit(self.shop_icon_image, shop_icon_image_pos)
 
-        self.shop_f_image = pg.transform.scale(self.shop_f_image, (30, 30))
+        self.shop_f_image = pg.transform.scale(self.shop_f_image, image_size)
         shop_f_image_pos = self.shop_f_image.get_rect(
-            centerx=self.shop_f_image.get_rect().width * 0.5,
-            centery=self.shop_surface.get_height() / 2)
+            centerx=self.shop_surface.get_rect().width /2,
+            centery=self.shop_surface.get_height() - shop_icon_image_pos.height*3.8)
         self.shop_surface.blit(self.shop_f_image, shop_f_image_pos)
 
-        self.shop_g_image = pg.transform.scale(self.shop_g_image, (30, 30))
+        self.shop_g_image = pg.transform.scale(self.shop_g_image, image_size)
         shop_g_image_pos = self.shop_g_image.get_rect(
-            centerx=self.shop_f_image.get_rect().width * 1.5,
-            centery=self.shop_surface.get_height() / 2)
+            centerx=self.shop_surface.get_rect().width /2,
+            centery=self.shop_surface.get_height() - shop_icon_image_pos.height*2.7)
         self.shop_surface.blit(self.shop_g_image, shop_g_image_pos)
 
-        self.shop_h_image = pg.transform.scale(self.shop_h_image, (30, 30))
+        self.shop_h_image = pg.transform.scale(self.shop_h_image, image_size)
         shop_h_image_pos = self.shop_h_image.get_rect(
-            centerx=self.shop_f_image.get_rect().width * 2.5,
-            centery=self.shop_surface.get_height() / 2)
+            centerx=self.shop_surface.get_rect().width /2,
+            centery=self.shop_surface.get_height() - shop_icon_image_pos.height*1.6)
         self.shop_surface.blit(self.shop_h_image, shop_h_image_pos)
 
     def draw_closed_shop(self):
-        self.shop_surface.fill((10, 200, 250))
-        self.shop_icon_image = pg.transform.scale(self.shop_icon_image, (30,30))
+        self.shop_surface.fill(self.shop_bg_color)
+        self.shop_icon_image = pg.transform.scale(self.shop_icon_image, (self.closed_surface.get_width(),self.closed_surface.get_height()))
         self.shop_surface.blit(self.shop_icon_image, self.shop_surface.get_rect())
 
     def toggle_open(self):
