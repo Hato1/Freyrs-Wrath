@@ -49,7 +49,7 @@ class World:
         for i in range(5):
             self.gen_coin()
 
-        self.update_world()
+        self.draw_world()
 
     def get_name(self):
         return self.name
@@ -61,12 +61,13 @@ class World:
         self.sprite_dict.update({"DOWN": player_sprite + "_front"})
 
     def update_world(self):
-        self.background.draw(self.world, self.dims)
         self.player_update()
         for sprite in self.allsprites:
-            sprite.move()
+           sprite.move()
+        self.draw_world()
 
-        self.allsprites.update()
+    def draw_world(self):
+        self.background.draw(self.world, self.dims)
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
 

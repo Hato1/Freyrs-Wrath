@@ -173,6 +173,7 @@ def create_background(name):
                 tile = str(18+int(roads[j][i]))
 
             bg.blit(LOADED_IMAGES[name[0] + tile], (i*48, j*48))
+    #bg.blit(LOADED_IMAGES[name[0] + pit.png], (4*48, 8*48))
     LOADED_IMAGES.update({name: bg})
     return {"DOWN": name}
 
