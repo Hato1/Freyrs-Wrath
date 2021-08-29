@@ -4,7 +4,7 @@ from pygame.locals import *
 import os
 
 import helper
-from helper import DATA_DIR, load_image, LOADED_IMAGES, load_sound
+from helper import DATA_DIR, LOADED_IMAGES, load_sound
 
 from entity import Entity
 from shop import Shop
@@ -21,7 +21,6 @@ class World:
 
         self.dims = dims
         self.name = character
-        # Delete me self.dir_dict = {pg.K_w: 0, pg.K_s: 0, pg.K_a: 0, pg.K_d: 0}
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
         self.number_of_players = number_of_players
         self.world_size = world_size
@@ -296,6 +295,7 @@ class World:
 
     def reset(self):
         self.player.lives = 3
+        self.money = 0
         for index, enemy in enumerate(self.enemy_list):
             del self.enemy_list[index]
         self.allsprites.empty()
