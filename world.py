@@ -14,7 +14,6 @@ CHARACTERS = {'VIKING': {'player_sprite': 'sprite_viking', 'enemy_sprite': 'spri
               'FARMER': {'player_sprite': 'sprite_farmer', 'enemy_sprite': 'sprite_viking'},
               'DEMON': {'player_sprite': 'sprite_demon', 'enemy_sprite': 'sprite_priest'}}
 
-
 class World:
 
     def __init__(self, dims, character):
@@ -33,7 +32,7 @@ class World:
         self.world = self.world.convert()
         self.shop = Shop(player_sprite, (60, 60))
 
-        self.money = 100
+        self.money = 0
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
 
@@ -252,7 +251,7 @@ class World:
     def activate_power(self, power_name):
         if power_name == "speed":
             for enemy in self.enemy_list:
-                enemy.speed = enemy.speed * 2
+                enemy.speed += 0.3
 
         elif power_name == "more":
             self.gen_enemy()

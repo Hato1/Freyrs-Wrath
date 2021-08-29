@@ -37,11 +37,13 @@ class Game:
         self.background_surface = None  # init in setup_game
         self.screen = None  # init in setup_game
         self.soundtrack = None
+        self.number_of_players = 2
         self.setup_game()
 
         half_screen_width = self.screen.get_size()[0] / 2
         screen_height = self.screen.get_size()[1]
         self.players = []
+
         self.characters = ["VIKING", "PRIEST", "FARMER", "DEMON"]
         # for i in range(helper.PLAYERCOUNT):
         #     self.players.append(Select(dims=helper.WORLD_SIZE))
@@ -58,6 +60,9 @@ class Game:
         self.soundtrack = load_sound("Fishing song.mp3")
         self.soundtrack.set_volume(0.2)
         self.soundtrack.play(-1)
+
+        self.button_sound = load_sound("button_sound.mp3")
+        self.button_sound.set_volume(0.5)
 
     def draw_menu_background(self):
         # Create The Menu
@@ -79,6 +84,8 @@ class Game:
                                           centery=self.background_surface.get_height() / 1.8)
         self.background_surface.blit(text_team, textpos_team)
 
+        self.draw_number_players_selector()
+
         text_by = font_team.render("by", 1, (220, 20, 60))
         textpos_by = text_by.get_rect(centerx=self.background_surface.get_width() / 2,
                                       centery=self.background_surface.get_height() / 2.2)
@@ -89,6 +96,29 @@ class Game:
         textpos_space_to_begin = text_space_to_begin.get_rect(centerx=self.background_surface.get_width() / 2,
                                                               centery=self.background_surface.get_height() / 1.2)
         self.background_surface.blit(text_space_to_begin, textpos_space_to_begin)
+
+    def draw_number_players_selector(self):
+        font_number_of_players = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 20 * 3)
+
+        number_players_string = "  Number of players:  "
+        if self.number_of_players > 2:
+            number_players_string += "< "
+        else:
+            number_players_string += "   "
+        number_players_string += str(self.number_of_players)
+        if self.number_of_players < 4:
+            number_players_string += " >"
+        else:
+            number_players_string += "    "
+
+        text_number_of_players = font_number_of_players.render(
+            number_players_string, 1, (220, 20, 60))
+        textpos_number_of_players = text_number_of_players.get_rect(centerx=self.background_surface.get_width() / 2,
+                                                                    centery=self.background_surface.get_height() / 1.4)
+        background_rect = pg.Surface(text_number_of_players.get_size())
+        background_rect.fill(WHITE)
+        self.background_surface.blit(background_rect, textpos_number_of_players)
+        self.background_surface.blit(text_number_of_players, textpos_number_of_players)
 
     def draw_game_background(self):
         screen_height = self.screen.get_size()[1]
@@ -232,14 +262,22 @@ class Game:
             self.process_end_event(event)
 
     def process_menu_event(self, event):
-        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == MENU:
+        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
             self.game_state = SELECT
-            button_sound = load_sound("button_sound.mp3")
-            button_sound.play()
-        elif event.type == pg.JOYBUTTONDOWN and event.button == 0 and self.game_state == MENU:
+            self.button_sound.play()
+        elif event.type == pg.JOYBUTTONDOWN and event.button == 0:
             self.game_state = SELECT
-            button_sound = load_sound("button_sound.mp3")
-            button_sound.play()
+            self.button_sound.play()
+
+        elif event.type == pg.KEYDOWN and (event.key == pg.K_a or event.key == pg.K_LEFT):
+            if self.number_of_players > 2:
+                self.number_of_players -= 1
+                self.button_sound.play()
+
+        elif event.type == pg.KEYDOWN and (event.key == pg.K_d or event.key == pg.K_RIGHT):
+            if self.number_of_players < 4:
+                self.number_of_players += 1
+                self.button_sound.play()
 
     def process_select_event(self, event):
         if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == SELECT:
@@ -372,6 +410,7 @@ class Game:
 
     def menu_loop(self):
         self.screen.blit(self.background_surface, (0, 0))
+        self.draw_number_players_selector()
 
     def select_loop(self):
         self.draw_select_background()

@@ -114,6 +114,6 @@ class ShopCard:
             font = pg.font.Font(os.path.join(DATA_DIR, self.font_name), 18)
             text_control = font.render(str(price), 1, BLACK)
             text_pos = text_control.get_rect(centerx=self.base_image.get_width() / 1.5,
-                                             centery=self.base_image.get_height() / 5.7)
+                                             centery=self.base_image.get_height() / 5.8)
             self.image.blit(self.price_base, (text_pos[0]-1, text_pos[1]+1))
             self.image.blit(text_control, text_pos)
