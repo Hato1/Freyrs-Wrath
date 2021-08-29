@@ -9,7 +9,7 @@ class Shop:
 
     def __init__(self, player_sprite, closed_dims):
         self.open = False
-        self.open_surface = pg.Surface((closed_dims[0], closed_dims[1]*4.5))
+        self.open_surface = pg.Surface((closed_dims[0], closed_dims[1] * 4.5))
         self.closed_surface = pg.Surface(closed_dims)
         self.shop_surface = self.closed_surface
         self.shop_surface = self.shop_surface.convert()
@@ -18,7 +18,7 @@ class Shop:
         self.populate_card_list(player_sprite)
 
     def populate_card_list(self, player_sprite):
-        image_size = (self.closed_surface.get_width(),self.closed_surface.get_height())
+        image_size = (self.closed_surface.get_width(), self.closed_surface.get_height())
 
         if player_sprite == "sprite_viking":
             self.shop_card_list = [
@@ -47,26 +47,11 @@ class Shop:
 
         padding = 0.1
         for i, shop_card in enumerate(self.shop_card_list):
-            offset = i+0.5+(padding*i)
+            offset = i + 0.5 + (padding * i)
             shop_icon_image_pos = shop_card.image.get_rect(
-                centerx=0 + shop_card.image.get_rect().width/2,
-                centery=self.shop_surface.get_height() - shop_card.image.get_rect().height*(offset))
+                centerx=0 + shop_card.image.get_rect().width / 2,
+                centery=self.shop_surface.get_height() - shop_card.image.get_rect().height * (offset))
             self.shop_surface.blit(shop_card.image, shop_icon_image_pos)
-
-        # shop_f_image_pos = self.shop_f_image.get_rect(
-        #     centerx=self.shop_surface.get_rect().width /2,
-        #     centery=self.shop_surface.get_height() - shop_icon_image_pos.height*3.8)
-        # self.shop_surface.blit(self.shop_f_image, shop_f_image_pos)
-        #
-        # shop_g_image_pos = self.shop_g_image.get_rect(
-        #     centerx=self.shop_surface.get_rect().width /2,
-        #     centery=self.shop_surface.get_height() - shop_icon_image_pos.height*2.7)
-        # self.shop_surface.blit(self.shop_g_image, shop_g_image_pos)
-        #
-        # shop_h_image_pos = self.shop_h_image.get_rect(
-        #     centerx=self.shop_surface.get_rect().width /2,
-        #     centery=self.shop_surface.get_height() - shop_icon_image_pos.height*1.6)
-        # self.shop_surface.blit(self.shop_h_image, shop_h_image_pos)
 
     def draw_closed_shop(self):
         self.shop_surface.fill(self.shop_bg_color)
@@ -83,9 +68,10 @@ class Shop:
     def set_displayed_price_of_power(self, power_number, price):
         pass
 
+
 class ShopCard:
 
-    def __init__(self, name, image, price, image_size,control="f"):
+    def __init__(self, name, image, price, image_size, control="f"):
         self.name = name
         self.image = pg.transform.scale(image, image_size)
         self.price = price
