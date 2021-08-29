@@ -43,6 +43,7 @@ class World:
         self.coin_sound.set_volume(0.05)
 
         self.background = Entity(helper.create_background(self.name), (0, 0))
+        self.pit = Entity({"DOWN": self.name[0] + 'pit'}, (0, 0))
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
         self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
@@ -58,7 +59,6 @@ class World:
     def get_name(self):
         return self.name
 
-
     def init_character(self, name):
         self.name = name
         self.background = Entity(helper.create_background(self.name), (0, 0))
@@ -68,12 +68,14 @@ class World:
             enemy_dict = helper.create_sprite_dict(CHARACTERS[name]['enemy_sprite'])
             enemy.set_sprite_dict(enemy_dict)
 
-
-
     def draw_pit(self):
-        # rect = LOADED_IMAGES[self.name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
-        # self.world.blit(LOADED_IMAGES[self.name[0] + 'pit'], rect)
-        pass
+        x, y = self.background.position
+        x -= self.pit.get_width() / 2
+        y -= self.pit.get_height() / 2
+        x += (8.5*48)
+        y += (4.25*48)
+        self.pit.set_position((x, y))
+        self.pit.draw(self.world, self.dims)
 
     def create_sprite_dict(self, player_sprite):
         self.sprite_dict.update({"LEFT": player_sprite + "_left"})
@@ -92,9 +94,9 @@ class World:
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
 
-        self.draw_pit()
         self.update_gui()
         self.world.blit(self.player.get_sprite(), self.player.get_position())
+        self.draw_pit()
         pg.display.flip()
 
     def draw_select(self):
