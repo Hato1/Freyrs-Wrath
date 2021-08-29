@@ -5,7 +5,7 @@ from pygame.compat import geterror
 from pygame.locals import *
 
 import helper
-from helper import load_sound, DATA_DIR, load_all_images, WIN_SIZE
+from helper import load_sound, DATA_DIR, load_all_images, WIN_SIZE, LOADED_IMAGES
 from world import World
 
 if not pg.font:
@@ -46,11 +46,17 @@ class Game:
         self.players = []
         self.characters = ["VIKING", "PRIEST", "FARMER", "DEMON"]
 
+    def create_scrolling_menu_background(self):
+        return LOADED_IMAGES[helper.create_background("VIKING", helper.WIN_SIZE, 0)["DOWN"]]
+
+
+
     def setup_game(self):
         self.screen = pg.display.set_mode(WIN_SIZE, pg.SCALED | pg.RESIZABLE)
         pg.display.set_caption(GAME_NAME)
-        self.draw_menu_background()
         load_all_images()
+        self.scrolling_menu_background = self.create_scrolling_menu_background()
+        self.draw_menu_background()
 
         self.soundtrack = load_sound("Fishing song.mp3")
         self.soundtrack.set_volume(0.2)
@@ -67,6 +73,7 @@ class Game:
         self.background_surface = pg.Surface(self.screen.get_size())
         self.background_surface = self.background_surface.convert()
         self.background_surface.fill(WHITE)
+        self.background_surface.blit(self.scrolling_menu_background, (0, 0))
         self.write_menu_text()
 
     def write_menu_text(self):

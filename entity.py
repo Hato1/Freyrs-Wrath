@@ -1,11 +1,7 @@
 import random
 import pygame as pg
 
-from helper import DATA_DIR, load_image, LOADED_IMAGES
-
-
-# To do:
-# Handle position wrapping. (helper function?)
+from helper import LOADED_IMAGES
 
 class Entity(pg.sprite.Sprite):
     def __init__(self, sprite_dict, position, lives=3, speed=5, ai=None, type="Entity", info={}):
@@ -50,19 +46,16 @@ class Entity(pg.sprite.Sprite):
 
         if self.position[0] + image.get_width() > dims[0]:
             # off screen right
-            # self.position[0] += -dims[0]
             xmod = -dims[0]
             wrap_x = True
 
         if self.position[1] < 0:
             # off screen top
-            # self.position[1] += dims[1]
             ymod = dims[1]
             wrap_y = True
 
         if self.position[1] + image.get_height() > dims[1]:
             # off screen bottom
-            # self.position[1] += -dims[1]
             ymod = -dims[1]
             wrap_y = True
 
