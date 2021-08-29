@@ -113,14 +113,16 @@ class Game:
     def draw_end_background(self):
         self.background_surface = pg.Surface(self.screen.get_size())
         self.background_surface = self.background_surface.convert()
-        self.background_surface.fill(GREY)
-        self.write_end_text()
+        self.background_surface.fill(BLACK)
 
-    def write_end_text(self):
         winner = ""
         for player in self.players:
             if player.check_alive():
                 winner = player.get_name()
+
+        self.write_end_text(winner)
+
+    def write_end_text(self, winner):
 
         font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         text_title = font_title.render(winner + ' WINS!', 1, (255, 20, 30))
@@ -133,6 +135,13 @@ class Game:
         textpos_team = text_team.get_rect(centerx=self.background_surface.get_width() / 2,
                                           centery=self.background_surface.get_height() / 1.8)
         self.background_surface.blit(text_team, textpos_team)
+
+        winner_sprite = helper.LOADED_IMAGES["sprite_" + winner.lower() + "_front"]
+        winner_sprite = pg.transform.scale(winner_sprite, (150, 150))
+        winner_sprite_pos = winner_sprite.get_rect(centerx=self.background_surface.get_width() / 2,
+                                                   centery=self.background_surface.get_height() / 2.5)
+
+        self.background_surface.blit(winner_sprite, winner_sprite_pos)
 
     def main(self):
         """this function is called when the program starts.
