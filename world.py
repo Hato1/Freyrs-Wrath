@@ -55,6 +55,7 @@ class World:
         # spawns 5 coin entities
         for i in range(5):
             self.gen_coin()
+        self.player.image = 'DOWN'
 
     def get_name(self):
         return self.name
