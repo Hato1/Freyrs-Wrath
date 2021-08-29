@@ -74,7 +74,7 @@ for i in os.listdir(tilesets):
 LOADED_IMAGES = {}
 
 
-def load_image(name, colorkey=(0,0,0,255)):
+def load_image(name, colorkey=(0, 0, 0, 255)):
     fullname = os.path.join(DATA_DIR, name)
     try:
         image = pg.image.load(fullname)

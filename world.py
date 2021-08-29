@@ -102,11 +102,11 @@ class World:
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
 
-        self.update_gui()
-
         if self.check_alive():
             self.world.blit(self.player.get_sprite(), self.player.get_position())
         self.draw_pit()
+
+        self.update_gui()
         pg.display.flip()
 
     def draw_select(self):
