@@ -88,18 +88,14 @@ class Entity(pg.sprite.Sprite):
     def get_width(self):
         return LOADED_IMAGES[self.sprite_dict[self.image]].get_width()
 
-    def set_rect(self, rect):
-        self.position = rect
-
     def set_sprite_dict(self, sprite_dict):
-        print(sprite_dict)
         self.sprite_dict = sprite_dict
 
     def get_position(self):
         return self.position
 
     def set_position(self, position):
-        self.position = position
+        self.position = list(position)
 
     def change_control(self, new_scheme):
         self.control = new_scheme

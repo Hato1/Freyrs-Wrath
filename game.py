@@ -24,8 +24,8 @@ GREEN = (20, 239, 20)
 BLACK = (0, 0, 0)
 GAME_NAME = "Freyr's Wrath"
 XBOX360 = {'A': 0, 'B': 1, 'X': 2, 'Y': 3, 'LB': 4, 'RB': 5}
-P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT'}
-P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT'}
+P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT', pg.K_f: 'MORE', pg.K_g: 'SPEED', pg.K_h: 'HEAL'}
+P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT', pg.K_k: 'MORE', pg.K_l: 'SPEED', pg.K_SEMICOLON: 'HEAL'}
 pg.init()
 joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
 
@@ -263,9 +263,13 @@ class Game:
 
     def process_menu_event(self, event):
         if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+            for player in self.players:
+                player.start()
             self.game_state = SELECT
             self.button_sound.play()
         elif event.type == pg.JOYBUTTONDOWN and event.button == 0:
+            for player in self.players:
+                player.start()
             self.game_state = SELECT
             self.button_sound.play()
 
@@ -342,14 +346,7 @@ class Game:
         elif event.type == pg.KEYUP and event.key in P2DIRS:
             self.players[1].set_dir(P2DIRS[event.key], 0)
 
-        if event.type == pg.KEYDOWN and event.key in P2DIRS:
-            self.players[2].set_dir(P2DIRS[event.key], 1)
-        elif event.type == pg.KEYUP and event.key in P2DIRS:
-            self.players[2].set_dir(P2DIRS[event.key], 0)
-        if event.type == pg.KEYDOWN and event.key in P1DIRS:
-            self.players[3].set_dir(P1DIRS[event.key], 1)
-        elif event.type == pg.KEYUP and event.key in P1DIRS:
-            self.players[3].set_dir(P1DIRS[event.key], 0)
+
 
         #shop open/close keys
         if event.type == pg.KEYDOWN and event.key == pg.K_q:
@@ -406,9 +403,14 @@ class Game:
                 self.players[1].activate_power("heal")
 
     def process_end_event(self, event):
-        pass
+        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+            for player in self.players:
+                player.reset()
+            self.game_state = MENU
 
     def menu_loop(self):
+        self.draw_menu_background()
+        self.write_menu_text()
         self.screen.blit(self.background_surface, (0, 0))
         self.draw_number_players_selector()
 

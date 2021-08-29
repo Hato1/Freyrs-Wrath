@@ -7,7 +7,7 @@ from pygame.compat import geterror
 
 import random
 
-PLAYERCOUNT = 4
+PLAYERCOUNT = 2
 WIN_SIZE = ((512*3)+2, (288*3)+2)
 
 WORLD_SIZE = ((512*3)//2, (288*3))
@@ -74,7 +74,7 @@ for i in os.listdir(tilesets):
 LOADED_IMAGES = {}
 
 
-def load_image(name, colorkey=(0,0,0,255)):
+def load_image(name, colorkey=(0, 0, 0, 255)):
     fullname = os.path.join(DATA_DIR, name)
     try:
         image = pg.image.load(fullname)
