@@ -456,15 +456,12 @@ class Game:
         self.screen.blit(self.background_surface, (0, 0))
 
     def initialize_game_worlds(self):
-        if len(self.players) > 0:
-            return  # already inititalized
-        else:
-            world_size = ((512 * 3) // 2, (288 * 3))
-            if self.number_of_players > 2:
-                world_size = ((512 * 3) // 2, (288 * 3) // 2)
-            for i in range(self.number_of_players):
-                self.players.append(World(dims=world_size, character=self.characters[i], world_size=world_size,
-                                          number_of_players=self.number_of_players))
+        self.players =[]
+        world_size = ((512 * 3) // 2, (288 * 3))
+        if self.number_of_players > 2:
+            world_size = ((512 * 3) // 2, (288 * 3) // 2)
+        for i in range(self.number_of_players):
+            self.players.append(World(dims=world_size, character=self.characters[i], world_size=world_size, number_of_players=self.number_of_players))
 
 
 # Game Over
