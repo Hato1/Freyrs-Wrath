@@ -7,7 +7,6 @@ from pygame.locals import *
 import helper
 from helper import load_sound, DATA_DIR, load_all_images, WIN_SIZE
 from world import World
-from select import Select
 
 if not pg.font:
     print("Warning, fonts disabled")
