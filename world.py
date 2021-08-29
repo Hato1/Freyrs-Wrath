@@ -47,6 +47,8 @@ class World:
         self.create_sprite_dict(player_sprite)
         self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
                              lives=3)
+
+        self.pit = 
         self.gen_enemy()
         # spawns 5 coin entities
         for i in range(5):
@@ -64,9 +66,12 @@ class World:
         self.background = Entity(helper.create_background(self.name), (0, 0))
 
     def draw_pit(self):
-        # rect = LOADED_IMAGES[self.name[0] + 'pit'].get_rect(center=(8.5*48, 4.25*48))
-        # self.world.blit(LOADED_IMAGES[self.name[0] + 'pit'], rect)
-        pass
+        x, y = self.background.get_position()
+        x += 8.5*48 % self.world.get_width()
+        y += 4.25*48 % self.world.get_height()
+        #rect = LOADED_IMAGES[self.name[0] + 'pit'].get_rect(center=(x, y))
+        Entity(helper.create_background(self.name), (0, 0))
+        self.world.blit(LOADED_IMAGES[self.name[0] + 'pit'], (x,y))
 
     def create_sprite_dict(self, player_sprite):
         self.sprite_dict.update({"LEFT": player_sprite + "_left"})
