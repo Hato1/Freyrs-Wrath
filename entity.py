@@ -3,6 +3,7 @@ import pygame as pg
 
 from helper import LOADED_IMAGES
 
+
 class Entity(pg.sprite.Sprite):
     def __init__(self, sprite_dict, position, lives=3, speed=5, ai=None, type="Entity", info={}):
         """EG Entity([5.5, 7.64], ai='follow')"""

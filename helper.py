@@ -91,6 +91,8 @@ def load_sound(name):
 
     if not pg.mixer or not pg.mixer.get_init():
         return NoneSound()
+    if name.endswith('.mp3'):
+        raise ValueError("mp3 files not supported by Linux, convert to .wav instead! -Love Jacob")
     fullname = os.path.join(DATA_DIR, name)
     try:
         sound = pg.mixer.Sound(fullname)

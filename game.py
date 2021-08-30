@@ -58,17 +58,17 @@ class Game:
         self.scrolling_menu_background = self.create_scrolling_menu_background()
         self.initialize_menu_background()
 
-        self.soundtrack = load_sound("Fishing song.mp3")
+        self.soundtrack = load_sound("Fishing song.wav")
         self.soundtrack.set_volume(0.2)
         self.soundtrack.play(-1)
 
-        self.button_sound = load_sound("button_sound.mp3")
+        self.button_sound = load_sound("button_sound.wav")
         self.button_sound.set_volume(0.5)
 
-        self.victory_sound = load_sound("victory.mp3")
+        self.victory_sound = load_sound("victory.wav")
         self.victory_sound.set_volume(0.3)
 
-        self.select_sound = load_sound("select_sound.mp3")
+        self.select_sound = load_sound("select_sound.wav")
         self.select_sound.set_volume(0.3)
 
     def initialize_menu_background(self):

@@ -39,9 +39,9 @@ class World:
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 20 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
 
-        self.ouch_sound = load_sound("ouch.mp3")
+        self.ouch_sound = load_sound("ouch.wav")
         self.ouch_sound.set_volume(0.2)
-        self.coin_sound = load_sound("coin_sound.mp3")
+        self.coin_sound = load_sound("coin_sound.wav")
         self.coin_sound.set_volume(0.05)
 
         self.background = Entity(helper.create_background(self.name, self.world_size, self.number_of_players), (0, 0))
@@ -116,7 +116,7 @@ class World:
         font_select = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         text_select = font_select.render('Choose Your Character', 1, (220, 20, 60))
         textpos_select = text_select.get_rect(centerx=self.get_width() / 2,
-                                          centery=self.get_height() / 5)
+                                              centery=self.get_height() / 5)
         self.world.blit(text_select, textpos_select)
 
         font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
@@ -158,7 +158,6 @@ class World:
         pg.draw.circle(self.world, GOLD, textpos_money.center, 40)
         self.world.blit(self.text_money, textpos_money)
 
-
     def update_shop(self):
         self.shop.draw_shop()
 
@@ -189,7 +188,7 @@ class World:
         x = self.dir_dict['LEFT'] - self.dir_dict['RIGHT']
         y = self.dir_dict['UP'] - self.dir_dict['DOWN']
         norm = (x ** 2 + y ** 2) ** 0.5
-        norm = norm / 2 # Double move speed
+        norm = norm / 2  # Double move speed
         if norm == 0:
             return
         x = x / norm
