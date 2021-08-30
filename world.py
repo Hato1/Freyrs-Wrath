@@ -19,19 +19,16 @@ THEMES = {'VIKING': {'player_sprite': 'sprite_viking', 'enemy_sprite': 'sprite_d
 class World:
 
     def __init__(self, dims, theme):
-
         self.dims = dims
         self.theme = theme
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
 
         self.coin_list = []
         self.enemy_list = []
-        player_sprite = THEMES[theme]['player_sprite']
-        self.sprite_dict = helper.create_sprite_dict(player_sprite)
         self.allsprites = pg.sprite.RenderPlain()
 
         self.world = pg.Surface(self.dims).convert()
-        self.shop = Shop(player_sprite, (60, 60))
+        self.shop = Shop(THEMES[theme]['player_sprite'], (60, 60))
 
         self.money = 0
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 20 * 3)
@@ -44,7 +41,7 @@ class World:
 
         self.background = Entity(helper.create_background(self.theme, self.dims), (dims[0]/2 - 24, dims[1]/2 - 70))
         self.pit = Entity({"DOWN": self.theme[0] + 'pit'}, (0, 0))
-        self.player = Entity(self.sprite_dict, (self.dims[0] / 2, self.dims[1] / 2), lives=3)
+        self.player = Entity(helper.create_sprite_dict(THEMES[theme]['player_sprite']), (self.dims[0] / 2, self.dims[1] / 2), lives=3)
 
         self.draw_world()
 
@@ -83,8 +80,7 @@ class World:
         del LOADED_IMAGES[self.background.get_sprite_id()]
         self.background = Entity(helper.create_background(self.theme, self.dims),
                                  (self.dims[0]/2 - 24, self.dims[1]/2 - 70))
-        self.sprite_dict = helper.create_sprite_dict(THEMES[theme]['player_sprite'])
-        self.player.set_sprite_dict(self.sprite_dict)
+        self.player.set_sprite_dict(helper.create_sprite_dict(THEMES[theme]['player_sprite']))
         for enemy in self.enemy_list:
             enemy_dict = helper.create_sprite_dict(THEMES[theme]['enemy_sprite'])
             enemy.set_sprite_dict(enemy_dict)
