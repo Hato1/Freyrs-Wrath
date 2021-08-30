@@ -25,6 +25,7 @@ class World:
         self.dir_dict = {'UP': 0, 'DOWN': 0, 'LEFT': 0, 'RIGHT': 0}
         self.number_of_players = number_of_players
         self.world_size = world_size
+        self.ready = False
 
         self.coin_list = []
         self.enemy_list = []
@@ -119,11 +120,25 @@ class World:
                                           centery=self.get_height() / 5)
         self.world.blit(text_select, textpos_select)
 
-        font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
-        text_space_to_begin = font_space_to_begin.render("Press Spacebar to Start", 1, (220, 20, 60))
-        textpos_space_to_begin = text_space_to_begin.get_rect(centerx=self.get_width() / 2,
-                                                              centery=self.get_height() / 1.2)
-        self.world.blit(text_space_to_begin, textpos_space_to_begin)
+        if self.ready:
+            font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
+            text_space_to_begin = font_space_to_begin.render("Ready!", 1, (220, 20, 60))
+            textpos_space_to_begin = text_space_to_begin.get_rect(centerx=self.get_width() / 2,
+                                                                  centery=self.get_height() / 1.2)
+            self.world.blit(text_space_to_begin, textpos_space_to_begin)
+        else:
+
+            font_select = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 24 * 3)
+            text_select = font_select.render('<       >', 1, (220, 20, 60))
+            textpos_select = text_select.get_rect(centerx=self.get_width() / 2,
+                                                  centery=self.get_height() / 2)
+            self.world.blit(text_select, textpos_select)
+
+            font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
+            text_space_to_begin = font_space_to_begin.render("Press [shop button] when Ready", 1, (220, 20, 60))
+            textpos_space_to_begin = text_space_to_begin.get_rect(centerx=self.get_width() / 2,
+                                                                  centery=self.get_height() / 1.2)
+            self.world.blit(text_space_to_begin, textpos_space_to_begin)
 
     def add_entity(self, sprite_dict, pos, ai=None, name="Entity", speed=5):
         entity = Entity(sprite_dict, pos, ai=ai, type=name, speed=speed)
