@@ -42,7 +42,7 @@ class World:
         self.coin_sound = load_sound("coin_sound.wav")
         self.coin_sound.set_volume(0.05)
 
-        self.background = Entity(helper.create_background(self.theme, self.dims), (0, 0))
+        self.background = Entity(helper.create_background(self.theme, self.dims), (dims[0]/2 - 24, dims[1]/2 - 70))
         self.pit = Entity({"DOWN": self.theme[0] + 'pit'}, (0, 0))
         self.player = Entity(self.sprite_dict, (self.dims[0] / 2, self.dims[1] / 2), lives=3)
 
@@ -80,7 +80,9 @@ class World:
     def init_character(self, theme):
         """Clean me or rename change_theme"""
         self.theme = theme
-        self.background = Entity(helper.create_background(self.theme, self.dims), (0, 0))
+        del LOADED_IMAGES[self.background.get_sprite_id()]
+        self.background = Entity(helper.create_background(self.theme, self.dims),
+                                 (self.dims[0]/2 - 24, self.dims[1]/2 - 70))
         self.sprite_dict = helper.create_sprite_dict(THEMES[theme]['player_sprite'])
         self.player.set_sprite_dict(self.sprite_dict)
         for enemy in self.enemy_list:

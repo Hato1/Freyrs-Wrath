@@ -188,9 +188,11 @@ def create_background(name, world_size, dummy=None):
                 rect = img.get_rect(topleft=(i*48, j*48))
                 # z = (i*48, j*48)
                 bg.blit(img, rect)
-
-    LOADED_IMAGES.update({name: bg})
-    return {"DOWN": name}
+    id = 0
+    while id in LOADED_IMAGES:
+        id += 1
+    LOADED_IMAGES.update({id: bg})
+    return {"DOWN": id}
 
 
 def create_sprite_dict(sprite):

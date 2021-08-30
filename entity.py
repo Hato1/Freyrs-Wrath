@@ -39,6 +39,10 @@ class Entity(pg.sprite.Sprite):
     def get_sprite(self):
         return LOADED_IMAGES[self.sprite_dict[self.image]]
 
+    def get_sprite_id(self):
+        """Used to help delete background sprite from LOADED_IMAGES"""
+        return self.sprite_dict[self.image]
+
     def is_alive(self):
         return self.lives > 0
 
@@ -71,6 +75,8 @@ class Entity(pg.sprite.Sprite):
     def draw(self, surface, dims):
         wrap_x = False
         wrap_y = False
+        self.position[0] %= dims[0]
+        self.position[1] %= dims[1]
         image = LOADED_IMAGES[self.sprite_dict[self.image]]
         # position = sprite.get_rect()
         if self.position[0] < 0:
@@ -109,7 +115,6 @@ class Entity(pg.sprite.Sprite):
 
         self.position[0] %= dims[0]
         self.position[1] %= dims[1]
-
         surface.blit(image, self.position)
 
     def check_collision(self, object):
