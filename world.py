@@ -48,7 +48,7 @@ class World:
         self.pit = Entity({"DOWN": self.name[0] + 'pit'}, (0, 0))
         self.sprite_dict = {}
         self.create_sprite_dict(player_sprite)
-        self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2), type='Player',
+        self.player = Entity(self.sprite_dict, (self.world.get_width() / 2, self.world.get_height() / 2),
                              lives=3)
 
         self.draw_world()
@@ -125,8 +125,8 @@ class World:
                                                               centery=self.get_height() / 1.2)
         self.world.blit(text_space_to_begin, textpos_space_to_begin)
 
-    def add_entity(self, sprite_dict, pos, ai=None, name="Entity", speed=5):
-        entity = Entity(sprite_dict, pos, ai=ai, type=name, speed=speed)
+    def add_entity(self, sprite_dict, pos, ai=None, speed=5):
+        entity = Entity(sprite_dict, pos, ai=ai, speed=speed)
         self.allsprites.add(entity)
         return entity
 
@@ -214,10 +214,10 @@ class World:
         side = random.randint(0, 3)
         ran = random.random()
         if side == 0:
-            coin = self.add_entity(coin_sprite_dict, (ran*self.dims[0], 1), name='Coin')
+            coin = self.add_entity(coin_sprite_dict, (ran*self.dims[0], 1))
             self.coin_list.append(coin)
         else:
-            coin = self.add_entity(coin_sprite_dict, (1, ran*self.dims[1]), name='Coin')
+            coin = self.add_entity(coin_sprite_dict, (1, ran*self.dims[1]))
             self.coin_list.append(coin)
 
     def gen_enemy(self, speed=1):
@@ -225,7 +225,7 @@ class World:
         pos = random.choice([(random.randint(1, self.dims[0]), 0), (0, random.randint(1, self.dims[1]))])
         enemy = self.add_entity(enemy_sprite_dict,
                                 pos, ai='follow',
-                                speed=speed, name='Enemy')
+                                speed=speed)
         enemy.update_info({'target': self.player, 'me': enemy})
         self.enemy_list.append(enemy)
 

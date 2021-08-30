@@ -6,14 +6,16 @@ from helper import LOADED_IMAGES, DATA_DIR
 
 STARTING_PRICE_LIST = [0, 2, 2, 2]
 STARTING_ABILITY_IMAGE_LIST = ["shop_icon", "heal", "speed", "more"]
-BLACK = (0,0,0)
-WHITE = (255,255,255)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 GOLD = (254, 224, 34)
 
 CHARACTER_KEYS = {"sprite_viking": {"shop_icon": "q", "more": "f", "speed": "g", "heal": "h"},
                   "sprite_priest": {"shop_icon": "p", "more": "k", "speed": "l", "heal": ";"},
                   "sprite_farmer": {"shop_icon": "1", "more": "2", "speed": "3", "heal": "4"},
                   "sprite_demon": {"shop_icon": "5", "more": "6", "speed": "7", "heal": "8"}}
+
+
 class Shop:
 
     def __init__(self, player_sprite, closed_dims):
@@ -81,6 +83,7 @@ class Shop:
                 return shop_card
         return None
 
+
 class ShopCard:
 
     def __init__(self, name, image, price, image_size, control="q"):
@@ -88,7 +91,7 @@ class ShopCard:
         self.base_image = pg.transform.scale(image, image_size)
         self.image = self.base_image
         self.price = price
-        self.price_base = pg.Surface((15,10))
+        self.price_base = pg.Surface((15, 10))
         self.price_base.fill(GOLD)
         self.font_name = 'MomcakeBold-WyonA.otf'
         self.set_control(control)

@@ -5,34 +5,60 @@ from helper import LOADED_IMAGES
 
 
 class Entity(pg.sprite.Sprite):
-    def __init__(self, sprite_dict, position, lives=3, speed=5, ai=None, type="Entity", info={}):
-        """EG Entity([5.5, 7.64], ai='follow')"""
+    def __init__(self, sprite_dict, position, lives=3, speed=5, ai=None, info={}):
         pg.sprite.Sprite.__init__(self)
+
         self.image = "DOWN"
         self.sprite_dict = sprite_dict
-        self.position = list(position)
-        self.position[0] -= LOADED_IMAGES[sprite_dict[self.image]].get_width() / 2
-        self.position[1] -= LOADED_IMAGES[sprite_dict[self.image]].get_height() / 2
-        # self.rect.center = position
+
+        x, y = list(position)
+        x -= self.get_width() / 2
+        y -= self.get_height() / 2
+        self.position = [x, y]
+
         self.lives = lives
         self.max_lives = lives
         self.speed = speed
-        self.ai = ai
-        self.type = type
 
+        self.ai = ai
         self.info = info
 
-    def __type__(self):
-        return self.type
+    def get_height(self):
+        return LOADED_IMAGES[self.sprite_dict[self.image]].get_height()
 
-    def get_rect(self):
-        return self.rect
+    def get_width(self):
+        return LOADED_IMAGES[self.sprite_dict[self.image]].get_width()
+
+    def get_position(self):
+        return self.position
 
     def get_sprite(self):
         return LOADED_IMAGES[self.sprite_dict[self.image]]
 
-    def get_height(self):
-        return LOADED_IMAGES[self.sprite_dict[self.image]].get_height()
+    def is_alive(self):
+        return self.lives > 0
+
+    def set_sprite_dict(self, sprite_dict):
+        self.sprite_dict = sprite_dict
+
+    def set_position(self, position):
+        self.position = list(position)
+
+    def update_info(self, new_info):
+        self.info.update(new_info)
+
+    def change_control(self, new_scheme):
+        self.control = new_scheme
+
+    def set_dir(self, vector):
+        if vector[0] > 0.5:
+            self.image = "LEFT"
+        elif vector[0] < -0.5:
+            self.image = "RIGHT"
+        elif vector[1] > 0:
+            self.image = "UP"
+        elif vector[1] < 0:
+            self.image = "DOWN"
 
     def draw(self, surface, dims):
         wrap_x = False
@@ -41,7 +67,6 @@ class Entity(pg.sprite.Sprite):
         # position = sprite.get_rect()
         if self.position[0] < 0:
             # off screen left
-            # self.position[0] += dims[0]
             xmod = dims[0]
             wrap_x = True
 
@@ -79,21 +104,6 @@ class Entity(pg.sprite.Sprite):
 
         surface.blit(image, self.position)
 
-    def get_width(self):
-        return LOADED_IMAGES[self.sprite_dict[self.image]].get_width()
-
-    def set_sprite_dict(self, sprite_dict):
-        self.sprite_dict = sprite_dict
-
-    def get_position(self):
-        return self.position
-
-    def set_position(self, position):
-        self.position = list(position)
-
-    def change_control(self, new_scheme):
-        self.control = new_scheme
-
     def check_collision(self, object):
         """Fails if object completely encompases me"""
         my_pos = [self.position[0] + self.get_width()/2, self.position[1] + self.get_height()/2]
@@ -107,9 +117,6 @@ class Entity(pg.sprite.Sprite):
         if top <= my_pos[1] <= bottom:
             if left <= my_pos[0] <= right:
                 return True
-
-    def is_alive(self):
-        return self.lives > 0
 
     def move(self, world_size):
         if self.ai:
@@ -135,9 +142,6 @@ class Entity(pg.sprite.Sprite):
         self.position[0] += vec[0]
         self.position[1] += vec[1]
 
-    def update_info(self, new_info):
-        self.info.update(new_info)
-
     def get_center(self, world_size):
         return ((self.position[0] + self.get_width()/2) % world_size[0],
                 (self.position[1] + self.get_height()/2) % world_size[1])
@@ -146,13 +150,3 @@ class Entity(pg.sprite.Sprite):
         x, y = self.get_center(world_size)
         tx, ty = self.info['target'].get_center(world_size)
         return (tx-x, ty-y)
-
-    def set_dir(self, vector):
-        if vector[0] > 0.5:
-            self.image = "LEFT"
-        elif vector[0] < -0.5:
-            self.image = "RIGHT"
-        elif vector[1] > 0:
-            self.image = "UP"
-        elif vector[1] < 0:
-            self.image = "DOWN"
