@@ -15,6 +15,7 @@ CHARACTERS = {'VIKING': {'player_sprite': 'sprite_viking', 'enemy_sprite': 'spri
               'FARMER': {'player_sprite': 'sprite_farmer', 'enemy_sprite': 'sprite_viking'},
               'DEMON': {'player_sprite': 'sprite_demon', 'enemy_sprite': 'sprite_priest'}}
 
+
 class World:
 
     def __init__(self, dims, character, world_size, number_of_players):
