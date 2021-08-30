@@ -32,6 +32,10 @@ class Entity(pg.sprite.Sprite):
     def get_position(self):
         return self.position
 
+    def get_center(self, world_size):
+        return ((self.position[0] + self.get_width()/2) % world_size[0],
+                (self.position[1] + self.get_height()/2) % world_size[1])
+
     def get_sprite(self):
         return LOADED_IMAGES[self.sprite_dict[self.image]]
 
@@ -49,6 +53,10 @@ class Entity(pg.sprite.Sprite):
 
     def change_control(self, new_scheme):
         self.control = new_scheme
+
+    def slide(self, vec):
+        self.position[0] += vec[0]
+        self.position[1] += vec[1]
 
     def set_dir(self, vector):
         if vector[0] > 0.5:
@@ -137,14 +145,6 @@ class Entity(pg.sprite.Sprite):
             return (x, y)
         else:
             return False
-
-    def slide(self, vec):
-        self.position[0] += vec[0]
-        self.position[1] += vec[1]
-
-    def get_center(self, world_size):
-        return ((self.position[0] + self.get_width()/2) % world_size[0],
-                (self.position[1] + self.get_height()/2) % world_size[1])
 
     def ai_follow(self, world_size):
         x, y = self.get_center(world_size)
