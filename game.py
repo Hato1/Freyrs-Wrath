@@ -44,6 +44,7 @@ class Game:
         self.select_sound = None
         self.number_of_players = 2
         self.setup_game()
+        pg.display.set_icon(LOADED_IMAGES['sprite_viking_front'])
         self.players = []
         self.characters = ["VIKING", "PRIEST", "FARMER", "DEMON"]
 
