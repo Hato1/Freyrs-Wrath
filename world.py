@@ -222,8 +222,9 @@ class World:
 
     def gen_enemy(self, speed=1):
         enemy_sprite_dict = helper.create_sprite_dict(CHARACTERS[self.name]['enemy_sprite'])
+        pos = random.choice([(random.randint(1, self.dims[0]), 0), (0, random.randint(1, self.dims[1]))])
         enemy = self.add_entity(enemy_sprite_dict,
-                                ((random.randint(1, self.dims[0])), (random.randint(1, self.dims[0]))), ai='follow',
+                                pos, ai='follow',
                                 speed=speed, name='Enemy')
         enemy.update_info({'target': self.player, 'me': enemy})
         self.enemy_list.append(enemy)
