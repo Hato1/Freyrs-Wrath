@@ -111,19 +111,20 @@ def load_all_images():
         LOADED_IMAGES.update({image_name: img[0]})
 
 
-def create_background(name, world_size, number_of_players):
-    roads = [
-        '           |    ',
-        '           |    ',
-        '---D    R--L  R-',
-        '   U-D 123    | ',
-        '     U-456----L ',
-        '       789      ',
-        '        |       ',
-        '        U--D    ',
-        '           |    '
-        ]
-    if number_of_players == 0:
+def create_background(name, world_size, dummy=None):
+    # Check world size to know how big a road to make
+    # roads = [
+    #     '           |    ',
+    #     '           |    ',
+    #     '---D    R--L  R-',
+    #     '   U-D 123    | ',
+    #     '     U-456----L ',
+    #     '       789      ',
+    #     '        |       ',
+    #     '        U--D    ',
+    #     '           |    '
+    #     ]
+    if True or number_of_players == 0:
         roads = [
                  '           |    ',
                  '           |    ',
@@ -140,27 +141,7 @@ def create_background(name, world_size, number_of_players):
                 roads[i] = roads[i] + roads[i][-1]
         while len(roads) < int(world_size[1]):
             roads.append('           |    ' + ' ' * (int(world_size[0])-16))
-    if number_of_players == 2:
-        roads = [
-            '           |    ',
-            '           |    ',
-            '---D    R--L  R-',
-            '   U-D 123    | ',
-            '     U-456----L ',
-            '       789      ',
-            '        |       ',
-            '        U--D    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            ]
+
     feature_counts = {
         'FARMER': 22,
         'DEMON': 19,
@@ -205,9 +186,7 @@ def create_background(name, world_size, number_of_players):
                     num = '0' + num
                 img = LOADED_IMAGES[name[0] + "E" + num]
                 rect = img.get_rect(topleft=(i*48, j*48))
-                if name[0] + "E" + num == 'DE08':
-                    print(img.get_width(), img.get_height())
-                z = (i*48, j*48)
+                # z = (i*48, j*48)
                 bg.blit(img, rect)
 
     LOADED_IMAGES.update({name: bg})
@@ -220,5 +199,5 @@ def create_sprite_dict(sprite):
     sprite_dict["RIGHT"] = sprite + "_right"
     sprite_dict["UP"] = sprite + "_back"
     sprite_dict["DOWN"] = sprite + "_front"
+    sprite_dict["DEAD"] = sprite + "_dead"
     return sprite_dict
-

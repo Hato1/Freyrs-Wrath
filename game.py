@@ -46,7 +46,7 @@ class Game:
         self.setup_game()
         pg.display.set_icon(LOADED_IMAGES['sprite_viking_front'])
         self.players = []
-        self.characters = ["VIKING", "PRIEST", "FARMER", "DEMON"]
+        self.themes = ["VIKING", "PRIEST", "FARMER", "DEMON"]
 
     def create_scrolling_menu_background(self):
         return LOADED_IMAGES[helper.create_background("VIKING", helper.WIN_SIZE, 0)["DOWN"]]
@@ -181,11 +181,11 @@ class Game:
 
         winner = "Player "
         for i, player in enumerate(self.players):
-            if player.check_alive():
+            if player.get_player().is_alive():
                 winner += str(i + 1)
                 break
 
-        self.write_end_text(winner=winner, sprite_name=player.get_name())
+        self.write_end_text(winner=winner, sprite_name=player.get_theme())
 
     def write_end_text(self, winner, sprite_name):
 
@@ -311,29 +311,29 @@ class Game:
             self.button_sound.play()
 
         if event.type == pg.KEYDOWN and event.key == pg.K_a:
-            self.players[0].init_character(self.characters[(self.characters.index(self.players[0].get_name()) - 1) % 4])
+            self.players[0].init_character(self.themes[(self.themes.index(self.players[0].get_theme()) - 1) % 4])
             self.select_sound.play()
         elif event.type == pg.KEYDOWN and event.key == pg.K_d:
-            self.players[0].init_character(self.characters[(self.characters.index(self.players[0].get_name()) + 1) % 4])
+            self.players[0].init_character(self.themes[(self.themes.index(self.players[0].get_theme()) + 1) % 4])
             self.select_sound.play()
         elif event.type == pg.KEYDOWN and event.key == pg.K_LEFT:
-            self.players[1].init_character(self.characters[(self.characters.index(self.players[1].get_name()) + 1) % 4])
+            self.players[1].init_character(self.themes[(self.themes.index(self.players[1].get_theme()) + 1) % 4])
             self.select_sound.play()
         elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
             self.select_sound.play()
-            self.players[1].init_character(self.characters[(self.characters.index(self.players[1].get_name()) + 1) % 4])
+            self.players[1].init_character(self.themes[(self.themes.index(self.players[1].get_theme()) + 1) % 4])
 
         for index, player in enumerate(self.players):
             try:
                 if event.type == pg.JOYBUTTONDOWN and\
                         joysticks[index].get_instance_id() == event.instance_id and event.button == XBOX360['LB']:
-                    player.init_character(self.characters[(self.characters.index(player.get_name()) - 1) % 4])
+                    player.init_character(self.themes[(self.themes.index(player.get_theme()) - 1) % 4])
             except IndexError:
                 pass
             try:
                 if event.type == pg.JOYBUTTONDOWN and\
                         joysticks[index].get_instance_id() == event.instance_id and event.button == XBOX360['RB']:
-                    player.init_character(self.characters[(self.characters.index(player.get_name()) + 1) % 4])
+                    player.init_character(self.themes[(self.themes.index(player.get_theme()) + 1) % 4])
             except IndexError:
                 pass
 
@@ -456,7 +456,7 @@ class Game:
 
         players_left = 0
         for player in self.players:
-            players_left += player.check_alive()
+            players_left += player.get_player().is_alive()
 
         if players_left < 2:
             self.game_state = END
@@ -473,8 +473,7 @@ class Game:
         if self.number_of_players > 2:
             world_size = ((512 * 3) // 2, (288 * 3) // 2)
         for i in range(self.number_of_players):
-            self.players.append(World(dims=world_size, character=self.characters[i], world_size=world_size,
-                                      number_of_players=self.number_of_players))
+            self.players.append(World(dims=world_size, theme=self.themes[i]))
 
 
 # Game Over
