@@ -34,6 +34,7 @@ P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT', pg.K_f:
 P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT', pg.K_k: 'MORE', pg.K_l: 'SPEED',
           pg.K_SEMICOLON: 'HEAL'}
 pg.init()
+pg.display.set_icon(pg.image.load(os.path.join('data', 'sprite_viking', 'sprite_viking_front.png')))
 joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
 
 # TODO
@@ -57,7 +58,7 @@ class Game:
         self.menu_theme = 0  # Set to viking for scrolling_menu_background
         self.players = []
         self.setup_game()
-        pg.display.set_icon(LOADED_IMAGES['sprite_viking_front'])
+        # pg.display.set_icon(LOADED_IMAGES['sprite_viking_front'])
 
     def create_scrolling_menu_background(self):
         bg = helper.create_background(self.themes[self.menu_theme], helper.WIN_SIZE)
@@ -79,7 +80,7 @@ class Game:
         self.select_sound = load_sound("select_sound.wav")
         self.select_sound.set_volume(0.3)
 
-        pg.mixer.music.load("data/Fishing song.wav")
+        pg.mixer.music.load(os.path.join("data", "Fishing song.wav"))
         pg.mixer.music.set_volume(0.2)
         pg.mixer.music.play()
 
