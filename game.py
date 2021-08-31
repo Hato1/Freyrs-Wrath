@@ -317,11 +317,11 @@ class Game:
             self.players[0].init_character(self.themes[(self.themes.index(self.players[0].get_theme()) + 1) % 4])
             self.select_sound.play()
         elif event.type == pg.KEYDOWN and event.key == pg.K_LEFT:
-            self.players[1].init_character(self.themes[(self.themes.index(self.players[1].get_theme()) + 1) % 4])
+            self.players[1].init_character(self.themes[(self.themes.index(self.players[1].get_theme()) - 1) % 4])
             self.select_sound.play()
         elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
-            self.select_sound.play()
             self.players[1].init_character(self.themes[(self.themes.index(self.players[1].get_theme()) + 1) % 4])
+            self.select_sound.play()
 
         for index, player in enumerate(self.players):
             try:
@@ -395,15 +395,15 @@ class Game:
             enemy_player = (index % 2) + 1
             try:
                 if event.type == pg.JOYBUTTONDOWN and joysticks[
-                    index].get_instance_id() == event.instance_id and event.button == XBOX360['A']:
+                        index].get_instance_id() == event.instance_id and event.button == XBOX360['A']:
                     if player.pay_for_power("more"):
                         self.players[enemy_player].activate_power("more")
                 elif event.type == pg.JOYBUTTONDOWN and joysticks[
-                    index].get_instance_id() == event.instance_id and event.button == XBOX360['B']:
+                        index].get_instance_id() == event.instance_id and event.button == XBOX360['B']:
                     if player.pay_for_power("speed"):
                         self.players[enemy_player].activate_power("speed")
                 elif event.type == pg.JOYBUTTONDOWN and joysticks[
-                    index].get_instance_id() == event.instance_id and event.button == XBOX360['X']:
+                        index].get_instance_id() == event.instance_id and event.button == XBOX360['X']:
                     if player.pay_for_power("heal"):
                         player.activate_power("heal")
             except IndexError:

@@ -39,9 +39,11 @@ class World:
         self.coin_sound = load_sound("coin_sound.wav")
         self.coin_sound.set_volume(0.05)
 
-        self.background = Entity(helper.create_background(self.theme, self.dims), (dims[0]/2 - 24, dims[1]/2 - 70))
         self.pit = Entity({"DOWN": self.theme[0] + 'pit'}, (0, 0))
-        self.player = Entity(helper.create_sprite_dict(THEMES[theme]['player_sprite']), (self.dims[0] / 2, self.dims[1] / 2), lives=3)
+        self.player = Entity(helper.create_sprite_dict(THEMES[theme]['player_sprite']),
+                             (self.dims[0] / 2, self.dims[1] / 2), lives=3)
+
+        self.background = Entity(helper.create_background(self.theme, self.dims), (dims[0]/2 - 24, dims[1]/2 - 70))
 
         self.draw_world()
 
@@ -114,7 +116,7 @@ class World:
         self.pit.draw(self.world, self.dims)
 
     def draw_select(self):
-        """Clean me by helper data loading"""
+        """Clean me by helper data font loading"""
         font_select = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         text_select = font_select.render('Choose Your Character', 1, (220, 20, 60))
         textpos_select = text_select.get_rect(centerx=self.get_width() / 2,
@@ -177,54 +179,40 @@ class World:
             counter += 1
 
     def move(self):
-        '''Clean me'''
-        if not self.player.is_alive():
-            return
-        x = self.dir_dict['LEFT'] - self.dir_dict['RIGHT']
-        y = self.dir_dict['UP'] - self.dir_dict['DOWN']
-        norm = (x ** 2 + y ** 2) ** 0.5
-        norm = norm / 2  # Double move speed
-        if norm == 0:
-            return
-        x = x / norm
-        y = y / norm
-        for sprite in self.allsprites:
-            sprite.slide([x, y])
-            self.player.set_dir([x, y])
-        self.background.slide([x, y])
+        '''Move player, by moving everything except player based on currently held buttons'''
+        if self.player.is_alive():
+            x = self.dir_dict['LEFT'] - self.dir_dict['RIGHT']
+            y = self.dir_dict['UP'] - self.dir_dict['DOWN']
+            norm = (x**2 + y**2)**0.5
+            norm = norm / self.player.get_speed()
+            if norm == 0:
+                return
+            x = x / norm
+            y = y / norm
+            for sprite in self.allsprites:
+                sprite.slide([x, y])
+                self.player.set_dir([x, y])
+            self.background.slide([x, y])
+
+    def get_random_edge_pos(self):
+        return random.choice([(random.randint(0, self.dims[0]), 0), (0, random.randint(1, self.dims[1]))])
 
     def gen_coin(self):
-        """clean me"""
         coin_sprite_dict = {"DOWN": "sprite_coin"}
-        side = random.randint(0, 3)
-        ran = random.random()
-        if side == 0:
-            coin = self.add_entity(coin_sprite_dict, (ran*self.dims[0], 1))
-            self.coin_list.append(coin)
-        else:
-            coin = self.add_entity(coin_sprite_dict, (1, ran*self.dims[1]))
-            self.coin_list.append(coin)
+        coin = self.add_entity(coin_sprite_dict, self.get_random_edge_pos())
+        self.coin_list.append(coin)
 
     def gen_enemy(self, speed=1):
         enemy_sprite_dict = helper.create_sprite_dict(THEMES[self.theme]['enemy_sprite'])
-        pos = random.choice([(random.randint(1, self.dims[0]), 0), (0, random.randint(1, self.dims[1]))])
-        enemy = self.add_entity(enemy_sprite_dict, pos, ai='follow', speed=speed)
+        enemy = self.add_entity(enemy_sprite_dict, self.get_random_edge_pos(), ai='follow', speed=speed)
         enemy.update_info({'target': self.player, 'me': enemy})
         self.enemy_list.append(enemy)
 
     def reset_entity(self, entity):
-        """Clean me"""
-        side = random.randint(0, 1)
-        ran = random.random()
-        height = entity.get_height()
-        width = entity.get_width()
-        if side == 0:
-            entity.set_position([ran*self.dims[0], -height/2])
-        else:
-            entity.set_position([-width/2, ran*self.dims[1]])
+        entity.set_position(self.get_random_edge_pos())
 
     def set_dir(self, key, val):
-        """CLEAN me"""
+        """CLEAN ME"""
         if type(val) == int:
             self.dir_dict[key] = val
         elif type(val) == tuple:

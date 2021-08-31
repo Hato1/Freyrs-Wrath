@@ -5,7 +5,8 @@ from helper import LOADED_IMAGES
 
 
 class Entity(pg.sprite.Sprite):
-    def __init__(self, sprite_dict, position, lives=3, speed=5, ai=None, info={}):
+
+    def __init__(self, sprite_dict, position, lives=3, speed=2, ai=None, info={}):
         pg.sprite.Sprite.__init__(self)
 
         self.image = "DOWN"
@@ -22,6 +23,9 @@ class Entity(pg.sprite.Sprite):
 
         self.ai = ai
         self.info = info
+
+    def get_speed(self):
+        return self.speed
 
     def get_height(self):
         return LOADED_IMAGES[self.sprite_dict[self.image]].get_height()
@@ -50,7 +54,7 @@ class Entity(pg.sprite.Sprite):
         self.sprite_dict = sprite_dict
 
     def set_position(self, position):
-        self.position = list(position)
+        self.position = [position[0]-self.get_width()/2, position[1]-self.get_height()/2]
 
     def update_info(self, new_info):
         self.info.update(new_info)
