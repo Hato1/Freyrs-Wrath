@@ -1,4 +1,5 @@
 import os
+import math
 
 import pygame as pg
 from pygame.compat import geterror
@@ -7,6 +8,7 @@ from pygame.locals import *
 import helper
 from helper import load_sound, DATA_DIR, load_all_images, WIN_SIZE, LOADED_IMAGES
 from world import World
+from entity import Entity
 
 if not pg.font:
     print("Warning, fonts disabled")
@@ -18,10 +20,12 @@ GAME = 2
 END = 3
 SELECT = 4
 GAME_STATE = MENU
+
 WHITE = (255, 255, 255)
 GREY = (122, 122, 122)
 GREEN = (20, 239, 20)
 BLACK = (0, 0, 0)
+
 GAME_NAME = "Freyr's Wrath"
 XBOX360 = {'A': 0, 'B': 1, 'X': 2, 'Y': 3, 'LB': 4, 'RB': 5}
 P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT', pg.K_f: 'MORE', pg.K_g: 'SPEED',
@@ -31,6 +35,10 @@ P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGH
 pg.init()
 joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
 
+# TODO
+# Store sounds and fonts in dictionary created by helper.py
+# Make main theme loop if it doesn't already.
+
 
 class Game:
 
@@ -38,18 +46,19 @@ class Game:
         self.game_state = state
         self.background_surface = None  # init in setup_game
         self.screen = None  # init in setup_game
-        self.soundtrack = None
         self.button_sound = None
         self.victory_sound = None
         self.select_sound = None
         self.number_of_players = 2
+        self.themes = ["VIKING", "PRIEST", "FARMER", "DEMON"]
+        self.menu_theme = 0  # Set to viking for scrolling_menu_background
+        self.players = []
         self.setup_game()
         pg.display.set_icon(LOADED_IMAGES['sprite_viking_front'])
-        self.players = []
-        self.themes = ["VIKING", "PRIEST", "FARMER", "DEMON"]
 
     def create_scrolling_menu_background(self):
-        return LOADED_IMAGES[helper.create_background("VIKING", helper.WIN_SIZE, 0)["DOWN"]]
+        bg = helper.create_background(self.themes[self.menu_theme], helper.WIN_SIZE)
+        return Entity(bg, (0, 0))
 
     def setup_game(self):
         self.screen = pg.display.set_mode(WIN_SIZE, pg.SCALED | pg.RESIZABLE)
@@ -57,10 +66,6 @@ class Game:
         load_all_images()
         self.scrolling_menu_background = self.create_scrolling_menu_background()
         self.initialize_menu_background()
-
-        self.soundtrack = load_sound("Fishing song.wav")
-        self.soundtrack.set_volume(0.2)
-        self.soundtrack.play(-1)
 
         self.button_sound = load_sound("button_sound.wav")
         self.button_sound.set_volume(0.5)
@@ -71,12 +76,17 @@ class Game:
         self.select_sound = load_sound("select_sound.wav")
         self.select_sound.set_volume(0.3)
 
+        pg.mixer.music.load("data/Fishing song.wav")
+        pg.mixer.music.set_volume(0.2)
+        pg.mixer.music.play()
+
     def initialize_menu_background(self):
         # Create The Menu
         self.background_surface = pg.Surface(self.screen.get_size())
         self.background_surface = self.background_surface.convert()
         self.background_surface.fill(WHITE)
-        self.background_surface.blit(self.scrolling_menu_background, (0, 0))
+        self.scrolling_menu_background.draw(self.background_surface, self.background_surface.get_size())
+        # self.background_surface.blit(self.scrolling_menu_background, (0, 0))
         self.write_menu_text()
 
     def write_menu_text(self):
@@ -237,7 +247,10 @@ class Game:
                 elif event.type == pg.VIDEORESIZE:
                     pg.display._resize_event(event)
                 elif event.type == pg.KEYDOWN and event.key == pg.K_m:
-                    self.soundtrack.stop()
+                    if not pg.mixer.music.get_busy():
+                        pg.mixer.music.unpause()
+                    else:
+                        pg.mixer.music.pause()
 
                 self.process_event(event)
 
@@ -427,18 +440,26 @@ class Game:
             self.game_state = MENU
             self.initialize_menu_background()
             self.victory_sound.stop()
-            self.soundtrack.play(-1)
+            pg.mixer.music.play()
         if event.type == JOYBUTTONDOWN and event.button == XBOX360['A']:
             for player in self.players:
                 player.reset()
             self.game_state = MENU
             self.initialize_menu_background()
             self.victory_sound.stop()
-            self.soundtrack.play(-1)
+            pg.mixer.music.play()
 
     def menu_loop(self):
+        self.scrolling_menu_background.slide([-1, -1])
+        music_ms = pg.mixer.music.get_pos()
+        music_s = music_ms / 1000
+        # Fishing song is 120bps. Divide by 2 for 60bps or 
+        val = (music_s % 8) / 2
+        if self.menu_theme != math.floor(val):
+            self.menu_theme = math.floor(val)
+            self.scrolling_menu_background.set_sprite_dict(helper.create_background(self.themes[self.menu_theme], helper.WIN_SIZE))
+        self.scrolling_menu_background.draw(self.background_surface, self.screen.get_size())
         self.write_menu_text()
-        self.screen.blit(self.scrolling_menu_background, (0, 0))
         self.screen.blit(self.background_surface, (0, 0))
         self.draw_number_players_selector()
 
@@ -461,7 +482,7 @@ class Game:
         if players_left < 2:
             self.game_state = END
             self.draw_end_background()
-            self.soundtrack.stop()
+            pg.mixer.music.stop()
             self.victory_sound.play()
 
     def end_loop(self):

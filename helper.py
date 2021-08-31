@@ -5,6 +5,7 @@ import pygame.surfarray as surfarray
 from pygame.compat import geterror
 
 import random
+import math
 
 WIN_SIZE = ((512*3)+2, (288*3)+2)
 
@@ -149,7 +150,8 @@ def create_background(name, world_size, dummy=None):
         'VIKING': 21
         }
     dims = (world_size[0]//48, world_size[1]//48)
-    bg = pg.Surface(world_size)
+    adjusted_world_size = [world_size[0] - world_size[0] % 48, world_size[1] - world_size[1] % 48]
+    bg = pg.Surface(adjusted_world_size)
     for i in range(dims[0]):
         for j in range(dims[1]):
             if roads[j][i] == ' ':
@@ -188,6 +190,8 @@ def create_background(name, world_size, dummy=None):
                 rect = img.get_rect(topleft=(i*48, j*48))
                 # z = (i*48, j*48)
                 bg.blit(img, rect)
+
+    bg = pg.transform.scale(bg, world_size)
     id = 0
     while id in LOADED_IMAGES:
         id += 1
