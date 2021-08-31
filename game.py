@@ -1,5 +1,6 @@
 import os
 import math
+import time
 
 import pygame as pg
 from pygame.compat import geterror
@@ -38,6 +39,8 @@ joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
 # TODO
 # Store sounds and fonts in dictionary created by helper.py
 # Make main theme loop if it doesn't already.
+# Animate title
+# Draw PIT on title background
 
 
 class Game:
@@ -92,8 +95,11 @@ class Game:
     def write_menu_text(self):
         font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
         text_title = font_title.render(GAME_NAME, 1, (220, 20, 60))
+        text_title = pg.transform.rotate(text_title, math.sin(time.time()/1.5)*10)
+        text_title = pg.transform.scale(text_title, (text_title.get_width() + int(math.sin(time.time()/1)*20), text_title.get_height() + int(math.sin(time.time()/1)*20)))
         textpos_title = text_title.get_rect(centerx=self.background_surface.get_width() / 2,
                                             centery=self.background_surface.get_height() / 5)
+
         self.background_surface.blit(text_title, textpos_title)
 
         font_team = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
