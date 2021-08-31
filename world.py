@@ -93,13 +93,12 @@ class World:
         self.background.draw(self.world, self.dims)
         if not self.player.is_alive():
             self.player.image = "DEAD"
-            self.world.blit(self.player.get_sprite(), self.player.get_position())
 
         for sprite in self.allsprites:
             sprite.draw(self.world, self.dims)
 
-        if self.player.is_alive():
-            self.world.blit(self.player.get_sprite(), self.player.get_position())
+        self.world.blit(self.player.get_sprite(), self.player.get_position())
+
         self.draw_pit()
 
         self.update_gui()
@@ -108,8 +107,6 @@ class World:
     def draw_pit(self):
         """Hardcoded pit location. Fix by initialising pit entity with location in pit.info dictionary"""
         x, y = self.background.position
-        x -= self.pit.get_width() / 2
-        y -= self.pit.get_height() / 2
         x += (8.5*48)
         y += (4.25*48)
         self.pit.set_position((x, y))
