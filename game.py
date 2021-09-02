@@ -39,9 +39,9 @@ joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
 
 # TODO
 # Store sounds and fonts in dictionary created by helper.py
-# Make main theme loop if it doesn't already.
 # Animate title
 # Draw PIT on title background
+# Cut off empty end end of fishing.wav if it breaks looping of title screen background in sync with music
 
 
 class Game:
@@ -82,7 +82,7 @@ class Game:
 
         pg.mixer.music.load(os.path.join("data", "Fishing song.wav"))
         pg.mixer.music.set_volume(0.2)
-        pg.mixer.music.play()
+        pg.mixer.music.play(-1)
 
     def initialize_menu_background(self):
         # Create The Menu
@@ -447,14 +447,14 @@ class Game:
             self.game_state = MENU
             self.initialize_menu_background()
             self.victory_sound.stop()
-            pg.mixer.music.play()
+            pg.mixer.music.play(-1)
         if event.type == JOYBUTTONDOWN and event.button == XBOX360['A']:
             for player in self.players:
                 player.reset()
             self.game_state = MENU
             self.initialize_menu_background()
             self.victory_sound.stop()
-            pg.mixer.music.play()
+            pg.mixer.music.play(-1)
 
     def menu_loop(self):
         self.scrolling_menu_background.slide([-1, -1])
