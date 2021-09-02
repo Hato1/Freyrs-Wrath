@@ -42,6 +42,9 @@ joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
 # Animate title
 # Draw PIT on title background
 # Cut off empty end end of fishing.wav if it breaks looping of title screen background in sync with music
+# Implement AI that distances self from player (If nearest entity is enemy move away, else move toward)
+# Implement dumb AI that kinda ambles (Set vector movement with low % chance to chance vec by up to 90 degrees L or R)
+# Balance shop prices
 
 
 class Game:
@@ -58,7 +61,6 @@ class Game:
         self.menu_theme = 0  # Set to viking for scrolling_menu_background
         self.players = []
         self.setup_game()
-        # pg.display.set_icon(LOADED_IMAGES['sprite_viking_front'])
 
     def create_scrolling_menu_background(self):
         bg = helper.create_background(self.themes[self.menu_theme], helper.WIN_SIZE)
@@ -90,7 +92,6 @@ class Game:
         self.background_surface = self.background_surface.convert()
         self.background_surface.fill(WHITE)
         self.scrolling_menu_background.draw(self.background_surface, self.background_surface.get_size())
-        # self.background_surface.blit(self.scrolling_menu_background, (0, 0))
         self.write_menu_text()
 
     def write_menu_text(self):
@@ -307,7 +308,7 @@ class Game:
                 self.number_of_players -= 1
                 self.select_sound.play()
 
-        elif event.type == pg.KEYDOWN and (event.key == pg.K_d or event.key == pg.K_RIGHT):
+        elif event.type == pg.KEYDOWN and event.key in [pg.K_d, pg.K_RIGHT]:
             if self.number_of_players < 4:
                 self.number_of_players += 1
                 self.select_sound.play()
@@ -460,7 +461,7 @@ class Game:
         self.scrolling_menu_background.slide([-1, -1])
         music_ms = pg.mixer.music.get_pos()
         music_s = music_ms / 1000
-        # Fishing song is 120bps. Divide by 2 for 60bps or 
+        # Fishing song is 120bpm. Divide by 2 for 60bpm or 1bps and 4 beats makes a bar.
         val = (music_s % 8) / 2
         if self.menu_theme != math.floor(val):
             self.menu_theme = math.floor(val)

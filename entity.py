@@ -6,7 +6,7 @@ from helper import LOADED_IMAGES
 
 class Entity(pg.sprite.Sprite):
 
-    def __init__(self, sprite_dict, position, lives=3, speed=2, ai=None, info={}):
+    def __init__(self, sprite_dict, position, lives=3, speed=2, ai=None):
         pg.sprite.Sprite.__init__(self)
 
         self.image = "DOWN"
@@ -22,7 +22,7 @@ class Entity(pg.sprite.Sprite):
         self.speed = speed
 
         self.ai = ai
-        self.info = info
+        self.info = {}
 
     def get_speed(self):
         return self.speed
@@ -139,6 +139,8 @@ class Entity(pg.sprite.Sprite):
         if self.ai:
             if self.ai == 'follow':
                 x, y = self.ai_follow(world_size)
+            elif self.ai == 'distance':
+                x, y = self.ai_distance(world_size)
             else:
                 raise ValueError('No such ai method {}'.format())
             norm = (x**2 + y**2)**0.5
@@ -159,3 +161,32 @@ class Entity(pg.sprite.Sprite):
         x, y = self.get_center(world_size)
         tx, ty = self.info['target'].get_center(world_size)
         return (tx-x, ty-y)
+
+    def ai_distance(self, world_size):
+        me = self.get_center(world_size)
+        nearest = None
+        min_dist = 999999999999
+        for entity in self.info['distance']:
+            them = entity.get_center(world_size)
+            dist = distance(me, them)
+            if dist < min_dist and self is not entity:
+                nearest = them
+                min_dist = dist
+
+        target = self.info['target'].get_center(world_size)
+        dist = distance(me, target)
+        if dist < min_dist or dist < 100:
+            tx, ty = target
+            return (tx-me[0], ty-me[1])
+        else:
+            print(me[0]-nearest[0], me[1]-nearest[1])
+            #print(self.info['distance'])
+            print(distance(me, target))
+            print(min_dist)
+            return (me[0]-nearest[0], me[1]-nearest[1])
+
+        closest = distance(self.get_center(), self.info['target'].get_center(world_size))
+
+
+def distance(a, b):
+    return ((a[0] - b[0])**2 + (a[1] - b[1])**2)**0.5

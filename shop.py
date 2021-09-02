@@ -75,7 +75,7 @@ class Shop:
     def increase_price_of_power(self, power_name):
         for card in self.shop_card_list:
             if card.name == power_name:
-                card.set_price(card.price*2)
+                card.set_price(card.price+8)
 
     def get_shopcard(self, name):
         for shop_card in self.shop_card_list:

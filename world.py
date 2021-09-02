@@ -30,7 +30,7 @@ class World:
         self.world = pg.Surface(self.dims).convert()
         self.shop = Shop(THEMES[theme]['player_sprite'], (60, 60))
 
-        self.money = 0
+        self.money = 900
         self.font_money = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 20 * 3)
         self.text_money = self.font_money.render(str(self.money), 1, (220, 20, 60))
 
@@ -201,8 +201,8 @@ class World:
 
     def gen_enemy(self, speed=1):
         enemy_sprite_dict = helper.create_sprite_dict(THEMES[self.theme]['enemy_sprite'])
-        enemy = self.add_entity(enemy_sprite_dict, self.get_random_edge_pos(), ai='follow', speed=speed)
-        enemy.update_info({'target': self.player, 'me': enemy})
+        enemy = self.add_entity(enemy_sprite_dict, self.get_random_edge_pos(), ai='distance', speed=speed)
+        enemy.update_info({'target': self.player, 'me': enemy, 'distance': self.enemy_list})
         self.enemy_list.append(enemy)
 
     def reset_entity(self, entity):
@@ -261,7 +261,8 @@ class World:
             shop_power = self.shop.get_shopcard(power_name)
             if self.money >= shop_power.price:
                 self.money -= shop_power.price
-                self.shop.increase_price_of_power(power_name)
+                if power_name not in ['more']:
+                    self.shop.increase_price_of_power(power_name)
                 return True
             return False
 
