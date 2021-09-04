@@ -38,12 +38,8 @@ joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
 
 # TODO
 # Store sounds and fonts in dictionary created by helper.py
-# Animate title
 # Draw PIT on title background
-# Cut off empty end end of fishing.wav if it breaks looping of title screen background in sync with music
-# Implement AI that distances self from player (If nearest entity is enemy move away, else move toward)
-# Implement dumb AI that kinda ambles (Set vector movement with low % chance to chance vec by up to 90 degrees L or R)
-# Balance shop prices
+# Cut off empty end end of fishing.wav or make it a full bar if it breaks looping of title screen background in sync with music
 
 
 class Game:
