@@ -1,4 +1,5 @@
 import random
+import math
 import pygame as pg
 
 from helper import LOADED_IMAGES
@@ -141,8 +142,12 @@ class Entity(pg.sprite.Sprite):
                 x, y = self.ai_follow(world_size)
             elif self.ai == 'distance':
                 x, y = self.ai_distance(world_size)
+            elif self.ai == 'amble':
+                x, y = self.ai_amble(world_size)
+            elif self.ai == 'madman':
+                x, y = self.ai_madman(world_size)
             else:
-                raise ValueError('No such ai method {}'.format())
+                raise ValueError('No such ai method {}'.format(self.ai))
             norm = (x**2 + y**2)**0.5
             if norm == 0:
                 return (0, 0)
@@ -156,6 +161,24 @@ class Entity(pg.sprite.Sprite):
             return (x, y)
         else:
             return False
+
+    def ai_amble(self, world_size):
+        if 'amble' not in self.info:
+            self.info['amble'] = [(random.random(), random.random()), random.randint(60, 240)]
+
+        v, idle_frames = self.info['amble']
+        if idle_frames:
+            self.info['amble'][1] -= 1
+            return (0, 0)
+
+        elif random.random() > 0.99:
+            self.info['amble'][1] = random.randint(60, 240)
+            self.info['amble'][0] = (random.uniform(-1, 1), random.uniform(-1, 1))
+            return (0, 0)
+
+        else:
+            angle = random.uniform(-1, 1)
+            return v
 
     def ai_follow(self, world_size):
         x, y = self.get_center(world_size)
@@ -179,13 +202,23 @@ class Entity(pg.sprite.Sprite):
             tx, ty = target
             return (tx-me[0], ty-me[1])
         else:
-            print(me[0]-nearest[0], me[1]-nearest[1])
-            #print(self.info['distance'])
-            print(distance(me, target))
-            print(min_dist)
             return (me[0]-nearest[0], me[1]-nearest[1])
 
         closest = distance(self.get_center(), self.info['target'].get_center(world_size))
+
+    def ai_madman(self, world_size):
+        if 'mad' not in self.info:
+            self.speed = 20
+            self.info['mad'] = [(random.uniform(-1, 1), random.uniform(-1, 1)), 5]
+
+        if self.info['mad'][1] <= 0:
+            self.info['mad'][1] = 5
+            x, y = self.info['mad'][0]
+            angle = math.radians(random.uniform(-15, 15))
+            self.info['mad'][0] = (x*math.cos(angle) - y*math.sin(angle), x*math.sin(angle) + y*math.cos(angle))
+
+        self.info['mad'][1] -= 1
+        return self.info['mad'][0]
 
 
 def distance(a, b):
