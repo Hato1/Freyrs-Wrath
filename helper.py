@@ -51,8 +51,8 @@ tilesets = os.path.join(DATA_DIR, 'tilesets')
 for i in os.listdir(tilesets):
     if os.path.isdir(os.path.join(tilesets, i)):
         for j in os.listdir(os.path.join(tilesets, i)):
+            scale = 3/16
             if j.endswith('png'):
-                scale = 3/16
                 if j[1:].startswith('pit'):
                     if j == 'Fpit.png':
                         scale = scale * 2.5
@@ -101,6 +101,25 @@ def load_sound(name):
         print("Cannot load sound: %s" % fullname)
         raise SystemExit(str(geterror()))
     return sound
+
+
+def load_music(name):
+    class NoneSound:
+        def play(self):
+            pass
+
+    if not pg.mixer or not pg.mixer.get_init():
+        return NoneSound()
+    if name.endswith('.mp3'):
+        raise ValueError("mp3 files not supported by Linux, convert to .wav instead! -Love Jacob")
+    fullname = os.path.join(DATA_DIR, name)
+    try:
+        #sound = pg.mixer.Sound(fullname)
+        pg.mixer.music.load(fullname)
+    except pg.error:
+        print("Cannot load sound: %s" % fullname)
+        raise SystemExit(str(geterror()))
+    #return sound
 
 
 def load_all_images():
