@@ -102,7 +102,7 @@ class World:
         self.draw_pit()
 
         self.update_gui()
-        pg.display.flip()
+        #pg.display.flip()
 
     def draw_pit(self):
         """Hardcoded pit location. Fix by initialising pit entity with location in pit.info dictionary"""
@@ -201,7 +201,7 @@ class World:
 
     def gen_enemy(self, speed=1):
         enemy_sprite_dict = helper.create_sprite_dict(THEMES[self.theme]['enemy_sprite'])
-        enemy = self.add_entity(enemy_sprite_dict, self.get_random_edge_pos(), ai='amble', speed=speed)
+        enemy = self.add_entity(enemy_sprite_dict, self.get_random_edge_pos(), ai='follow', speed=speed)
         enemy.update_info({'target': self.player, 'me': enemy, 'distance': self.enemy_list})
         self.enemy_list.append(enemy)
 

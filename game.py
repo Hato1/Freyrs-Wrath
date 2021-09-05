@@ -165,8 +165,6 @@ class Game:
             self.screen.blit(self.players[2].world, (0, half_screen_height))
             self.screen.blit(self.players[3].world, (half_screen_width, half_screen_height))
 
-        pg.display.flip()
-
     def draw_select_background(self):
         screen_height = self.screen.get_size()[1]
         screen_width = self.screen.get_size()[0]
@@ -187,7 +185,6 @@ class Game:
             self.screen.blit(self.players[1].world, (half_screen_width, 0))
             self.screen.blit(self.players[2].world, (0, half_screen_height))
             self.screen.blit(self.players[3].world, (half_screen_width, half_screen_height))
-        pg.display.flip()
 
     def draw_end_background(self):
         self.background_surface = pg.Surface(self.screen.get_size())
@@ -229,10 +226,6 @@ class Game:
            a loop until the function returns."""
         # Initialize Everything
 
-        # Display The Background
-        self.screen.blit(self.background_surface, (0, 0))
-        pg.display.flip()  # Flipping display is recommended practice to be sure display updates???
-
         # Prepare Game Objects
         clock = pg.time.Clock()
         allsprites = pg.sprite.RenderPlain(())
@@ -264,6 +257,7 @@ class Game:
             elif self.game_state == SELECT:
                 self.select_loop()
             elif self.game_state == GAME:
+                pass
                 self.game_loop()
             elif self.game_state == END:
                 self.end_loop()
