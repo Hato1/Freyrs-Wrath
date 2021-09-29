@@ -188,7 +188,7 @@ class Entity(pg.sprite.Sprite):
     def ai_distance(self, world_size):
         me = self.get_center(world_size)
         nearest = None
-        min_dist = 999999999999
+        min_dist = math.inf
         for entity in self.info['distance']:
             them = entity.get_center(world_size)
             dist = distance(me, them)
