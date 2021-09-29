@@ -44,7 +44,8 @@ IMAGE_PATHS = [
     (os.path.join(DATA_DIR, 'sprite_shop_blank', 'heal.png'), 2),
     (os.path.join(DATA_DIR, 'sprite_shop_blank', 'shop_icon.png'), 2),
     (os.path.join(DATA_DIR, 'sprite_heart.png'), 0.1),
-    (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 0.1)
+    (os.path.join(DATA_DIR, 'sprite_heart_empty.png'), 0.1),
+    (os.path.join(DATA_DIR, 'sprite_pit', 'pit_open.png'), 1)
 ]
 
 tilesets = os.path.join(DATA_DIR, 'tilesets')

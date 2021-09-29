@@ -315,6 +315,7 @@ class Game:
                 self.select_sound.play()
 
     def process_select_event(self, event):
+
         if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == SELECT:
             self.game_state = GAME
             self.button_sound.play()
@@ -322,10 +323,10 @@ class Game:
             self.game_state = GAME
             self.button_sound.play()
 
-        if event.type == pg.KEYDOWN and event.key == pg.K_a:
+        if event.type == pg.KEYDOWN and event.key == pg.K_a and not self.players[0].ready:
             self.players[0].init_character(self.themes[(self.themes.index(self.players[0].get_theme()) - 1) % 4])
             self.select_sound.play()
-        elif event.type == pg.KEYDOWN and event.key == pg.K_d:
+        elif event.type == pg.KEYDOWN and event.key == pg.K_d and not self.players[0].ready:
             self.players[0].init_character(self.themes[(self.themes.index(self.players[0].get_theme()) + 1) % 4])
             self.select_sound.play()
         elif event.type == pg.KEYDOWN and event.key == pg.K_LEFT:
@@ -334,6 +335,10 @@ class Game:
         elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
             self.players[1].init_character(self.themes[(self.themes.index(self.players[1].get_theme()) + 1) % 4])
             self.select_sound.play()
+
+        if event.type == pg.KEYDOWN and event.key == pg.K_q:
+            self.players[0].ready = not self.players[0].ready
+            self.button_sound.play()
 
         for index, player in enumerate(self.players):
             try:
