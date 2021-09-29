@@ -5,6 +5,7 @@ import pygame.surfarray as surfarray
 from pygame.compat import geterror
 
 import random
+import math
 
 WIN_SIZE = ((512*3)+2, (288*3)+2)
 
@@ -50,8 +51,8 @@ tilesets = os.path.join(DATA_DIR, 'tilesets')
 for i in os.listdir(tilesets):
     if os.path.isdir(os.path.join(tilesets, i)):
         for j in os.listdir(os.path.join(tilesets, i)):
+            scale = 3/16
             if j.endswith('png'):
-                scale = 3/16
                 if j[1:].startswith('pit'):
                     if j == 'Fpit.png':
                         scale = scale * 2.5
@@ -91,6 +92,8 @@ def load_sound(name):
 
     if not pg.mixer or not pg.mixer.get_init():
         return NoneSound()
+    if name.endswith('.mp3'):
+        raise ValueError("mp3 files not supported by Linux, convert to .wav instead! -Love Jacob")
     fullname = os.path.join(DATA_DIR, name)
     try:
         sound = pg.mixer.Sound(fullname)
@@ -98,6 +101,25 @@ def load_sound(name):
         print("Cannot load sound: %s" % fullname)
         raise SystemExit(str(geterror()))
     return sound
+
+
+def load_music(name):
+    class NoneSound:
+        def play(self):
+            pass
+
+    if not pg.mixer or not pg.mixer.get_init():
+        return NoneSound()
+    if name.endswith('.mp3'):
+        raise ValueError("mp3 files not supported by Linux, convert to .wav instead! -Love Jacob")
+    fullname = os.path.join(DATA_DIR, name)
+    try:
+        #sound = pg.mixer.Sound(fullname)
+        pg.mixer.music.load(fullname)
+    except pg.error:
+        print("Cannot load sound: %s" % fullname)
+        raise SystemExit(str(geterror()))
+    #return sound
 
 
 def load_all_images():
@@ -109,19 +131,20 @@ def load_all_images():
         LOADED_IMAGES.update({image_name: img[0]})
 
 
-def create_background(name, world_size, number_of_players):
-    roads = [
-        '           |    ',
-        '           |    ',
-        '---D    R--L  R-',
-        '   U-D 123    | ',
-        '     U-456----L ',
-        '       789      ',
-        '        |       ',
-        '        U--D    ',
-        '           |    '
-        ]
-    if number_of_players == 0:
+def create_background(name, world_size, dummy=None):
+    # Check world size to know how big a road to make
+    # roads = [
+    #     '           |    ',
+    #     '           |    ',
+    #     '---D    R--L  R-',
+    #     '   U-D 123    | ',
+    #     '     U-456----L ',
+    #     '       789      ',
+    #     '        |       ',
+    #     '        U--D    ',
+    #     '           |    '
+    #     ]
+    if True or number_of_players == 0:
         roads = [
                  '           |    ',
                  '           |    ',
@@ -138,27 +161,7 @@ def create_background(name, world_size, number_of_players):
                 roads[i] = roads[i] + roads[i][-1]
         while len(roads) < int(world_size[1]):
             roads.append('           |    ' + ' ' * (int(world_size[0])-16))
-    if number_of_players == 2:
-        roads = [
-            '           |    ',
-            '           |    ',
-            '---D    R--L  R-',
-            '   U-D 123    | ',
-            '     U-456----L ',
-            '       789      ',
-            '        |       ',
-            '        U--D    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            '           |    ',
-            ]
+
     feature_counts = {
         'FARMER': 22,
         'DEMON': 19,
@@ -166,7 +169,8 @@ def create_background(name, world_size, number_of_players):
         'VIKING': 21
         }
     dims = (world_size[0]//48, world_size[1]//48)
-    bg = pg.Surface(world_size)
+    adjusted_world_size = [world_size[0] - world_size[0] % 48, world_size[1] - world_size[1] % 48]
+    bg = pg.Surface(adjusted_world_size)
     for i in range(dims[0]):
         for j in range(dims[1]):
             if roads[j][i] == ' ':
@@ -203,13 +207,15 @@ def create_background(name, world_size, number_of_players):
                     num = '0' + num
                 img = LOADED_IMAGES[name[0] + "E" + num]
                 rect = img.get_rect(topleft=(i*48, j*48))
-                if name[0] + "E" + num == 'DE08':
-                    print(img.get_width(), img.get_height())
-                z = (i*48, j*48)
+                # z = (i*48, j*48)
                 bg.blit(img, rect)
 
-    LOADED_IMAGES.update({name: bg})
-    return {"DOWN": name}
+    bg = pg.transform.scale(bg, world_size)
+    id = 0
+    while id in LOADED_IMAGES:
+        id += 1
+    LOADED_IMAGES.update({id: bg})
+    return {"DOWN": id}
 
 
 def create_sprite_dict(sprite):
@@ -218,5 +224,5 @@ def create_sprite_dict(sprite):
     sprite_dict["RIGHT"] = sprite + "_right"
     sprite_dict["UP"] = sprite + "_back"
     sprite_dict["DOWN"] = sprite + "_front"
+    sprite_dict["DEAD"] = sprite + "_dead"
     return sprite_dict
-
