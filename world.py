@@ -39,8 +39,11 @@ class World:
         self.ouch_sound.set_volume(0.2)
         self.coin_sound = load_sound("coin_sound.wav")
         self.coin_sound.set_volume(0.05)
+        self.pit_sound = load_sound("pit_fall_down.wav")
 
-        self.pit = Entity({"DOWN": self.theme[0] + 'pit'}, (0, 0))
+        #TODO: rename building files from pit to 'building'
+        self.building = Entity({"DOWN": self.theme[0] + 'pit'}, (0, 0))
+        self.pit = Entity({"DOWN": "pit_open"}, (0, 0))
         self.player = Entity(helper.create_sprite_dict(THEMES[theme]['player_sprite']),
                              (self.dims[0] / 2, self.dims[1] / 2), lives=3)
 
@@ -87,7 +90,8 @@ class World:
         for enemy in self.enemy_list:
             enemy_dict = helper.create_sprite_dict(THEMES[theme]['enemy_sprite'])
             enemy.set_sprite_dict(enemy_dict)
-        self.pit.set_sprite_dict({"DOWN": self.theme[0] + 'pit'})
+        self.building.set_sprite_dict({"DOWN": self.theme[0] + 'pit'})
+        self.pit.set_sprite_dict({"DOWN": 'pit_open'})
 
     def draw_world(self):
         """Clean me"""
@@ -100,18 +104,21 @@ class World:
 
         self.world.blit(self.player.get_sprite(), self.player.get_position())
 
-        self.draw_pit()
+        #Draws the building
+        self.draw_static_thing(8.5, 4.25, self.building)
+
+        self.draw_static_thing(3, 4.25, self.pit)
 
         self.update_gui()
         #pg.display.flip()
 
-    def draw_pit(self):
-        """Hardcoded pit location. Fix by initialising pit entity with location in pit.info dictionary"""
+    def draw_static_thing(self, x_add_coord, y_add_coord, thing):
+        """Hardcoded location. Fix by initialising entity with location in pit.info dictionary"""
         x, y = self.background.position
-        x += (8.5*48)
-        y += (4.25*48)
-        self.pit.set_position((x, y))
-        self.pit.draw(self.world, self.dims)
+        x += (x_add_coord*48)
+        y += (y_add_coord*48)
+        thing.set_position((x, y))
+        thing.draw(self.world, self.dims)
 
     def draw_select(self):
         """Clean me by helper data font loading"""
@@ -159,6 +166,9 @@ class World:
                     self.reset_entity(enemy)
                     self.player.lives -= 1
                     self.ouch_sound.play()
+                if self.pit.check_collision(enemy):
+                    self.reset_entity(enemy)
+                    self.pit_sound.play()
 
     def update_gui(self):
         self.update_lives()
@@ -216,7 +226,7 @@ class World:
 
     def gen_enemy(self, speed=1):
         enemy_sprite_dict = helper.create_sprite_dict(THEMES[self.theme]['enemy_sprite'])
-        enemy = self.add_entity(enemy_sprite_dict, self.get_random_edge_pos(), ai='amble', speed=speed)
+        enemy = self.add_entity(enemy_sprite_dict, self.get_random_edge_pos(), ai='follow', speed=speed)
         enemy.update_info({'target': self.player, 'me': enemy, 'distance': self.enemy_list})
         self.enemy_list.append(enemy)
 
