@@ -6,7 +6,6 @@ from helper import LOADED_IMAGES
 
 
 class Entity(pg.sprite.Sprite):
-
     def __init__(self, sprite_dict, position, lives=3, speed=2, ai=None):
         pg.sprite.Sprite.__init__(self)
 
@@ -38,8 +37,10 @@ class Entity(pg.sprite.Sprite):
         return self.position
 
     def get_center(self, world_size):
-        return ((self.position[0] + self.get_width()/2) % world_size[0],
-                (self.position[1] + self.get_height()/2) % world_size[1])
+        return (
+            (self.position[0] + self.get_width() / 2) % world_size[0],
+            (self.position[1] + self.get_height() / 2) % world_size[1],
+        )
 
     def get_sprite(self):
         return LOADED_IMAGES[self.sprite_dict[self.image]]
@@ -55,7 +56,10 @@ class Entity(pg.sprite.Sprite):
         self.sprite_dict = sprite_dict
 
     def set_position(self, position):
-        self.position = [position[0]-self.get_width()/2, position[1]-self.get_height()/2]
+        self.position = [
+            position[0] - self.get_width() / 2,
+            position[1] - self.get_height() / 2,
+        ]
 
     def update_info(self, new_info):
         self.info.update(new_info)
@@ -106,9 +110,9 @@ class Entity(pg.sprite.Sprite):
 
         if wrap_x and wrap_y:
             x, y = self.position
-            surface.blit(image, (x+xmod, y))
-            surface.blit(image, (x, y+ymod))
-            surface.blit(image, (x+xmod, y+ymod))
+            surface.blit(image, (x + xmod, y))
+            surface.blit(image, (x, y + ymod))
+            surface.blit(image, (x + xmod, y + ymod))
             self.position[0] += xmod
             self.position[1] += ymod
         elif wrap_x:
@@ -124,7 +128,10 @@ class Entity(pg.sprite.Sprite):
 
     def check_collision(self, object):
         """Fails if object completely encompases me"""
-        my_pos = [self.position[0] + self.get_width()/2, self.position[1] + self.get_height()/2]
+        my_pos = [
+            self.position[0] + self.get_width() / 2,
+            self.position[1] + self.get_height() / 2,
+        ]
 
         object_pos = object.get_position()
         left = object_pos[0]
@@ -138,17 +145,17 @@ class Entity(pg.sprite.Sprite):
 
     def move(self, world_size):
         if self.ai:
-            if self.ai == 'follow':
+            if self.ai == "follow":
                 x, y = self.ai_follow(world_size)
-            elif self.ai == 'distance':
+            elif self.ai == "distance":
                 x, y = self.ai_distance(world_size)
-            elif self.ai == 'amble':
+            elif self.ai == "amble":
                 x, y = self.ai_amble(world_size)
-            elif self.ai == 'madman':
+            elif self.ai == "madman":
                 x, y = self.ai_madman(world_size)
             else:
-                raise ValueError('No such ai method {}'.format(self.ai))
-            norm = (x**2 + y**2)**0.5
+                raise ValueError("No such ai method {}".format(self.ai))
+            norm = (x**2 + y**2) ** 0.5
             if norm == 0:
                 return (0, 0)
             x = x / norm
@@ -163,17 +170,20 @@ class Entity(pg.sprite.Sprite):
             return False
 
     def ai_amble(self, world_size):
-        if 'amble' not in self.info:
-            self.info['amble'] = [(random.random(), random.random()), random.randint(60, 240)]
+        if "amble" not in self.info:
+            self.info["amble"] = [
+                (random.random(), random.random()),
+                random.randint(60, 240),
+            ]
 
-        v, idle_frames = self.info['amble']
+        v, idle_frames = self.info["amble"]
         if idle_frames:
-            self.info['amble'][1] -= 1
+            self.info["amble"][1] -= 1
             return (0, 0)
 
         elif random.random() > 0.99:
-            self.info['amble'][1] = random.randint(60, 240)
-            self.info['amble'][0] = (random.uniform(-1, 1), random.uniform(-1, 1))
+            self.info["amble"][1] = random.randint(60, 240)
+            self.info["amble"][0] = (random.uniform(-1, 1), random.uniform(-1, 1))
             return (0, 0)
 
         else:
@@ -182,44 +192,49 @@ class Entity(pg.sprite.Sprite):
 
     def ai_follow(self, world_size):
         x, y = self.get_center(world_size)
-        tx, ty = self.info['target'].get_center(world_size)
-        return (tx-x, ty-y)
+        tx, ty = self.info["target"].get_center(world_size)
+        return (tx - x, ty - y)
 
     def ai_distance(self, world_size):
         me = self.get_center(world_size)
         nearest = None
         min_dist = math.inf
-        for entity in self.info['distance']:
+        for entity in self.info["distance"]:
             them = entity.get_center(world_size)
             dist = distance(me, them)
             if dist < min_dist and self is not entity:
                 nearest = them
                 min_dist = dist
 
-        target = self.info['target'].get_center(world_size)
+        target = self.info["target"].get_center(world_size)
         dist = distance(me, target)
         if dist < min_dist or dist < 100:
             tx, ty = target
-            return (tx-me[0], ty-me[1])
+            return (tx - me[0], ty - me[1])
         else:
-            return (me[0]-nearest[0], me[1]-nearest[1])
+            return (me[0] - nearest[0], me[1] - nearest[1])
 
-        closest = distance(self.get_center(), self.info['target'].get_center(world_size))
+        closest = distance(
+            self.get_center(), self.info["target"].get_center(world_size)
+        )
 
     def ai_madman(self, world_size):
-        if 'mad' not in self.info:
+        if "mad" not in self.info:
             self.speed = 20
-            self.info['mad'] = [(random.uniform(-1, 1), random.uniform(-1, 1)), 5]
+            self.info["mad"] = [(random.uniform(-1, 1), random.uniform(-1, 1)), 5]
 
-        if self.info['mad'][1] <= 0:
-            self.info['mad'][1] = 5
-            x, y = self.info['mad'][0]
+        if self.info["mad"][1] <= 0:
+            self.info["mad"][1] = 5
+            x, y = self.info["mad"][0]
             angle = math.radians(random.uniform(-15, 15))
-            self.info['mad'][0] = (x*math.cos(angle) - y*math.sin(angle), x*math.sin(angle) + y*math.cos(angle))
+            self.info["mad"][0] = (
+                x * math.cos(angle) - y * math.sin(angle),
+                x * math.sin(angle) + y * math.cos(angle),
+            )
 
-        self.info['mad'][1] -= 1
-        return self.info['mad'][0]
+        self.info["mad"][1] -= 1
+        return self.info["mad"][0]
 
 
 def distance(a, b):
-    return ((a[0] - b[0])**2 + (a[1] - b[1])**2)**0.5
+    return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5

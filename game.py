@@ -3,11 +3,19 @@ import math
 import time
 
 import pygame as pg
-from pygame.compat import geterror
+
+# from pygame.compat import geterror
 from pygame.locals import *
 
 import helper
-from helper import load_sound, load_music, DATA_DIR, load_all_images, WIN_SIZE, LOADED_IMAGES
+from helper import (
+    load_sound,
+    load_music,
+    DATA_DIR,
+    load_all_images,
+    WIN_SIZE,
+    LOADED_IMAGES,
+)
 from world import World
 from entity import Entity
 
@@ -28,11 +36,25 @@ GREEN = (20, 239, 20)
 BLACK = (0, 0, 0)
 
 GAME_NAME = "Freyr's Wrath"
-XBOX360 = {'A': 0, 'B': 1, 'X': 2, 'Y': 3, 'LB': 4, 'RB': 5}
-P1DIRS = {pg.K_w: 'UP', pg.K_s: 'DOWN', pg.K_a: 'LEFT', pg.K_d: 'RIGHT', pg.K_f: 'MORE', pg.K_g: 'SPEED',
-          pg.K_h: 'HEAL'}
-P2DIRS = {pg.K_UP: 'UP', pg.K_DOWN: 'DOWN', pg.K_LEFT: 'LEFT', pg.K_RIGHT: 'RIGHT', pg.K_k: 'MORE', pg.K_l: 'SPEED',
-          pg.K_SEMICOLON: 'HEAL'}
+XBOX360 = {"A": 0, "B": 1, "X": 2, "Y": 3, "LB": 4, "RB": 5}
+P1DIRS = {
+    pg.K_w: "UP",
+    pg.K_s: "DOWN",
+    pg.K_a: "LEFT",
+    pg.K_d: "RIGHT",
+    pg.K_f: "MORE",
+    pg.K_g: "SPEED",
+    pg.K_h: "HEAL",
+}
+P2DIRS = {
+    pg.K_UP: "UP",
+    pg.K_DOWN: "DOWN",
+    pg.K_LEFT: "LEFT",
+    pg.K_RIGHT: "RIGHT",
+    pg.K_k: "MORE",
+    pg.K_l: "SPEED",
+    pg.K_SEMICOLON: "HEAL",
+}
 pg.init()
 joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
 
@@ -43,7 +65,6 @@ joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
 
 
 class Game:
-
     def __init__(self, state=MENU):
         self.game_state = state
         self.background_surface = None  # init in setup_game
@@ -64,7 +85,7 @@ class Game:
     def setup_game(self):
         self.screen = pg.display.set_mode(WIN_SIZE, pg.SCALED | pg.RESIZABLE)
         load_all_images()
-        pg.display.set_icon(LOADED_IMAGES['sprite_viking_front'])
+        pg.display.set_icon(LOADED_IMAGES["sprite_viking_front"])
         pg.display.set_caption(GAME_NAME)
         self.scrolling_menu_background = self.create_scrolling_menu_background()
         self.initialize_menu_background()
@@ -79,7 +100,7 @@ class Game:
         self.select_sound.set_volume(0.3)
 
         load_music("Fishing_Song.wav")
-        #pg.mixer.music.load(load_music("Fishing_Song.wav"))
+        # pg.mixer.music.load(load_music("Fishing_Song.wav"))
         pg.mixer.music.set_volume(0.2)
         pg.mixer.music.play(-1)
 
@@ -88,40 +109,62 @@ class Game:
         self.background_surface = pg.Surface(self.screen.get_size())
         self.background_surface = self.background_surface.convert()
         self.background_surface.fill(WHITE)
-        self.scrolling_menu_background.draw(self.background_surface, self.background_surface.get_size())
+        self.scrolling_menu_background.draw(
+            self.background_surface, self.background_surface.get_size()
+        )
         self.write_menu_text()
 
     def write_menu_text(self):
-        font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
+        font_title = pg.font.Font(os.path.join(DATA_DIR, "Amatic-Bold.ttf"), 36 * 3)
         text_title = font_title.render(GAME_NAME, 1, (220, 20, 60))
-        text_title = pg.transform.rotate(text_title, math.sin(time.time()/1.5)*10)
-        text_title = pg.transform.scale(text_title, (text_title.get_width() + int(math.sin(time.time()/1)*20), text_title.get_height() + int(math.sin(time.time()/1)*20)))
-        textpos_title = text_title.get_rect(centerx=self.background_surface.get_width() / 2,
-                                            centery=self.background_surface.get_height() / 5)
+        text_title = pg.transform.rotate(text_title, math.sin(time.time() / 1.5) * 10)
+        text_title = pg.transform.scale(
+            text_title,
+            (
+                text_title.get_width() + int(math.sin(time.time() / 1) * 20),
+                text_title.get_height() + int(math.sin(time.time() / 1) * 20),
+            ),
+        )
+        textpos_title = text_title.get_rect(
+            centerx=self.background_surface.get_width() / 2,
+            centery=self.background_surface.get_height() / 5,
+        )
 
         self.background_surface.blit(text_title, textpos_title)
 
-        font_team = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
+        font_team = pg.font.Font(os.path.join(DATA_DIR, "Amatic-Bold.ttf"), 12 * 3)
         text_team = font_team.render("Team Fishing Minigame Metaphor", 1, (220, 20, 60))
-        textpos_team = text_team.get_rect(centerx=self.background_surface.get_width() / 2,
-                                          centery=self.background_surface.get_height() / 1.8)
+        textpos_team = text_team.get_rect(
+            centerx=self.background_surface.get_width() / 2,
+            centery=self.background_surface.get_height() / 1.8,
+        )
         self.background_surface.blit(text_team, textpos_team)
 
         self.draw_number_players_selector()
 
         text_by = font_team.render("by", 1, (220, 20, 60))
-        textpos_by = text_by.get_rect(centerx=self.background_surface.get_width() / 2,
-                                      centery=self.background_surface.get_height() / 2.2)
+        textpos_by = text_by.get_rect(
+            centerx=self.background_surface.get_width() / 2,
+            centery=self.background_surface.get_height() / 2.2,
+        )
         self.background_surface.blit(text_by, textpos_by)
 
-        font_space_to_begin = pg.font.Font(os.path.join(DATA_DIR, 'AmaticSC-Regular.ttf'), 16 * 3)
-        text_space_to_begin = font_space_to_begin.render("Press Spacebar to Start", 1, (220, 20, 60))
-        textpos_space_to_begin = text_space_to_begin.get_rect(centerx=self.background_surface.get_width() / 2,
-                                                              centery=self.background_surface.get_height() / 1.2)
+        font_space_to_begin = pg.font.Font(
+            os.path.join(DATA_DIR, "AmaticSC-Regular.ttf"), 16 * 3
+        )
+        text_space_to_begin = font_space_to_begin.render(
+            "Press Spacebar to Start", 1, (220, 20, 60)
+        )
+        textpos_space_to_begin = text_space_to_begin.get_rect(
+            centerx=self.background_surface.get_width() / 2,
+            centery=self.background_surface.get_height() / 1.2,
+        )
         self.background_surface.blit(text_space_to_begin, textpos_space_to_begin)
 
     def draw_number_players_selector(self):
-        font_number_of_players = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 20 * 3)
+        font_number_of_players = pg.font.Font(
+            os.path.join(DATA_DIR, "Amatic-Bold.ttf"), 20 * 3
+        )
 
         number_players_string = "  Number of players:  "
         if self.number_of_players > 2:
@@ -135,9 +178,12 @@ class Game:
             number_players_string += "    "
 
         text_number_of_players = font_number_of_players.render(
-            number_players_string, 1, (220, 20, 60))
-        textpos_number_of_players = text_number_of_players.get_rect(centerx=self.background_surface.get_width() / 2,
-                                                                    centery=self.background_surface.get_height() / 1.4)
+            number_players_string, 1, (220, 20, 60)
+        )
+        textpos_number_of_players = text_number_of_players.get_rect(
+            centerx=self.background_surface.get_width() / 2,
+            centery=self.background_surface.get_height() / 1.4,
+        )
         self.screen.blit(text_number_of_players, textpos_number_of_players)
 
     def draw_menu_background(self):
@@ -158,12 +204,16 @@ class Game:
         elif len(self.players) == 3:
             self.screen.blit(self.players[0].world, (0, 0))
             self.screen.blit(self.players[1].world, (half_screen_width, 0))
-            self.screen.blit(self.players[2].world, (screen_width / 4, half_screen_height))
+            self.screen.blit(
+                self.players[2].world, (screen_width / 4, half_screen_height)
+            )
         elif len(self.players) == 4:
             self.screen.blit(self.players[0].world, (0, 0))
             self.screen.blit(self.players[1].world, (half_screen_width, 0))
             self.screen.blit(self.players[2].world, (0, half_screen_height))
-            self.screen.blit(self.players[3].world, (half_screen_width, half_screen_height))
+            self.screen.blit(
+                self.players[3].world, (half_screen_width, half_screen_height)
+            )
 
     def draw_select_background(self):
         screen_height = self.screen.get_size()[1]
@@ -179,12 +229,16 @@ class Game:
         elif len(self.players) == 3:
             self.screen.blit(self.players[0].world, (0, 0))
             self.screen.blit(self.players[1].world, (half_screen_width, 0))
-            self.screen.blit(self.players[2].world, (screen_width / 4, half_screen_height))
+            self.screen.blit(
+                self.players[2].world, (screen_width / 4, half_screen_height)
+            )
         elif len(self.players) == 4:
             self.screen.blit(self.players[0].world, (0, 0))
             self.screen.blit(self.players[1].world, (half_screen_width, 0))
             self.screen.blit(self.players[2].world, (0, half_screen_height))
-            self.screen.blit(self.players[3].world, (half_screen_width, half_screen_height))
+            self.screen.blit(
+                self.players[3].world, (half_screen_width, half_screen_height)
+            )
 
     def draw_end_background(self):
         self.background_surface = pg.Surface(self.screen.get_size())
@@ -201,29 +255,35 @@ class Game:
 
     def write_end_text(self, winner, sprite_name):
 
-        font_title = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 36 * 3)
-        text_title = font_title.render(winner + ' wins!', 1, (255, 20, 30))
-        textpos_title = text_title.get_rect(centerx=self.background_surface.get_width() / 2,
-                                            centery=self.background_surface.get_height() / 5)
+        font_title = pg.font.Font(os.path.join(DATA_DIR, "Amatic-Bold.ttf"), 36 * 3)
+        text_title = font_title.render(winner + " wins!", 1, (255, 20, 30))
+        textpos_title = text_title.get_rect(
+            centerx=self.background_surface.get_width() / 2,
+            centery=self.background_surface.get_height() / 5,
+        )
         self.background_surface.blit(text_title, textpos_title)
 
-        font_team = pg.font.Font(os.path.join(DATA_DIR, 'Amatic-Bold.ttf'), 12 * 3)
+        font_team = pg.font.Font(os.path.join(DATA_DIR, "Amatic-Bold.ttf"), 12 * 3)
         text_team = font_team.render("Team Fishing Minigame Metaphor", 1, (220, 20, 60))
-        textpos_team = text_team.get_rect(centerx=self.background_surface.get_width() / 2,
-                                          centery=self.background_surface.get_height() / 1.8)
+        textpos_team = text_team.get_rect(
+            centerx=self.background_surface.get_width() / 2,
+            centery=self.background_surface.get_height() / 1.8,
+        )
         self.background_surface.blit(text_team, textpos_team)
 
         winner_sprite = helper.LOADED_IMAGES["sprite_" + sprite_name.lower() + "_front"]
         winner_sprite = pg.transform.scale(winner_sprite, (150, 150))
-        winner_sprite_pos = winner_sprite.get_rect(centerx=self.background_surface.get_width() / 2,
-                                                   centery=self.background_surface.get_height() / 2.5)
+        winner_sprite_pos = winner_sprite.get_rect(
+            centerx=self.background_surface.get_width() / 2,
+            centery=self.background_surface.get_height() / 2.5,
+        )
 
         self.background_surface.blit(winner_sprite, winner_sprite_pos)
 
     def main(self):
         """this function is called when the program starts.
-           it initializes everything it needs, then runs in
-           a loop until the function returns."""
+        it initializes everything it needs, then runs in
+        a loop until the function returns."""
         # Initialize Everything
 
         # Prepare Game Objects
@@ -294,7 +354,9 @@ class Game:
             self.game_state = SELECT
             self.button_sound.play()
 
-        elif event.type == pg.KEYDOWN and (event.key == pg.K_a or event.key == pg.K_LEFT):
+        elif event.type == pg.KEYDOWN and (
+            event.key == pg.K_a or event.key == pg.K_LEFT
+        ):
             if self.number_of_players > 2:
                 self.number_of_players -= 1
                 self.select_sound.play()
@@ -316,24 +378,48 @@ class Game:
 
     def process_select_event(self, event):
 
-        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.game_state == SELECT:
+        if (
+            event.type == pg.KEYDOWN
+            and event.key == pg.K_SPACE
+            and self.game_state == SELECT
+        ):
             self.game_state = GAME
             self.button_sound.play()
-        elif event.type == pg.JOYBUTTONDOWN and event.button == 0 and self.game_state == SELECT:
+        elif (
+            event.type == pg.JOYBUTTONDOWN
+            and event.button == 0
+            and self.game_state == SELECT
+        ):
             self.game_state = GAME
             self.button_sound.play()
 
-        if event.type == pg.KEYDOWN and event.key == pg.K_a and not self.players[0].ready:
-            self.players[0].init_character(self.themes[(self.themes.index(self.players[0].get_theme()) - 1) % 4])
+        if (
+            event.type == pg.KEYDOWN
+            and event.key == pg.K_a
+            and not self.players[0].ready
+        ):
+            self.players[0].init_character(
+                self.themes[(self.themes.index(self.players[0].get_theme()) - 1) % 4]
+            )
             self.select_sound.play()
-        elif event.type == pg.KEYDOWN and event.key == pg.K_d and not self.players[0].ready:
-            self.players[0].init_character(self.themes[(self.themes.index(self.players[0].get_theme()) + 1) % 4])
+        elif (
+            event.type == pg.KEYDOWN
+            and event.key == pg.K_d
+            and not self.players[0].ready
+        ):
+            self.players[0].init_character(
+                self.themes[(self.themes.index(self.players[0].get_theme()) + 1) % 4]
+            )
             self.select_sound.play()
         elif event.type == pg.KEYDOWN and event.key == pg.K_LEFT:
-            self.players[1].init_character(self.themes[(self.themes.index(self.players[1].get_theme()) - 1) % 4])
+            self.players[1].init_character(
+                self.themes[(self.themes.index(self.players[1].get_theme()) - 1) % 4]
+            )
             self.select_sound.play()
         elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT:
-            self.players[1].init_character(self.themes[(self.themes.index(self.players[1].get_theme()) + 1) % 4])
+            self.players[1].init_character(
+                self.themes[(self.themes.index(self.players[1].get_theme()) + 1) % 4]
+            )
             self.select_sound.play()
 
         if event.type == pg.KEYDOWN and event.key == pg.K_q:
@@ -342,15 +428,25 @@ class Game:
 
         for index, player in enumerate(self.players):
             try:
-                if event.type == pg.JOYBUTTONDOWN and\
-                        joysticks[index].get_instance_id() == event.instance_id and event.button == XBOX360['LB']:
-                    player.init_character(self.themes[(self.themes.index(player.get_theme()) - 1) % 4])
+                if (
+                    event.type == pg.JOYBUTTONDOWN
+                    and joysticks[index].get_instance_id() == event.instance_id
+                    and event.button == XBOX360["LB"]
+                ):
+                    player.init_character(
+                        self.themes[(self.themes.index(player.get_theme()) - 1) % 4]
+                    )
             except IndexError:
                 pass
             try:
-                if event.type == pg.JOYBUTTONDOWN and\
-                        joysticks[index].get_instance_id() == event.instance_id and event.button == XBOX360['RB']:
-                    player.init_character(self.themes[(self.themes.index(player.get_theme()) + 1) % 4])
+                if (
+                    event.type == pg.JOYBUTTONDOWN
+                    and joysticks[index].get_instance_id() == event.instance_id
+                    and event.button == XBOX360["RB"]
+                ):
+                    player.init_character(
+                        self.themes[(self.themes.index(player.get_theme()) + 1) % 4]
+                    )
             except IndexError:
                 pass
 
@@ -363,12 +459,18 @@ class Game:
         # controller support for player 1
         for index, player in enumerate(self.players):
             try:
-                if event.type == pg.JOYHATMOTION and joysticks[index].get_instance_id() == event.instance_id:
+                if (
+                    event.type == pg.JOYHATMOTION
+                    and joysticks[index].get_instance_id() == event.instance_id
+                ):
                     player.set_dir(0, event.value)
             except IndexError:
                 pass
             try:
-                if event.type == pg.JOYAXISMOTION and joysticks[index].get_instance_id() == event.instance_id:
+                if (
+                    event.type == pg.JOYAXISMOTION
+                    and joysticks[index].get_instance_id() == event.instance_id
+                ):
                     if abs(event.value) > 0.3:
                         player.set_dir(event.axis, event.value)
                     else:
@@ -390,8 +492,11 @@ class Game:
         # players shop controller
         for index, player in enumerate(self.players):
             try:
-                if event.type == pg.JOYBUTTONDOWN and joysticks[
-                    index].get_instance_id() == event.instance_id and event.button == XBOX360['LB']:
+                if (
+                    event.type == pg.JOYBUTTONDOWN
+                    and joysticks[index].get_instance_id() == event.instance_id
+                    and event.button == XBOX360["LB"]
+                ):
                     player.shop.toggle_open()
             except IndexError:
                 pass
@@ -411,16 +516,25 @@ class Game:
         for index, player in enumerate(self.players):
             enemy_player = (index % 2) + 1
             try:
-                if event.type == pg.JOYBUTTONDOWN and joysticks[
-                        index].get_instance_id() == event.instance_id and event.button == XBOX360['A']:
+                if (
+                    event.type == pg.JOYBUTTONDOWN
+                    and joysticks[index].get_instance_id() == event.instance_id
+                    and event.button == XBOX360["A"]
+                ):
                     if player.pay_for_power("more"):
                         self.players[enemy_player].activate_power("more")
-                elif event.type == pg.JOYBUTTONDOWN and joysticks[
-                        index].get_instance_id() == event.instance_id and event.button == XBOX360['B']:
+                elif (
+                    event.type == pg.JOYBUTTONDOWN
+                    and joysticks[index].get_instance_id() == event.instance_id
+                    and event.button == XBOX360["B"]
+                ):
                     if player.pay_for_power("speed"):
                         self.players[enemy_player].activate_power("speed")
-                elif event.type == pg.JOYBUTTONDOWN and joysticks[
-                        index].get_instance_id() == event.instance_id and event.button == XBOX360['X']:
+                elif (
+                    event.type == pg.JOYBUTTONDOWN
+                    and joysticks[index].get_instance_id() == event.instance_id
+                    and event.button == XBOX360["X"]
+                ):
                     if player.pay_for_power("heal"):
                         player.activate_power("heal")
             except IndexError:
@@ -445,7 +559,7 @@ class Game:
             self.initialize_menu_background()
             self.victory_sound.stop()
             pg.mixer.music.play(-1)
-        if event.type == JOYBUTTONDOWN and event.button == XBOX360['A']:
+        if event.type == JOYBUTTONDOWN and event.button == XBOX360["A"]:
             for player in self.players:
                 player.reset()
             self.game_state = MENU
@@ -461,8 +575,12 @@ class Game:
         val = (music_s % 8) / 2
         if self.menu_theme != math.floor(val):
             self.menu_theme = math.floor(val)
-            self.scrolling_menu_background.set_sprite_dict(helper.create_background(self.themes[self.menu_theme], helper.WIN_SIZE))
-        self.scrolling_menu_background.draw(self.background_surface, self.screen.get_size())
+            self.scrolling_menu_background.set_sprite_dict(
+                helper.create_background(self.themes[self.menu_theme], helper.WIN_SIZE)
+            )
+        self.scrolling_menu_background.draw(
+            self.background_surface, self.screen.get_size()
+        )
         self.write_menu_text()
         self.screen.blit(self.background_surface, (0, 0))
         self.draw_number_players_selector()
